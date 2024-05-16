@@ -1,0 +1,14 @@
+[run]
+branch=True
+source = app
+omit =
+    */__init__.py
+    **/deprecated/*.py
+    **/models/*.py
+    **/schemas/*.py
+[report]
+exclude_lines =
+    import
+    from
+    logger
+    logging

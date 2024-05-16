@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        name: backend-ruff
+        args: [--fix, --exit-non-zero-on-fix]
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        name: backend-black
+        language_version: python3
+  - repo: local
+    hooks: 
+    -   id: coverage
+        name: backend-test-coverage
+        stages: [commit]
+        language: system
+        entry: bash
+        types: [python]
+        pass_filenames: false
+        args: 
+          - -c
+          - |
+            cd backend && poetry run coverage run -m pytest && poetry run coverage report
+  # - repo: https://github.com/pre-commit/mirrors-eslint
+  #   rev: 'v9.1.1'  # Use the sha / tag you want to point at
+  #   hooks:
+  #     - id: eslint
+  #       files:  \.(vue|[jt]sx?)$  # *.js, *.jsx, *.ts and *.tsx
+  #       types: [file]
+  #       args: ['--fix']

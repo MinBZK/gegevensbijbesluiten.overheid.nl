@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Opensource.Dockerfile
+    ports:
+      - 8001:8000
+    networks:
+      - database
+    environment:
+      POSTGRES_SERVER: 'db-inzage'
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      bash -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --log-config=app/logging.conf"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Opensource.Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    environment:
+        NUXT_PUBLIC_API_BASE_URL: ${NUXT_PUBLIC_API_BASE_URL}
+        NUXT_PUBLIC_COLOR_MODE: ${NUXT_PUBLIC_COLOR_MODE}
+        NUXT_DEV: ${NUXT_DEV}
+
+volumes:
+  dbgate:
+    name: inzage_dbgate
+  postgres:
+    name: ${POSTGRES_DB}
+    
+networks:
+  database:
+    external: true

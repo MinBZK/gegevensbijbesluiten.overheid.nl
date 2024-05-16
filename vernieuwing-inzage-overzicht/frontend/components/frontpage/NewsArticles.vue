@@ -1,0 +1,93 @@
+<template>
+  <div class="article-cards">
+    <div
+      v-for="article in reversedArticles"
+      :key="article.title"
+      class="article-card"
+    >
+      <img
+        :src="article.image"
+        :alt="t(article.alt)"
+        class="article-card-image"
+        tabindex="-1"
+      />
+      <div class="article-card-text">
+        <p>{{ t(article.date) }}</p>
+        <h3>{{ t(article.title) }}</h3>
+        <p>{{ t(article.summary) }}</p>
+        <ExternalLink :href="article.link" class="external-link">
+          {{ t('articles.readMore') }}</ExternalLink
+        >
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { articles } from '@/config/articles'
+
+const reversedArticles = computed(() => {
+  return articles.slice(-3).reverse()
+})
+
+const { t } = useI18n()
+</script>
+
+<style scoped lang="scss">
+.article-cards {
+  display: flex;
+  column-gap: 1em;
+}
+
+.article-card {
+  background-color: $tertiary;
+  width: 33%;
+  border-radius: 4px;
+
+  transition: box-shadow 0.3s ease-out;
+
+  &:hover {
+    box-shadow: 0 0 10px rgb(147, 180, 205);
+  }
+  .article-card-text {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 250px);
+
+    h3 {
+      margin-top: 0em;
+      font-size: 1em;
+    }
+    .external-link {
+      margin-top: auto;
+      width: 11.3em;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      background-position: 10.2em;
+    }
+  }
+}
+
+@media (max-width: 50em) {
+  .article-cards {
+    flex-direction: column;
+    row-gap: 0.85em;
+  }
+
+  .article-card {
+    width: 100%;
+  }
+}
+
+.article-card-image {
+  width: 100%;
+  height: 250px;
+
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  object-fit: cover;
+}
+</style>

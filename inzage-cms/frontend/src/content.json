@@ -1,0 +1,136 @@
+{
+    "links": {
+        "vaststellen": "Stel uw bestand vast",
+        "bekijken": "Bekijk de bevindingen",
+        "verbeteren": "Verbeter de bevindingen online",
+        "downloaden_findings": "Download de bevindingen",
+        "downloaden_file": "Bestand downloaden",
+        "login": "Log in voor toegang",
+        "reset_pwd": "Nieuw wachtwoord aanvragen",
+        "register_user": "Registreer gebruiker"
+    },
+    "pages": {
+        "aantal_bevindingen": {
+            "one": "Uw bestand heeft <strong>1</strong> bevinding.",
+            "multi": "Uw bestand heeft <strong>NUMBER</strong> bevindingen."
+        },
+        "login": {
+            "r_title": "Hulp nodig?",
+            "r_paragraphs": {
+                "text_1": "Neem voor ondersteuning contact op met uw contact bij het ministerie van Binnenlandse Zaken en Koninkrijksrelaties."
+            }
+        },
+        "welkom": {
+            "title": "Welkom",
+            "paragraphs": {
+                "text_1": "Deze website is niet openbaar",
+                "text_2": "voor toegang",
+                "text_3": "Log in om aan te leveren en om de instructies in te zien."
+            }
+        },
+        "upload": {
+            "l_title": {
+                "no_file": "Uploaden",
+                "file": "Opnieuw uploaden"
+            },
+            "l_dropzone": {
+                "inner_text": "Upload bestand",
+                "error_title": "Er is iets mis gegaan:",
+                "error": "Verbeter uw bestand en probeer het opnieuw of vraag hulp bij uw inzage beheer-contactpersoon.",
+                "warning": "Als u uw bestand opnieuw inlaadt overschrijft u een al ingeladen versie."
+            },
+            "r_title": {
+                "no_file": "Werkwijze",
+                "file": "Resultaten van de controle"
+            },
+            "r_paragraphs": {
+                "no_file": {
+                    "text": "Voer de volgende stappen uit:",
+                    "step_1": "Sleep of selecteer uw bestand in het upload-venster links.",
+                    "step_2": "Uw bestand wordt gecontroleerd. Dit kan even duren.",
+                    "step_3": "Als de controle klaar is wordt het resultaat op het scherm getoond.",
+                    "step_4": "Als er bevindingen zijn kunt u die ook downloaden."
+                },
+                "no_findings": {
+                    "text_1": "Uw bestand heeft geen bevindingen.",
+                    "text_2": "Sluit uw aanlevering nu af door uw bestand vast te stellen."
+                },
+                "findings": {
+                    "text_1": "Bekijk de bevindingen en beslis of u ze nu direct online wilt verbeteren of later offline in uw Excelbestand."
+                }
+            },
+            "popup_supplement": {
+                "title": "automatisch aanvullen",
+                "inner_text": " NUMBER leverancier zijn gevonden in ons systeem. wil je de leverancier gegevens overschrijven en aanvullen?"
+            }
+        },
+        "bekijk": {
+            "l_title": "Bekijk de bevindingen in uw bestand",
+            "l_paragraphs": {
+                "text_1": "Open detailpagina en klik op links op de tabs om rechts de verschillende soorten bevindingen te kunnen bekijken."
+            },
+            "l_btn_popup": "Open detailpagina",
+            "r_title": "Volgende stap",
+            "r_paragraphs": {
+                "text_1": "Herstel de bevindingen <strong>online</strong> en download het verbeterde bestand.",
+                "text_2": "Of: Download de bevindingen, herstel ze <strong>offline</strong> en upload het verbeterde bestand daarna opnieuw."
+            }
+        },
+        "verbeter": {
+            "l_title": "Verbeter uw bestand online",
+            "l_paragraphs": {
+                "text_1": "Los bevindingen stap voor stap op met behulp van een dialoog. <br />Sla desgewenst stappen over voor bevindingen die u later op wilt lossen.",
+                "text_2": "Uw verbeteringen worden gelijk doorgevoerd, als u klaar bent wordt de controle opnieuw uitgevoerd."
+            },
+            "l_btn_popup": "Start de Dialoog",
+            "popup_berekenen": "De bevindingen zijn opnieuw berekend.",
+            "r_title": "Tussenstand",
+            "r_paragraphs": {
+                "text_1": "Als u tussendoor stopt met de dialoog blijven de aanpassingen op de site bewaard.",
+                "text_2": "U kunt uw bestand met deze tussenstand ook weer downloaden."
+            }
+        },
+        "download": {
+            "l_title": "Download uw bestand",
+            "l_btn": "Download",
+            "r_title": "Tussenstand",
+            "r_paragraphs": {
+                "text_1": "Na het downloaden vind u ze terug in het foutenoverzicht van het Excel bestand."
+            }
+        },
+        "verwijder": {
+            "l_title": "Wilt u uw bestand verwijderen?",
+            "l_paragraphs": {
+                "text_1": ""
+            },
+            "r_title": "Als u uw bestand verwijdert",
+            "r_paragraphs": {
+                "text_1": "U kunt uw bestand niet meer terughalen. <br />Borg dat u een versie gedownload heeft."
+            }
+        },
+        "vasttel": {
+            "l_title": "Stel uw bestand vast",
+            "l_paragraphs": {
+                "text_1": ""
+            },
+            "r_title": "toelichting",
+            "r_paragraphs": {
+                "text_1": "Nadat u uw bestand heeft vastgesteld is het definitief. U kunt het niet meer wijzigen.",
+                "text_2": "Als u weer inlogt kunt u wel uw bestand downloaden."
+            }
+        },
+        "logout": {
+            "l_title": "Wilt u uitloggen?",
+            "l_paragraphs": {
+                "text_1": ""
+            },
+            "r_title": "Als u uitlogt",
+            "r_paragraphs": {
+                "text_1": "Uw gegevens blijven bewaard tot u weer inlogt en er mee verder wilt gaan."
+            }
+        }
+    },
+    "rules": {
+        "default_text": "Deze vullen we voor nu met deze tekst. Hier komt in de MVP-versie een vaste tekst uit de Kwaliteitsregel-database met uitleg over hoe deze fout te snappen en te herstellen. De tekst is dan via een beheermenu online aan te passen."
+    }
+}

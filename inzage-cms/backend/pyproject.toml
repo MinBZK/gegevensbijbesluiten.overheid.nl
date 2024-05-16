@@ -1,0 +1,70 @@
+[tool.poetry]
+name = "inzage-cms-poetry"
+version = "0.0.1"
+description = "CMS beheermodule"
+authors = ["ictu devops"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+SQLAlchemy = "^2.0.7"
+python-dotenv = "^0.21.0"
+alembic = "^1.8.1"
+psycopg2-binary = "^2.9.5"
+pandas = "^1.5.1"
+SQLAlchemy-Utils = "^0.40.0"
+secure = "^0.3.0"
+PyJWT = "^2.6.0"
+python-keycloak = "3.0.0"
+requests = "^2.28.2"
+aiofiles = "^23.1.0"
+ruff = "^0.2.2"
+coverage = "^7.2.7"
+pytest-asyncio = "^0.21.0"
+httpx = "^0.24.1"
+cryptography = "^41.0.3"
+mypy = "^1.5.1"
+clamd = "^1.0.2"
+fastapi = "^0.104.1"
+uvicorn = "^0.24.0.post1"
+python-multipart = "^0.0.6"
+numpy = "^1.26.4"
+asyncpg = "^0.29.0"
+pydantic-settings = "^2.2.1"
+email-validator = "^2.1.1"
+
+[tool.poetry.dev-dependencies]
+black = {extras = ["jupyter"], version = "^22.10.0"}
+flake8 = "^6.0.0"
+ipykernel = "^6.16.2"
+pytest = "^7.3.1"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.3.2"
+
+[tool.black]
+line-length = 120
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+# Enable flake8-bugbear (`B`) rules, in addition to the defaults.
+select = ['E', 'F', 'W', 'A', 'PLC', 'PLE', 'PLW', 'I']
+
+# Avoid enforcing line-length violations (`E501`)
+ignore = ["E501", "D104", "D100", "D107", "D103"]
+
+# Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+# Ignore `F401` (import violations) in all `__init__.py` files, and in select subdirectories.
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "I001"]
+
+[tool.ruff.format]
+# Use single quotes for non-triple-quoted strings.
+quote-style = "double"

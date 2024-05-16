@@ -1,0 +1,148 @@
+@import "./_variables.scss";
+
+body {
+    margin:0;
+}
+
+h1 {
+    font-size: 28px !important;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    max-width: 1440px !important;
+    padding: 0;
+}
+
+p {
+    font-size: 20px;
+    padding:  32px 32px 0 32px;
+    margin: 0;
+
+}
+.link {
+    display: block;
+    margin: 0 32px;
+    text-decoration: none;
+}
+.link-text {
+    color: var(--v-primary-base);
+    font-size: 20px;
+    padding: 0 !important;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+.alert-container {
+    border-radius: 4px;
+    margin:  12px 32px 0 32px;
+}
+.succes {
+    color: green;
+}
+
+.column {
+    float: left;
+    width: 50%;
+    padding: 0;
+    h1 {
+        color: $headerTextColour;
+        font-size: 3rem;
+        padding: 32px;
+    }
+    .v-icon {
+        margin-top: -4px;
+    }
+    .v-form {
+        padding: 0 32px;
+    }
+
+    &.popup-counts {
+        align-self: start;
+        text-align: end;
+        width: 10% !important;
+        font-size: 20px !important;
+    }
+    &.popup-text {
+        padding-left: 16px;
+        width: 90% !important;
+        font-size: 20px !important;
+    }
+}
+
+.one-btn {
+    display: block;
+    margin: 16px 32px 32px 32px;
+    width: 40%;
+    .v-btn__content {
+        color: white !important;
+    }
+  }
+.two-btns {
+    width: 30%;
+    .v-btn__content {
+        color: white !important;
+    }
+    &.ja-nee {        
+        display: block;
+        margin: 16px 32px 32px 32px;
+    }
+}
+.v-btn__content {
+    color: var(--v-primary-base);
+    text-transform: none;
+}
+.v-dialog--fullscreen {
+    height: 90% !important;
+    width: 90% !important;
+    position: unset !important;
+}
+.v-toolbar__title {
+    padding-left: 16px;
+}
+
+.v-btn {
+    border-radius: 4px !important;
+}
+
+.v-btn:focus {
+    box-shadow: 0 0 0 3px white, 0 0 0 0 black !important;
+}
+.v-application {
+    [class*='text-'] {
+      font-family:'Ubuntu', sans-serif !important;
+    }
+    font-family: 'Ubuntu', sans-serif !important;
+  }
+
+  a {
+    color: $primary;
+    text-decoration: none;
+  }  
+.centered {
+    text-align: center;
+}
+.left-align {
+    text-align: left;
+}
+.right-align {
+    text-align: right;
+}
+.btn-relation {
+    color: $secondary;
+    margin-left: 10px;
+}
+.btn-relation:hover {
+    color: $error;
+}
+.width-height-table {
+    width: 150px;
+    height: 150px;
+}
+.v-table__wrapper{
+    overflow-y:hidden;
+}

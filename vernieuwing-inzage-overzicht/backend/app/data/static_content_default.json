@@ -1,0 +1,89 @@
+{
+  "en": {},
+  "fy": {},
+  "pap": {},
+  "nl": {
+    "searchbar":{
+      "EvtpSearchText": "Zoek naar een besluit",
+      "EvtpSelect": "Selecteer een besluit",
+      "EvtpNoResults": "Geen besluiten gevonden voor de huidige zoekopdracht.",
+      "GgSearchText": "Zoek naar een gegeven",
+      "GgSelect": "Selecteer een gegeven",
+      "GgNoResults": "Geen gegevens gevonden voor de huidige zoekopdracht.",
+      "OeSearchText": "Zoek naar een organisatie",
+      "OeNoResults": "Geen organisaties gevonden voor de huidige zoekopdracht.",
+      "OeSelect": "Gevonden organisaties"
+    },
+    "gegevens": {
+      "goBack": "Terug naar alle gegevens",
+      "h1": "Voor welke besluiten worden uw gegevens gebruikt?",
+      "p1": "De gegevens worden in de volgende besluiten gebruikt:",
+      "h1Modal": "Gerelateerde besluiten",
+      "h2": "Waar komen deze gegevens vandaan?",
+      "p2": "Uw gegevens worden verzameld uit de volgende bronnen:",
+      "h2Modal": "Gerelateerde bronnen",
+      "h3": "Met welke organisaties worden uw gegevens gedeeld?",
+      "p3": "De gegevens worden afhankelijk van uw persoonlijke situatie gedeeld met de volgende organisaties:",
+      "h3Modal": "Gerelateerde organisaties"
+    },
+    "organisaties": {
+      "goBack": "Terug naar alle organisaties",
+      "h1": "Voor welke besluiten is deze organisatie verantwoordelijk?",
+      "p1": "Deze organisatie is verantwoordelijk voor de volgende besluiten:",
+      "h2": "Welke gegevens beheert deze organisatie?",
+      "p2": "Deze organisatie heeft de volgende gegevens:",
+      "p2-empty": "Deze organisatie beheert zelf geen gegevens",
+      "h3": "Welke gegevens ontvangt deze organisatie?",
+      "p3": "Deze organisatie ontvangt afhankelijk van uw situatie de volgende gegevens:",
+      "p3-empty": "Deze organisatie ontvangt geen gegevens van andere organisaties"
+    },
+    "pages: home": {
+      "title": "Wie gebruikt mijn gegevens bij de overheid?",
+      "description_1": "De Nederlandse overheid houdt gegevens bij van alle inwoners in Nederland. Die gegevens zijn nodig om besluiten te nemen. Bijvoorbeeld over de uitgifte van een paspoort of de toekenning van huurtoeslag of pensioen. Om te voorkomen dat u deze gegevens steeds opnieuw moet aanleveren wisselen de overheden deze gegevens onderling uit.",
+      "description_2": "Vraagt u zich af hoe dat precies zit? Wilt u weten wie welke gegevens over u heeft? Op deze website leest u daar meer over. Gebruik de zoekbalk, scroll verder of klik op"
+    },
+    "pages: onderwerpen": {
+      "title": "Onderwerpen",
+      "description_1": "Kies een onderwerp waar u meer over wilt weten.",
+      "description_2": "Per onderwerp vindt u de besluiten die de overheid over dat onderwerp neemt en de gegevens die daarbij nodig zijn.",
+      "referenceToEvtp": "Bekijk de besluiten bij {evtpName}",
+      "searchText": "Zoek naar een besluit"
+    },
+    "pages: besluiten": {
+      "title": "Besluiten",
+      "description_1": "Op deze pagina vindt u de besluiten die de overheid over u neemt alfabetisch op een rijtje.",
+      "description_2": "Gebruik de zoekbalk. Of selecteer een organisatie als u al weet dat u daar moet zijn.",
+      "description_3": "Klik op een besluit om er meer over te weten te komen. U ziet welke organisatie het besluit neemt, welke gegevens nodig zijn, wie ze aanlevert en volgens welke wet dat mag.",
+      "readMore": "Lees meer",
+      "searchText": "Zoek naar een besluit"
+    },
+    "pages: gegevens": {
+      "title": "Gegevens",
+      "description_1": "Wie beheert nu precies mijn inkomensgegevens? Met wie worden mijn medische gegevens gedeeld?",
+      "description_2": "Op deze pagina ziet u welke gegevens de overheid gebruikt om besluiten te nemen. Deze gegevens zijn verdeeld over een aantal categorieën. Van alle gegevens kunt u zien voor welk besluit ze worden gebruikt, welke organisatie ze beheert  en met welke andere organisaties ze worden gedeeld.",
+      "searchText": "Zoek naar gegevens"
+    },
+    "pages: organisaties": {
+      "title": "Organisaties",
+      "description_1": "Dit overzicht toont organisaties die verantwoordelijk zijn voor het uitvoeren van overheidsbesluiten. Het gaat om overheidsorganisaties én niet-overheidsorganisaties die namens de overheid een wettelijke taak uitvoeren. Per organisatie vindt u de bijbehorende besluiten.",
+      "searchText": "Zoek naar organisaties"
+    },
+    "navigation": {
+      "home": "Home",
+      "besluitRegister": "Besluiten",
+      "onderwerp": "Onderwerpen",
+      "uitleg": "Over het overzicht",
+      "dashboard": "Dashboard",
+      "footer": "Home",
+      "over": "Over deze website",
+      "contact": "Contact",
+      "vragen": "Veelgestelde vragen",
+      "privacyverklaring": "Privacy",
+      "toegankelijkheid": "Toegankelijkheid",
+      "db": "Dashboard",
+      "gegevens": "Gegevens",
+      "organisaties": "Organisaties"
+
+    }
+  }
+}

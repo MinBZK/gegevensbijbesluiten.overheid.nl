@@ -1,0 +1,253 @@
+@import '_koop_main.scss';
+@import '_koop_print.scss';
+@import '_skiplinks.scss';
+@import '_fonts.scss';
+
+.accordion-body {
+  padding: 0.8em 1.35em 1.35em 1.35em;
+}
+.accordion-header-with-chevron {
+  margin: 0;
+  max-width: 50rem;
+  @media (max-width: 30em) {
+      width: 15rem;
+    }
+}
+.show-more {
+  padding-left: 0.8em;
+  padding-bottom: 1.0em;
+}
+.white-card-list {
+  background-color: $white;
+  padding: 0.8em 0em 0em 0em;
+  margin-bottom: 0.8em;
+  hyphens: auto;
+  word-break: break-word;
+
+  & li {
+    padding: 0px 0.8em 0.8em 0.8em;
+  }
+}
+.white-card {
+  background-color: $white;
+  padding: 0.8em;
+  margin-bottom: 0.8em;
+}
+.accordion {
+  background-color: $tertiary;
+  border-radius: 4px;
+  margin-bottom: 1.35em;
+  display: flex;
+  flex-direction: column;
+
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    padding: 1.35em;
+    cursor: pointer;
+    word-break: break-word;
+
+    h3,
+    h4,
+    h2 {
+      margin: 0;
+      flex: auto;
+    }
+    .h3-sentence:first-letter {
+      text-transform: capitalize;
+    }
+  }
+  .accordion-body-gg {
+    padding: 0.8em 0em;
+    width: 100%;
+  }
+}
+.p-margin-bottom-footer {
+  margin-bottom: 3em;
+}
+li {
+  list-style-type: none;
+}
+
+.bullet li {
+  list-style-type: disc !important;
+}
+
+.question-mark {
+  background-image: url(../images/icons/icon-explanation.svg);
+  background-size: 1em !important;
+  background-position: center 50%;
+  background-repeat: no-repeat;
+  padding-right: 2em;
+  padding-left: 2em;
+  cursor: pointer;
+}
+
+.accordion-arrow-right {
+  background-image: url(../images/icons/icon-cta-right.svg);
+  background-size: 1em !important;
+  background-repeat: no-repeat;
+  padding-right: 0em;
+  padding-left: 2em;
+  cursor: pointer;
+}
+
+.accordion-arrow-up {
+  background-image: url(../images/icons/icon-arrow-up-blue.svg);
+  background-size: 1.2em !important;
+  background-repeat: no-repeat;
+  padding-right: 0em;
+  padding-left: 2em;
+  cursor: pointer;
+}
+
+.noselect {
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.is-external-icon {
+  text-decoration: underline !important;
+  padding-right: 1.25em;
+  margin-right: 0.25em;
+  background-repeat: no-repeat;
+  background-position: right 3px;
+  background-size: 13px 12px;
+  background-image: url(@/assets/images/icons/icon-link-external.svg);
+}
+
+@media (min-width: 65em) {
+  html {
+    padding-bottom: 14em !important;
+  }
+}
+
+a:hover {
+  color: $link-hover;
+}
+
+.no-focus-border {
+  box-shadow: 0 0 0 0 #000 !important;
+  outline: 0;
+}
+
+a:focus {
+  box-shadow: 0 0 0 0 #000 !important;
+  border: 2px dashed $primary-darker;
+  outline: 0;
+}
+
+a {
+  border: 2px solid transparent;
+}
+
+a.focus-border:focus {
+  border-left: 2px dashed $primary-darker;
+  border-right: 2px dashed $primary-darker;
+  border-bottom: 2px dashed $primary-darker;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $primary-darker;
+  font-size: 1em;
+}
+[data-icon='Gezondheid'] {
+  background-image: url('../images/icons/onderwerp/icon-health.svg');
+}
+[data-icon='Identiteit'] {
+  background-image: url('../images/icons/onderwerp/icon-identity.svg');
+}
+[data-icon='Inkomen'] {
+  background-image: url('../images/icons/onderwerp/icon-income.svg');
+}
+[data-icon='Onderwijs'] {
+  background-image: url('../images/icons/onderwerp/icon-education.svg');
+}
+[data-icon='Recht'] {
+  background-image: url('../images/icons/onderwerp/icon-law.svg');
+}
+[data-icon='Schulden'] {
+  background-image: url('../images/icons/onderwerp/icon-liabilities.svg');
+}
+[data-icon='Vervoer'] {
+  background-image: url('../images/icons/onderwerp/icon-transport.svg');
+}
+[data-icon='Werk'] {
+  background-image: url('../images/icons/onderwerp/icon-career.svg');
+}
+[data-icon='Wonen'] {
+  background-image: url('../images/icons/onderwerp/icon-living.svg');
+}
+[data-icon='Familie'] {
+  background-image: url('../images/icons/onderwerp/icon-family.svg');
+}
+[data-icon='Belastingen'] {
+  background-image: url('../images/icons/onderwerp/icon-tax.svg');
+}
+
+
+.card-container {
+  max-width: 1280px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 0.9em;
+  column-gap: 0.9em;
+}
+
+@media (max-width: 50em) {
+  .card-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.card-item {
+  min-height:35em;
+  height: 100%;
+  border-radius: 4px;
+  padding: 0.7em 1.5em 1em 1.5em;
+  background-color: $tertiary;
+  transition: box-shadow 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-hover {
+  &:hover {
+        box-shadow: 0 0 10px rgb(147, 180, 205);
+      }
+      cursor: pointer;
+}
+
+.card-sub-content {
+  margin-bottom: 0.8em;
+}
+
+.white-box{
+  background-color: $white;
+  padding: 0.8em;
+}
+
+.margin-top {
+  margin-top: 27px;
+}
+
+.capitalise-first:first-letter {
+  text-transform: uppercase;
+}

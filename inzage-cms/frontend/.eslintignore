@@ -1,0 +1,14 @@
+*.scss
+*.json
+*.conf
+*.svg
+*.woff
+*.woff2
+Dockerfile
+*.md
+*.png
+*.js
+*.ico
+Makefile
+dist
+*.Dockerfile
