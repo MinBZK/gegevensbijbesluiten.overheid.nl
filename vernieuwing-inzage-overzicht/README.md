@@ -21,7 +21,7 @@ Zorg ervoor dat je de volgende tools hebt geïnstalleerd:
 ### Database
 Deze applicatie maakt gebruik van een PostgreSQL-database voor het opslaan van gegevens over overheidsbesluiten, gegevensgebruik en -uitwisseling. De database wordt beheerd door het CMS-beheermodule, een apart systeem voor het beheren van de content op gegevensbijbesluiten.overheid.nl.
 
-Instructies voor het instellen en configureren van de database kunnen worden gevonden in de [README van het CMS-beheermodule](link/naar/cms-beheermodule/README.md).
+Instructies voor het instellen en configureren van de database kunnen worden gevonden in de [README van het CMS-beheermodule](https://github.com/MinBZK/gegevensbijbesluiten.overheid.nl/tree/main/inzage-cms).
 
 ### Preditor
 Preditor wordt gebruikt om statische content op de website te beheren. De content wordt opgeslagen in een JSON-bestand en wordt opgehaald door de frontend. De content wordt beheerd door het CMS-beheermodule.
