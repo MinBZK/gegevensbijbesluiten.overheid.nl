@@ -11,6 +11,7 @@ from app.schemas.oe import OeMinimalList
 class Gst(BaseModel):
     gst_cd: int
     gst_upc: int
+    versie_nr: int | None = None
     ext_lnk_aut: str | None
     ibron_cd: int | None
     notitie: str | None
@@ -23,6 +24,7 @@ class Gst(BaseModel):
 
 class GstMinimalList(BaseModel):
     gst_cd: int
+    versie_nr: int | None = None
     omschrijving: str
 
 

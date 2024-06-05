@@ -70,7 +70,6 @@ async def update_one(
     body: schemas.evtp_version.EvtpVersionIn,
     evtp_cd: int,
     db: AsyncSession = Depends(get_async_session),
-    # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
 ) -> EvtpVersion | None:
     """
     Update an EvtpVersion object with the given ID.
@@ -136,7 +135,6 @@ async def get_filtered(
 async def create_one(
     body: schemas.evtp_version.EvtpVersionIn,
     db: AsyncSession = Depends(get_async_session),
-    # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
 ) -> EvtpVersion:
     """
     Create a new EvtpVersion.
@@ -155,7 +153,6 @@ async def duplicate(
     evtp_cd: int,
     body: schemas.evtp_version.EvtpNewVersionIn,
     db: AsyncSession = Depends(get_async_session),
-    # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
 ) -> EvtpVersion | None:
     """
     Duplicate an evtp version.
@@ -227,7 +224,6 @@ async def create_new_version(
     evtp_cd: int,
     body: schemas.evtp_version.EvtpNewVersionIn,
     db: AsyncSession = Depends(get_async_session),
-    # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
 ) -> EvtpVersion | None:
     """
     Create a new EvtpVersion object for the given evtp_cd.
@@ -300,7 +296,6 @@ async def change_id_pub(
     evtp_cd: int,
     versie_nr: int,
     db: AsyncSession = Depends(get_async_session),
-    # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
 ) -> Literal["OK"]:
     """
     Update the ID publication status for a specific EvtpVersion version.

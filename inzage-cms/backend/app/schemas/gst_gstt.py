@@ -12,9 +12,11 @@ class GstGstt(BaseModel):
     gst_gstt_cd: int
     gst_cd: int
     gstt_cd: int
+    versie_nr: int
     notitie: str | None
     user_nm: str
     ts_mut: datetime
+    ts_end: datetime
 
 
 class GstGsttMinimalList(BaseModel):
@@ -22,11 +24,12 @@ class GstGsttMinimalList(BaseModel):
 
 
 class GstGsttWithRelations(GstGstt):
-    entity_gsttype: GstTypeMinimalList
+    entity_gst_type: GstTypeMinimalList
     entity_gst_gstt: GstMinimalList
 
 
 class GstGsttIn(BaseModel):
     gst_cd: int
     gstt_cd: int
+    versie_nr: int
     notitie: str | None = None

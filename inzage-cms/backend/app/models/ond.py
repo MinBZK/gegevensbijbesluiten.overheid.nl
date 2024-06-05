@@ -30,12 +30,13 @@ class EvtpOnd(Base, DefaultColumns):
     evtp_ond_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Onderwerpen besluiten code")
     ond_cd: Mapped[int] = mapped_column(Integer, ForeignKey("ond.ond_cd"), comment="Onderwerp code")
     evtp_cd: Mapped[int] = mapped_column(Integer, ForeignKey("evtp_version.evtp_cd"), comment="Besluit code")
+    versie_nr: Mapped[int] = mapped_column(Integer, comment="Versie nummer van de besluit onderwerp koppeling")
 
-    entity_evtp: Mapped["EvtpVersion"] = relationship(  # noqa: F821
+    # Relationships
+    entity_evtp_version: Mapped["EvtpVersion"] = relationship(  # type: ignore # noqa: F821
         "EvtpVersion",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpOnd.evtp_cd, EvtpVersion.ts_start < EvtpOnd.ts_end, EvtpVersion.ts_end > EvtpOnd.ts_start)",
     )
-
     entity_ond: Mapped["Ond"] = relationship(
         "Ond",
         foreign_keys=[ond_cd],

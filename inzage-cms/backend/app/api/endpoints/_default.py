@@ -226,7 +226,6 @@ def generate_router(
         body: getattr(schema_module, schema_in),  # type: ignore
         primary_key: int,
         db: AsyncSession = Depends(get_async_session),
-        # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
     ) -> Base | None:
         """
         Update a single record in the database.
@@ -247,7 +246,6 @@ def generate_router(
     async def create_one(
         body: getattr(schema_module, schema_in),  # type: ignore
         db: AsyncSession = Depends(get_async_session),
-        # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
     ) -> EvtpAcc | Base:
         """
         Create a new record.

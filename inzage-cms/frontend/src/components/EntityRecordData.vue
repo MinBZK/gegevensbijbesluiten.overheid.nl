@@ -220,7 +220,8 @@ export default defineComponent({
       handler() {
         this.inputValue = this.record
         // prefill evtp in evtp-ond
-        if ((this.evtpCd) && this.table.resource == 'evtp-ond') {
+
+        if ((this.evtpCd) && (this.table.resource == 'evtp-ond' || this.table.resource == 'evtp-oe-com-type')) {
           this.inputValue = {}
           this.inputValue['evtp_cd'] = this.evtpCd
           this.inputValue['versie_nr'] = this.versieNr
@@ -362,9 +363,12 @@ export default defineComponent({
       if (isMappedField) {
         const originalKey = this.mapForeignKeyToOriginalKey(fieldKey)
         const foreignKey = this.getForeignKey(fieldKey)
-        if (foreignKey) {
+        if (foreignKey && v) {
           const foreignId = v ? v[foreignKey.foreign_table.primary_key] : null
           this.adjustedRecord[originalKey] = foreignId
+          if ((foreignKey.foreign_resource == 'evtp-version') || ((foreignKey.foreign_resource == 'gst') && this.tableModel.resource != 'evtp-gst')){
+            this.adjustedRecord['versie_nr'] = v.versie_nr
+          }
         }
       } else {
         this.adjustedRecord[fieldKey] = v

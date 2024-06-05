@@ -20,15 +20,14 @@ class Rule8(SuperRule):
     def applyRule(self, evtp_structure):
         results = []
         for gst_object in evtp_structure.get("entities_evtp_gst"):
-            if len(gst_object.get("entity_gst").get("entities_gst_gstt")) > 0:
+            if len(gst_object.get("entities_gst_gstt")) > 0:
                 continue
             else:
                 results.append(
                     {
                         "result": True,
-                        "gst": gst_object.get("entity_gst").get("omschrijving"),
-                        "feedback_message": self.get_feedback_message
-                        % (gst_object.get("entity_gst").get("omschrijving"),),
+                        "gst": gst_object.get("omschrijving"),
+                        "feedback_message": self.get_feedback_message % (gst_object.get("omschrijving"),),
                     }
                 )
 

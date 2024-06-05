@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import app.crud as crud
 import app.schemas as schemas
-from app.api import dependencies
 from app.database.database import get_async_session
 
 # Setup logger
@@ -37,15 +36,13 @@ def healthcheck_backend() -> Literal["OK"]:
 
 
 @router.get("/login/verifieer", response_model=schemas.gebruiker.Gebruiker)
-def verify_login(
-    current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
-) -> schemas.gebruiker.Gebruiker:
+def verify_login() -> schemas.gebruiker.Gebruiker:
     """
     Verifies whether a user is logged on or not.
 
     Returns: The logged on user if a user is logged on, HTTP 401 otherwise.
     """
-    return current_gebruiker
+    return "current_gebruiker"
 
 
 @router.get("/pod-env")

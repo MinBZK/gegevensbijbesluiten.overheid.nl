@@ -4,6 +4,8 @@ export type EvtpVersion = {
   evtp_cd_sup: number
   evtp_nm: string
   omschrijving: string
+  overige_informatie: string
+  overige_informatie_link: string
   aanleiding: string
   gebr_dl: string
   oe_best: number
@@ -17,5 +19,4 @@ export type EvtpVersion = {
   user_nm: string
   ts_mut: Date
   ts_start: Date
-  ts_end: Date
 }

@@ -41,9 +41,9 @@ class EvtpAcc(Base):
     notitie: Mapped[str | None] = mapped_column(VARCHAR(4000), comment="Notitieveld")
     user_nm: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Gebruikersnaam", server_default="ICTU")
 
-    entity_evtp: Mapped["EvtpVersion"] = relationship(  # noqa: F821
+    entity_evtp_version: Mapped["EvtpVersion"] = relationship(  # type: ignore # noqa: F821
         "EvtpVersion",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpAcc.evtp_cd, EvtpVersion.ts_start < EvtpAcc.ts_acc, EvtpVersion.ts_end > EvtpAcc.ts_acc)",
     )
-    entity_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_cd])  # noqa: F821
-    entity_bestand: Mapped["BestandAcc"] = relationship("BestandAcc", foreign_keys=[bestand_acc_cd])  # noqa: F821
+    entity_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_cd])  # type: ignore # noqa: F821
+    entity_bestand: Mapped["BestandAcc"] = relationship("BestandAcc", foreign_keys=[bestand_acc_cd])  # type: ignore # noqa: F821

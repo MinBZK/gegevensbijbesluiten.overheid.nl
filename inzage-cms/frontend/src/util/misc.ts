@@ -14,6 +14,9 @@ const getTableValue = (
   foreignKey: TableModelForeignKey | undefined,
   value: string
 ) => {
+  if (typeof(value) == "function"){
+    return ''
+  }
   if (foreignKey) {
     return value ? value[foreignKey.foreign_table.description_key] : value
   } else {
@@ -56,7 +59,7 @@ const formatDateToLocale = (fieldKey: string, recordData: string) => {
   if ((fieldKey === 'ts_mut' || fieldKey === 'ts_publ') && recordData) {
     const dateString = recordData.toString()
     const date = moment(dateString).utcOffset(2)
-    return date.locale('nl').format('D MMMM YYYY HH:mm')
+    return date.locale('nl').format('DD-MM-YYYY HH:mm')
   }
   return recordData || ''
 }

@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    {{ getFilterOnAttribute }}
     <h1>{{ table?.label }}</h1>
     <v-container fill-height>
       <v-row

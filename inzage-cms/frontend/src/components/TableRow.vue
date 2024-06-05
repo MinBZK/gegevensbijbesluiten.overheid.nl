@@ -167,6 +167,7 @@ import store from '@/store/index'
 import { TableModelForeignKey } from '@/types/Tables'
 import { getTableValue, formatDateToLocale } from '@/util/misc'
 import axios from 'axios'
+import { getPublicatieStatus } from '@/types/PublicatieStatus'
 
 export default defineComponent({
   name: 'TableRow',
@@ -224,13 +225,21 @@ export default defineComponent({
     getValue(column) {
       const foreignKey = this.getForeignKey(column)
       const value = getTableValue(foreignKey, this.row[column])
-      const versionNumber = ['entity_evtp', 'entity_evtp_oe_com_type'].includes(column) ? this.row[column]['versie_nr'] : 0
+      const versionNumber = ['entity_evtp_version', 'entity_evtp_version_oe_com_type'].includes(column) ? this.row[column]['versie_nr'] : 0
       const maxLength = 100
+
+      // Helper function
+      const formatPublicatiestatus = (val) => {
+        if (['id_publicatiestatus'].includes(column)) {
+          return getPublicatieStatus(val)
+        }
+        return val
+      }
 
       // Helper function to format the value with version number
       const formatValueWithVersion = (val) => {
         if (versionNumber) {
-          return `${val} versie: ${versionNumber}`
+          return `${val} `
         }
         return val
       }
@@ -245,7 +254,8 @@ export default defineComponent({
 
       const valueFormatted = formatDateToLocale(column, value)
       const formattedValueWithVersion = formatValueWithVersion(valueFormatted)
-      return truncateValue(formattedValueWithVersion)
+      const formatted3 = formatPublicatiestatus(formattedValueWithVersion)
+      return truncateValue(formatted3)
     },
     async deleteObject(id: string) {
       try {

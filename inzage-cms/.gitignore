@@ -28,3 +28,5 @@ d/\\tmp*
 env_windows
 backend/.env
 mnt
+.docker
+inzage-cms

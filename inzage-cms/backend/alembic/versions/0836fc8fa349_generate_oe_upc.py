@@ -7,9 +7,8 @@ Create Date: 2024-02-28 13:19:45.887522
 """
 
 import sqlalchemy as sa
-from numpy import random
-
 from alembic import op
+from numpy import random
 
 # revision identifiers, used by Alembic.
 revision = "0836fc8fa349"

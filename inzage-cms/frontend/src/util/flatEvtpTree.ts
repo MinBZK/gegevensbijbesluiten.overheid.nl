@@ -17,6 +17,8 @@ const gst = (record) => {
       (gst, index) =>
         (gst['conditie'] = record.entities_evtp_gst[index].conditie)
     )
+    gst.map((gst, index) => (gst['entities_gst_gstt'] = record.entities_evtp_gst[index].entities_gst_gstt))
+    gst.map((gst, index) => (gst['entities_gst_rge'] = record.entities_evtp_gst[index].entities_gst_rge))
     return gst
   } catch {
     return null
@@ -36,6 +38,18 @@ const ond = (record) => {
   }
 }
 
+const oeComType = (record) => {
+  try {
+    const oeComType = record.entities_evtp_oe_com_type.map((item) => item.entity_oe_com_type)
+    oeComType.map(
+      (oeComType, index) =>
+        (oeComType['evtp_oe_com_type_cd'] = record.entities_evtp_oe_com_type[index].evtp_oe_com_type_cd)
+    )
+    return oeComType
+  } catch {
+    return null
+  }
+}
 
 const gstCd = (record) => {
   try {
@@ -62,21 +76,20 @@ const gstGgCd = (record) => {
 const gstGsttype = (record) => {
   try {
     const evtpGst = record.entities_evtp_gst.map((evtp_gst) =>
-      evtp_gst.entity_gst.entities_gst_gstt.map((gst_gstt) => gst_gstt.entity_gsttype)
+      evtp_gst.entities_gst_gstt.map((gst_gstt) => gst_gstt.entity_gst_type)
     )
 
     const gst_gstt_cd_list = record.entities_evtp_gst.map((item) =>
-      item.entity_gst
-    .entities_gst_gstt.map((gst_gstt) => gst_gstt.gst_gstt_cd)
+      item.entities_gst_gstt.map((gst_gstt) => gst_gstt.gst_gstt_cd)
     )
     evtpGst.forEach((object, index) =>
       object.map(
-        (evtpGst, subIndex) => (evtpGst['gst_gstt_cd'] = gst_gstt_cd_list[index][subIndex])
+        (evtpGst, subIndex) =>
+          (evtpGst['gst_gstt_cd'] = gst_gstt_cd_list[index][subIndex])
       )
     )
     return evtpGst
-
-  } catch (error){
+  } catch (error) {
     return null
   }
 }
@@ -190,20 +203,16 @@ const ibronGgOrgEenheid = (record) => {
 
 const gg = (record) => {
   try {
+    record.entities_evtp_gst.forEach((evtp_gst) =>
+      evtp_gst.entities_gst_gg.forEach((gst_gg) => {
+        gst_gg.entity_gg['gst_gg_cd'] = gst_gg.gst_gg_cd
+        gst_gg.entity_gg['sort_key'] = gst_gg.sort_key || 1000
+      })
+    )
+
     const gg = record.entities_evtp_gst.map((evtp_gst) =>
       evtp_gst.entities_gst_gg.map((gst_gg) => gst_gg.entity_gg)
     )
-
-    const gst_gg_cd_list = record.entities_evtp_gst.map((evtp_gst) =>
-      evtp_gst.entities_gst_gg.map((gst_gg) => gst_gg.gst_gg_cd)
-    )
-
-    gg.forEach((object, index) =>
-      object.map(
-        (gg, subIndex) => (gg['gst_gg_cd'] = gst_gg_cd_list[index][subIndex])
-      )
-    )
-
     return gg
   } catch {
     return null
@@ -234,13 +243,16 @@ const rge = (record) => {
     const gst_rge_cd_list = record.entities_evtp_gst.map((evtp_gst) =>
       evtp_gst.entities_gst_rge.map((gst_rge) => gst_rge.gst_rge_cd)
     )
-
-    rge.forEach((object, index) =>
-      object.map(
-        (rge, subIndex) =>
-          (rge['gst_rge_cd'] = gst_rge_cd_list[index][subIndex])
-      )
+    const gst_rge_sort_key = record.entities_evtp_gst.map((evtp_gst) =>
+      evtp_gst.entities_gst_rge.map((gst_rge) => gst_rge.sort_key || 1000)
     )
+    rge.forEach((object, index) =>
+      object.forEach((rge, subIndex) => {
+        rge['gst_rge_cd'] = gst_rge_cd_list[index][subIndex]
+        rge['sort_key'] = gst_rge_sort_key[index][subIndex]
+      })
+    )
+
     return rge
   } catch {
     return null
@@ -250,6 +262,7 @@ const rge = (record) => {
 export {
   gstGsttype,
   ond,
+  oeComType,
   evtpCd,
   versieNr,
   gst,

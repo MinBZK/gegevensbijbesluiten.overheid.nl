@@ -31,6 +31,8 @@ class EvtpVersion(BaseModel):
     id_publicatiestatus: int
     ts_publ: datetime | None
     notitie: str | None
+    overige_informatie: str | None = None
+    overige_informatie_link: str | None = None
     user_nm: str
     ts_mut: datetime
 
@@ -58,6 +60,7 @@ class EvtpMinimalListIncludingVersions(BaseModel):
     evtp_cd: int
     evtp_nm: str
     versie_nr: int
+    id_publicatiestatus: int
 
 
 class EvtpVersionWithRelations(EvtpVersion):
@@ -70,6 +73,8 @@ class EvtpVersionIn(BaseModel):
     evtp_cd_sup: int | None = None
     evtp_nm: str
     omschrijving: str
+    overige_informatie: str | None = None
+    overige_informatie_link: str | None = None
     uri: str | None = None
     aanleiding: str
     gebr_dl: str

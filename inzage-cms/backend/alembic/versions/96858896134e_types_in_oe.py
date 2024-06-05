@@ -6,9 +6,8 @@ Create Date: 2023-05-26 13:54:02.201532
 
 """
 
-from sqlalchemy import BIGINT, VARCHAR
-
 from alembic import op
+from sqlalchemy import BIGINT, VARCHAR
 
 # revision identifiers, used by Alembic.
 revision = "96858896134e"

@@ -32,8 +32,7 @@
       </tr>
       <tr>
         <v-btn
-          v-if="
-            relation.resource == 'gst' && resource.conditie && !disableEvtp
+          v-if="relation.resource == 'gst' && resource.conditie && !disableEvtp
           "
           width="20"
           height="20"
@@ -45,14 +44,12 @@
         />
 
         <v-btn
-          v-if="
-            relation.resource == 'gst' && !resource.conditie && !disableEvtp
+          v-if="relation.resource == 'gst' && !resource.conditie && !disableEvtp
           "
           color="primary"
           variant="plain"
           size="x-small"
-
-          :to="getEvtpGstRecordHref(resource.evtp_gst_cd)"
+          :to="getEvtpGstRecordHref(resource.evtp_gst_cd, versieNr)"
         >
           <v-icon> mdi-asterisk </v-icon>
         </v-btn>
@@ -66,7 +63,7 @@
     variant="outlined"
     :to="{
       name: 'newEntityGstWithRelation',
-      params: { evtpCd: evtpCd, recordResource: relation.resource },
+      params: { evtpCd: evtpCd, recordResource: relation.resource, versieNr: versieNr },
       query: {
         redirect: $route.fullPath,
       },
@@ -100,6 +97,10 @@ export default defineComponent({
       type: [String, Number],
       required: true,
     },
+    versieNr: {
+      type: [String, Number],
+      required: true,
+    },
     gstGgCd: {
       type: Object,
       required: true,
@@ -119,28 +120,39 @@ export default defineComponent({
   methods: {
     async deleteGst(gstObject, index) {
       // 1. Delete gst_gg
-      const postPromisesgstGg = await this.getgstGg[index].map((gst_gg) => {
+      const postPromisesGstGg = await this.getgstGg[index].map((gst_gg) => {
         axios.delete(`${store.state.APIurl}/gst-gg/${gst_gg}`)
       })
 
       // 2. Delete evtp_gst
-      const postPromisesEvtpGst = axios.delete(
+      const postPromisesEvtpGst = await axios.delete(
         `${store.state.APIurl}/evtp-gst/${gstObject.evtp_gst_cd}`
       )
 
       // 3. Delete gst_gstt
-      const postPromisesGstGsttype = await gstObject.entities_gst_gstt.map(
-        (gst_gsttype) => {
+      const postPromisesGstGstt = await gstObject.entities_gst_gstt.map(
+        (gst_gstt) => {
           axios.delete(
-            `${store.state.APIurl}/gst-gstt/${gst_gsttype.gst_gstt_cd}`
+            `${store.state.APIurl}/gst-gstt/${gst_gstt.gst_gstt_cd}`
           )
         }
       )
 
+      // 4. Delete gst_rge
+      const postPromisesGstRge = await gstObject.entities_gst_rge.map(
+        (gst_rge) => {
+          axios.delete(
+            `${store.state.APIurl}/gst-rge/${gst_rge.gst_rge_cd}`
+          )
+        }
+      )
+
+
       const postPromise = [
         postPromisesEvtpGst,
-        postPromisesgstGg,
-        postPromisesGstGsttype,
+        postPromisesGstGg,
+        postPromisesGstGstt,
+        postPromisesGstRge,
       ]
       Promise.all(postPromise)
         .then(() => {
@@ -199,17 +211,18 @@ export default defineComponent({
         },
       }).href
     },
-    getEvtpGstRecordHref(evtp_gst_cd) {
+    getEvtpGstRecordHref(evtp_gst_cd, versie_nr) {
       return this.$router.resolve({
-        name: 'entityRecord',
+        name: 'entityGstRecord',
         params: {
           id: evtp_gst_cd,
+          versieNr: versie_nr,
           resource: 'evtp-gst',
           recordResource: 'evtp-gst',
           tab: 'data',
         },
         query: {
-            redirect: this.$route.fullPath
+          redirect: this.$route.fullPath
         },
       }).href
     },
@@ -219,6 +232,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '/src/styles/styles.scss';
+
 .condition {
   font-style: italic;
   color: black;
