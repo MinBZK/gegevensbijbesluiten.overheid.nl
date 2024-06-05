@@ -99,6 +99,27 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: 'gst-record/:recordResource/:id/:tab/:versieNr',
+        name: 'entityGstRecord',
+        component: DialogRouter,
+        props: (route) => {
+          const table = tables.find(
+            (t) => t.resource == route.params.recordResource
+          )
+          return {
+            component: EntityRecord,
+            title: table ? table.label : 'Record',
+            maxWidthDialog: table?.maxWidthDialog,
+            childProps: {
+              resource: route.params.recordResource,
+              id: route.params.id,
+              versieNr: route.params.versieNr,
+              tab: 'data'
+            },
+          }
+        },
+      },
+      {
         path: 'new-version/:recordResource/:id/:versieNr',
         name: 'newEvtpVersion',
         component: DialogRouter,
@@ -182,7 +203,7 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: 'new-gst-with-relation/:recordResource/:evtpCd',
+        path: 'new-gst-with-relation/:recordResource/:evtpCd/:versieNr',
         name: 'newEntityGstWithRelation',
         component: DialogRouter,
         props: (route) => {
@@ -195,6 +216,7 @@ const routes: Array<RouteRecordRaw> = [
             maxWidthDialog: table?.maxWidthDialog,
             childProps: {
               evtpCd: route.params.evtpCd,
+              versieNr: route.params.versieNr,
               resource: route.params.recordResource,
               tab: 'data',
             },
@@ -202,7 +224,7 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: 'new-evtp-ond-with-relation/:recordResource/:evtpCd',
+        path: 'new-evtp-ond-with-relation/:recordResource/:evtpCd/:versieNr',
         name: 'newEntityEvtpOndWithRelation',
         component: DialogRouter,
         props: (route) => {
@@ -215,6 +237,7 @@ const routes: Array<RouteRecordRaw> = [
             maxWidthDialog: table?.maxWidthDialog,
             childProps: {
               evtpCd: route.params.evtpCd,
+              versieNr: route.params.versieNr,
               resource: route.params.recordResource,
               tab: 'data',
             },
@@ -222,7 +245,30 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: 'new-gst-gg-with-relation/:recordResource/:gstCd',
+        path: 'new-evtp-oe-com-type-relation/:recordResource/:evtpCd/:versieNr',
+        name: 'newEntityEvtpOeComTypeWithRelation',
+        component: DialogRouter,
+        props: (route) => {
+          const table = tables.find(
+            (t) => t.resource == route.params.recordResource
+          )
+          return {
+            component: EntityRecord,
+            title: table ? table.label : 'Record',
+            maxWidthDialog: table?.maxWidthDialog,
+            childProps: {
+              evtpCd: route.params.evtpCd,
+              versieNr: route.params.versieNr,
+              resource: route.params.recordResource,
+              tab: 'data',
+            },
+          }
+        },
+      },
+
+
+      {
+        path: 'new-gst-gg-with-relation/:recordResource/:gstCd/:versieNr',
         name: 'newEntityGstGgWithRelation',
         component: DialogRouter,
         props: (route) => {
@@ -235,6 +281,7 @@ const routes: Array<RouteRecordRaw> = [
             maxWidthDialog: table?.maxWidthDialog,
             childProps: {
               gstCd: route.params.gstCd,
+              versieNr: route.params.versieNr,
               resource: route.params.recordResource,
               tab: 'data',
             },
@@ -242,7 +289,7 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: 'new-gst-rge-with-relation/:recordResource/:gstCd',
+        path: 'new-gst-rge-with-relation/:recordResource/:gstCd/:versieNr',
         name: 'newEntityGstRgeWithRelation',
         component: DialogRouter,
         props: (route) => {
@@ -255,6 +302,7 @@ const routes: Array<RouteRecordRaw> = [
             maxWidthDialog: table?.maxWidthDialog,
             childProps: {
               gstCd: route.params.gstCd,
+              versieNr: route.params.versieNr,
               resource: route.params.recordResource,
               tab: 'data',
             },
@@ -262,7 +310,7 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: 'new-gst-gstt-with-relation/:recordResource/:gstCd',
+        path: 'new-gst-gstt-with-relation/:recordResource/:gstCd/:versieNr',
         name: 'newEntityGstGsttWithRelation',
         component: DialogRouter,
         props: (route) => {
@@ -275,6 +323,7 @@ const routes: Array<RouteRecordRaw> = [
             maxWidthDialog: table?.maxWidthDialog,
             childProps: {
               gstCd: route.params.gstCd,
+              versieNr: route.params.versieNr,
               resource: route.params.recordResource,
               tab: 'data',
             },

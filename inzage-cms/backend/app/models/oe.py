@@ -1,5 +1,4 @@
 from sqlalchemy import VARCHAR, Boolean, ForeignKey, Integer
-from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -42,8 +41,8 @@ class Oe(Base, DefaultColumns):
     straat: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Straatnaam")
     telefoon: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Telefoonnummer")
 
-    entity_ibron: Mapped["Ibron"] = relationship("Ibron", foreign_keys=[ibron_cd])  # noqa: F821
-
+    # Relationships
+    entity_ibron: Mapped["Ibron"] = relationship("Ibron", foreign_keys=[ibron_cd])  # type: ignore # noqa: F821
     parent_entities: Mapped[list["OeStruct"]] = relationship(
         "OeStruct",
         primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sub",
@@ -79,15 +78,13 @@ class OeStruct(Base, DefaultColumns):
     oe_cd_sup: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Sup (parent) organisatie code")
     koepel: Mapped[bool | None] = mapped_column(Boolean, comment="Wel of geen koepel")
 
+    # Relationships
     parent_entity: Mapped["Oe"] = relationship(
         "Oe",
         foreign_keys=[oe_cd_sup],
         back_populates="child_entities",
     )
     child_entity: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_cd_sub], back_populates="parent_entities")
-
-    parent_entity_omschrijving = association_proxy("parent_entity", "naam_officieel")
-    child_entity_omschrijving = association_proxy("child_entity", "naam_officieel")
 
 
 class OeComType(Base, DefaultColumns):
@@ -101,7 +98,8 @@ class OeComType(Base, DefaultColumns):
     oe_com_type_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Communicatiekanaal type code")
     omschrijving: Mapped[str] = mapped_column(VARCHAR(4000), comment="Omschrijving van het kanaal")
 
-    entities_oe_com_type: Mapped["EvtpOeComType"] = relationship(  # noqa: F821
+    # Relationships
+    entities_oe_com_type: Mapped["EvtpOeComType"] = relationship(  # type: ignore # noqa: F821
         "EvtpOeComType",
         primaryjoin="OeComType.oe_com_type_cd == EvtpOeComType.oe_com_type_cd",
         back_populates="entity_oe_com_type",

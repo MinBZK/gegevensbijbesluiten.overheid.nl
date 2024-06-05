@@ -13,6 +13,7 @@ if TYPE_CHECKING:  # Fix circular import
 
 class EvtpGst(BaseModel):
     evtp_gst_cd: int
+    versie_nr: int
     conditie: str | None
     evtp_cd: int
     gst_cd: int
@@ -20,6 +21,7 @@ class EvtpGst(BaseModel):
     sort_key: int | None
     user_nm: str
     ts_mut: datetime
+    ts_end: datetime
 
 
 class EvtpGstMinimalList(BaseModel):
@@ -28,12 +30,13 @@ class EvtpGstMinimalList(BaseModel):
 
 class EvtpGstWithRelations(EvtpGst):
     entity_gst: GstMinimalList
-    entity_evtp: EvtpVersionMinimalList
+    entity_evtp_version: EvtpVersionMinimalList
 
 
 class EvtpGstIn(BaseModel):
     conditie: str | None = None
     evtp_cd: int
     gst_cd: int
+    versie_nr: int
     notitie: str | None = None
     sort_key: int | None = None

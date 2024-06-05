@@ -12,10 +12,12 @@ class GstGg(BaseModel):
     gst_gg_cd: int
     gg_cd: int
     gst_cd: int
+    versie_nr: int
     notitie: str | None
     user_nm: str
     ts_mut: datetime
     sort_key: int | None
+    ts_end: datetime
 
 
 class GstGgMinimalList(BaseModel):
@@ -30,5 +32,6 @@ class GstGgWithRelations(GstGg):
 class GstGgIn(BaseModel):
     gg_cd: int
     gst_cd: int
+    versie_nr: int
     notitie: str | None = None
     sort_key: int | None = None

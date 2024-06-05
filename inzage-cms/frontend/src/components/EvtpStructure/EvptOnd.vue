@@ -18,6 +18,14 @@
         variant="outlined"
         @click="() => deleteOnd(resource)"
       />
+      <v-btn
+        v-if="relation.resource == 'oe-com-type' && !disableEvtp"
+        class="btn-relation"
+        icon="mdi-close"
+        size="x-small"
+        variant="outlined"
+        @click="() => deleteOeComType(resource)"
+      />
     </td>
   </tr>
   <br>
@@ -29,7 +37,27 @@
       name: 'newEntityEvtpOndWithRelation',
       params: {
         evtpCd: evtpCd,
+        versieNr: versieNr,
         recordResource: 'evtp-ond'
+      },
+      query: {
+        redirect: $route.fullPath,
+      },
+    }"
+  >
+    <v-icon> mdi-plus-box-outline </v-icon>
+  </v-btn>
+
+  <v-btn
+    v-if="relation.resource == 'oe-com-type' && !disableEvtp"
+    color="primary"
+    variant="outlined"
+    :to="{
+      name: 'newEntityEvtpOeComTypeWithRelation',
+      params: {
+        evtpCd: evtpCd,
+        versieNr: versieNr,
+        recordResource: 'evtp-oe-com-type'
       },
       query: {
         redirect: $route.fullPath,
@@ -64,6 +92,10 @@ export default defineComponent({
       type: [String, Number],
       required: true,
     },
+    versieNr: {
+      type: [String, Number],
+      required: true,
+    },
     disableEvtp: {
       type: Boolean,
       default: false,
@@ -72,6 +104,32 @@ export default defineComponent({
   },
   emits: ['recordUpdated'],
   methods: {
+    async deleteOeComType(oeComTypeObject) {
+      const postPromisesoeoeComType = axios.delete(
+        `${store.state.APIurl}/evtp-oe-com-type/${oeComTypeObject.evtp_oe_com_type_cd}`
+      )
+      const postPromise = [
+      postPromisesoeoeComType,
+      ]
+      Promise.all(postPromise)
+        .then(() => {
+          store.commit('activateSnackbar', {
+            show: true,
+            text: store.state.snackbar.succesfullDeletion,
+            color: store.state.snackbar.succes_color,
+          })
+        })
+        .catch(() => {
+          store.commit('activateSnackbar', {
+            show: true,
+            text: store.state.snackbar.unknown,
+            color: store.state.snackbar.error_color,
+          })
+        })
+        .finally(() => {
+          this.$emit('recordUpdated')
+        })
+    },
     async deleteOnd(ondObject) {
       // 2. Delete evtp_ond
       const postPromisesEvtpOnd = axios.delete(

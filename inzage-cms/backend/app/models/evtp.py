@@ -41,6 +41,12 @@ class EvtpVersion(Base, DefaultColumns):
     )
     evtp_nm: Mapped[str] = mapped_column(VARCHAR(200), comment="Naam van besluit")
     omschrijving: Mapped[str | None] = mapped_column(VARCHAR(2000), comment="Omschrijving het besluit")
+
+    overige_informatie: Mapped[str | None] = mapped_column(VARCHAR(4000), comment="Extra informatie over het besluit")
+    overige_informatie_link: Mapped[str | None] = mapped_column(
+        VARCHAR(2000), comment="Link naar extra informatie over het besluit"
+    )
+
     aanleiding: Mapped[str] = mapped_column(VARCHAR(2000), comment="Aanleiding van het nemen van een besluit")
     gebr_dl: Mapped[str] = mapped_column(VARCHAR(200), comment="Gebruiksdoel van het besluit")
     oe_best: Mapped[int | None] = mapped_column(
@@ -61,33 +67,31 @@ class EvtpVersion(Base, DefaultColumns):
     id_publicatiestatus: Mapped[int] = mapped_column(Integer, comment="Publicatie nummer voor een besluit")
     ts_publ: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), comment="Tijdstip publicatie")
 
-    evtp_upc = association_proxy("entity_evtp", "evtp_upc")
+    # Association proxy
+    evtp_upc = association_proxy("entity_evtp_version", "evtp_upc")
 
-    verantwoordelijke_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_best])  # noqa: F821
-
+    # Relationships
+    verantwoordelijke_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_best])  # type: ignore # type: ignore # noqa: F821
     parent_evtp: Mapped["EvtpVersion"] = relationship(
         "EvtpVersion",
         primaryjoin="and_(EvtpVersion.evtp_cd_sup == remote(EvtpVersion.evtp_cd), remote(EvtpVersion.ts_start) < func.now(), remote(EvtpVersion.ts_end) > func.now())",
         remote_side=[evtp_cd],
         viewonly=True,
     )
-
     entities_evtp_gst: Mapped[list["EvtpGst"]] = relationship(
         "EvtpGst",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpGst.evtp_cd, EvtpVersion.id_publicatiestatus < 4, EvtpVersion.ts_start < EvtpGst.ts_end, EvtpVersion.ts_end > EvtpGst.ts_start)",
-        back_populates="entity_evtp",
+        back_populates="entity_evtp_version",
     )
-
     entities_evtp_oe_com_type: Mapped[list["EvtpOeComType"]] = relationship(
         "EvtpOeComType",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpOeComType.evtp_cd, EvtpVersion.ts_start < EvtpOeComType.ts_end, EvtpVersion.ts_end > EvtpOeComType.ts_start)",
-        back_populates="entity_evtp_oe_com_type",
+        back_populates="entity_evtp_version_oe_com_type",
     )
-
-    entities_evtp_ond: Mapped[list["EvtpOnd"]] = relationship(  # noqa: F821
+    entities_evtp_ond: Mapped[list["EvtpOnd"]] = relationship(  # type: ignore # type: ignore # noqa: F821
         "EvtpOnd",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpOnd.evtp_cd, EvtpVersion.ts_start < EvtpOnd.ts_end, EvtpVersion.ts_end > EvtpOnd.ts_start)",
-        back_populates="entity_evtp",
+        back_populates="entity_evtp_version",
     )
 
     @hybrid_property
@@ -106,6 +110,7 @@ class EvtpGst(Base, DefaultColumns):
     evtp_gst_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Besluit gegevensstroom code")
     evtp_cd: Mapped[int] = mapped_column(Integer, ForeignKey("evtp_version.evtp_cd"), comment="Besluit code")
     gst_cd: Mapped[int] = mapped_column(Integer, ForeignKey("gst.gst_cd"), comment="Gegevensstroom code")
+    versie_nr: Mapped[int] = mapped_column(Integer, comment="Versie nummer van de besluit gegevensstroom koppeling ")
     conditie: Mapped[str | None] = mapped_column(
         VARCHAR(4000),
         comment="Toelichting van een conditie waaronder de gegevensstroom plaatsvindt, bijvoorbeeld ziek worden, wel of geen werk hebben, etc.",
@@ -115,26 +120,29 @@ class EvtpGst(Base, DefaultColumns):
         comment="Sorteersleutel om de gegevensstromen blokken te ordenen binnen een koepelgegeven van een besluit",
     )
 
-    entity_gst: Mapped["Gst"] = relationship(  # noqa: F821
+    # Relationships
+    entity_gst: Mapped["Gst"] = relationship(  # type: ignore # noqa: F821
         "Gst",
         primaryjoin="EvtpGst.gst_cd == Gst.gst_cd",
     )
-
-    entity_evtp: Mapped["EvtpVersion"] = relationship(
+    entity_evtp_version: Mapped["EvtpVersion"] = relationship(
         "EvtpVersion",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpGst.evtp_cd, EvtpVersion.ts_start < EvtpGst.ts_end, EvtpVersion.ts_end > EvtpGst.ts_start)",
         back_populates="entities_evtp_gst",
     )
-
-    entities_gst_gg: Mapped[list["GstGg"]] = relationship(  # noqa: F821
-        "GstGg",
-        primaryjoin="and_(EvtpGst.gst_cd == foreign(GstGg.gst_cd), EvtpGst.ts_start < foreign(GstGg.ts_end), EvtpGst.ts_end >= foreign(GstGg.ts_end))",
+    entities_gst_gstt: Mapped[list["GstGstt"]] = relationship(  # type: ignore # noqa: F821
+        "GstGstt",
+        primaryjoin="and_(EvtpGst.gst_cd == foreign(GstGstt.gst_cd), GstGstt.ts_end > EvtpGst.ts_start, GstGstt.ts_start < EvtpGst.ts_end)",
         viewonly=True,
     )
-
-    entities_gst_rge: Mapped[list["GstRge"]] = relationship(  # noqa: F821
+    entities_gst_gg: Mapped[list["GstGg"]] = relationship(  # type: ignore # noqa: F821
+        "GstGg",
+        primaryjoin="and_(EvtpGst.gst_cd == foreign(GstGg.gst_cd), EvtpGst.ts_start < foreign(GstGg.ts_end), EvtpGst.ts_end > foreign(GstGg.ts_start))",
+        viewonly=True,
+    )
+    entities_gst_rge: Mapped[list["GstRge"]] = relationship(  # type: ignore # noqa: F821
         "GstRge",
-        primaryjoin="and_(EvtpGst.gst_cd == foreign(GstRge.gst_cd), EvtpGst.ts_start < foreign(GstRge.ts_end), EvtpGst.ts_end >= foreign(GstRge.ts_end))",
+        primaryjoin="and_(EvtpGst.gst_cd == foreign(GstRge.gst_cd), EvtpGst.ts_start < foreign(GstRge.ts_end), EvtpGst.ts_end > foreign(GstRge.ts_start))",
         viewonly=True,
     )
 
@@ -151,6 +159,9 @@ class EvtpOeComType(Base, DefaultColumns):
         Integer, primary_key=True, comment="Besluit bestemmingsorganisatie communicatie kanaal code"
     )
     evtp_cd: Mapped[int] = mapped_column(Integer, ForeignKey("evtp_version.evtp_cd"), comment="Besluit code")
+    versie_nr: Mapped[int] = mapped_column(
+        Integer, comment="Versie nummer van de gegevensstroom bestemmingsorganisatie communicatie koppeling"
+    )
     oe_com_type_cd: Mapped[int] = mapped_column(
         Integer, ForeignKey("oe_com_type.oe_com_type_cd"), comment="Communicatiekanaal type code"
     )
@@ -158,12 +169,12 @@ class EvtpOeComType(Base, DefaultColumns):
         VARCHAR(2000), comment="Hyperlink waar de burger de uitkomst van het besluit ontvangt"
     )
 
-    entity_evtp_oe_com_type: Mapped["EvtpVersion"] = relationship(
+    # Relationships
+    entity_evtp_version_oe_com_type: Mapped["EvtpVersion"] = relationship(
         "EvtpVersion",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpOeComType.evtp_cd, EvtpVersion.ts_start < EvtpOeComType.ts_end, EvtpVersion.ts_end > EvtpOeComType.ts_start)",
     )
-
-    entity_oe_com_type: Mapped["OeComType"] = relationship(  # noqa: F821
+    entity_oe_com_type: Mapped["OeComType"] = relationship(  # type: ignore # noqa: F821
         "OeComType",
         foreign_keys=[oe_com_type_cd],
     )

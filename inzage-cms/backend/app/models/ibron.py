@@ -17,6 +17,6 @@ class Ibron(Base, DefaultColumns):
     oe_cd: Mapped[int | None] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Organisatie code")
     omschrijving: Mapped[str] = mapped_column(VARCHAR(80), comment="Omschrijving van de bron")
 
-    entity_oe: Mapped["Oe"] = relationship(  # noqa: F821
+    entity_oe: Mapped["Oe"] = relationship(  # type: ignore # noqa: F821
         foreign_keys=[oe_cd],
     )

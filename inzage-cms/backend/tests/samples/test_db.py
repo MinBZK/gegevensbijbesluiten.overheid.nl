@@ -2,12 +2,11 @@ import logging
 from dataclasses import dataclass
 from typing import NamedTuple
 
-import pytest
-from sqlalchemy import select
-
 import app.models as models
 import app.schemas as schemas
+import pytest
 from app.config.resource import TableResource
+from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 
@@ -145,12 +144,14 @@ def resource_payloads(resource_pks):
         evtp_gst=schemas.evtp_gst.EvtpGstIn(
             conditie=standard_text,
             evtp_cd=standard_value,
+            versie_nr=standard_value,
             gst_cd=standard_value,
             notitie=standard_text,
             sort_key=standard_value,
         ),
         evtp_oe_com_type=schemas.evtp_oe_com_type.EvtpOeComTypeIn(
             evtp_cd=standard_value,
+            versie_nr=standard_value,
             oe_com_type_cd=standard_value,
             link=standard_text,
         ),
@@ -162,6 +163,7 @@ def resource_payloads(resource_pks):
         gst_gg=schemas.gst_gg.GstGgIn(
             gg_cd=standard_value,
             gst_cd=standard_value,
+            versie_nr=standard_value,
             notitie=standard_text,
             sort_key=standard_value,
         ),
@@ -172,6 +174,7 @@ def resource_payloads(resource_pks):
         ),
         gst_gstt=schemas.gst_gstt.GstGsttIn(
             gst_cd=standard_value,
+            versie_nr=standard_value,
             gstt_cd=standard_value,
         ),
         gst=schemas.gst.GstIn(
@@ -232,6 +235,7 @@ def resource_payloads(resource_pks):
         ),
         evtp_ond=schemas.evtp_ond.EvtpOndIn(
             evtp_cd=standard_value,
+            versie_nr=standard_value,
             ond_cd=standard_value,
         ),
     )

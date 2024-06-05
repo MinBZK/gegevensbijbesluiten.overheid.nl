@@ -23,7 +23,7 @@ class GgEvtpSortMinimalList(GgEvtpSort):
 
 class GgEvtpSortWithRelations(GgEvtpSort):
     entity_gg: GgMinimalList
-    entity_evtp: EvtpVersionMinimalList
+    entity_evtp_version: EvtpVersionMinimalList
 
 
 class GgEvtpSortIn(BaseModel):

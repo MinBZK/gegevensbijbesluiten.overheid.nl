@@ -9,7 +9,7 @@
       :dot-color="relation.color"
       size="small"
       :icon="relation.icon"
-      width="100%"
+      :width="relation.width"
     >
       <template #opposite>
         <br>
@@ -60,6 +60,7 @@ import store from '@/store/index'
 import {
   gstGsttype,
   ond,
+  oeComType,
   gst,
   orgEenheidBron,
   orgEenheidBest,
@@ -131,6 +132,7 @@ export default defineComponent({
         color: string
         nameKey: string
         primaryKey: string
+        width: string
       }
 
       const relations: Array<Entity> = [
@@ -142,6 +144,7 @@ export default defineComponent({
           color: 'primary',
           nameKey: '',
           primaryKey: '',
+          width: '30vh'
         },
         {
           resource: 'ond',
@@ -151,6 +154,17 @@ export default defineComponent({
           color: 'secondary',
           nameKey: '',
           primaryKey: '',
+          width: '25vh'
+        },
+        {
+          resource: 'oe-com-type',
+          values: oeComType(this.recordRelation),
+          label: 'communicatiekanaal',
+          icon: 'mdi-waves-arrow-right',
+          color: 'secondary',
+          nameKey: '',
+          primaryKey: '',
+          width: '60vh'
         },
         {
           resource: 'gst',
@@ -160,6 +174,7 @@ export default defineComponent({
           color: 'secondary',
           nameKey: '',
           primaryKey: '',
+          width: '60vh'
         },
         {
           resource: 'gst-gstt',
@@ -169,6 +184,7 @@ export default defineComponent({
           color: 'tertiary',
           nameKey: '',
           primaryKey: '',
+          width: '30vh'
         },
         {
           resource: 'oe',
@@ -178,6 +194,7 @@ export default defineComponent({
           color: 'tertiary',
           nameKey: '',
           primaryKey: '',
+          width: '45vh'
         },
         {
           resource: 'oe',
@@ -187,6 +204,7 @@ export default defineComponent({
           color: 'tertiary',
           nameKey: '',
           primaryKey: '',
+          width: '45vh'
         },
         {
           resource: 'rge',
@@ -196,6 +214,7 @@ export default defineComponent({
           color: 'quinary',
           nameKey: '',
           primaryKey: '',
+          width: '45vh'
         },
         {
           resource: 'gg',
@@ -205,6 +224,7 @@ export default defineComponent({
           color: 'quaternary',
           nameKey: '',
           primaryKey: '',
+          width: '60vh'
         },
         {
           resource: 'gg',
@@ -214,6 +234,7 @@ export default defineComponent({
           color: 'quaternary',
           nameKey: '',
           primaryKey: '',
+          width: '45vh'
         },
       ]
       for (let relation of relations) {
@@ -252,7 +273,13 @@ ol {
 
 .row-height-50 {
   border: 1px;
-  width: calc(60vh);
-  height: calc(100vh);
+  min-width: calc(15vh);
+  min-height: 50vh;
+  height: auto;
 }
+
+:deep(.v-timeline-item__body) {
+  align-self: flex-start !important;
+}
+
 </style>

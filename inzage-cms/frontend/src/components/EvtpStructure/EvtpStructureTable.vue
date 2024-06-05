@@ -1,10 +1,11 @@
 <template>
   <EvptOnd
-    v-if="relation.resource == 'ond'"
+    v-if="relation.resource == 'ond' || relation.resource == 'oe-com-type'"
     :relation="relation"
     :primary-key="primaryKey"
     :name-key="nameKey"
     :evtp-cd="evtpCd"
+    :versie-nr="versieNr"
     :disable-evtp="disableEvtp"
     @record-updated="() => $emit('recordUpdated')"
   />
@@ -21,6 +22,7 @@
     :primary-key="primaryKey"
     :name-key="nameKey"
     :evtp-cd="evtpCd"
+    :versie-nr="versieNr"
     :gst-gg-cd="gstGgCd"
     :disable-evtp="disableEvtp"
     @record-updated="() => $emit('recordUpdated')"
@@ -31,6 +33,7 @@
     :primary-key="primaryKey"
     :name-key="nameKey"
     :gst-cd="gstCd"
+    :versie-nr="versieNr"
     :disable-evtp="disableEvtp"
     @record-updated="() => $emit('recordUpdated')"
   />

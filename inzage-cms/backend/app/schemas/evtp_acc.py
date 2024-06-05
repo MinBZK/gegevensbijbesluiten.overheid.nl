@@ -41,6 +41,6 @@ class EvtpAccIn(BaseModel):
 
 
 class EvtpAccWithRelations(EvtpAcc):
-    entity_evtp: EvtpVersionMinimalList
+    entity_evtp_version: EvtpVersionMinimalList
     entity_oe: OeMinimalList
     entity_bestand: BestandAcc | None

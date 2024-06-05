@@ -8,16 +8,16 @@
       v-if="resource.length > 0"
     >
       <tr
-        v-for="(gstGg, indexGstGg) in resource"
+        v-for="(gstGg, indexGstGg) in sortedResource(resource)"
         :key="indexGstGg"
       >
         <td>
           <a
             :href="
-              getEntityRecordHref(relation, resource, primaryKey, indexGstGg)
+              getEntityRecordHref(relation, gstGg, primaryKey)
             "
           >
-            {{ resource[indexGstGg][relation.nameKey] }}
+            {{ gstGg[relation.nameKey] }}
           </a>
         </td>
         <v-btn
@@ -71,6 +71,7 @@
           params: {
             gstCd: gstCd[index],
             recordResource: 'gst-gstt',
+            versieNr: versieNr
           },
           query: {
             redirect: $route.fullPath,
@@ -88,6 +89,7 @@
           params: {
             gstCd: gstCd[index],
             recordResource: 'gst-gg',
+            versieNr: versieNr
           },
           query: {
             redirect: $route.fullPath,
@@ -106,6 +108,7 @@
           params: {
             gstCd: gstCd[index],
             recordResource: 'gst-rge',
+            versieNr: versieNr
           },
           query: {
             redirect: $route.fullPath,
@@ -147,6 +150,10 @@ export default defineComponent({
       default: false,
       required: false,
     },
+    versieNr: {
+      type: [String, Number],
+      required: true,
+    },
   },
   emits: ['recordUpdated'],
   data() {
@@ -156,6 +163,9 @@ export default defineComponent({
     }
   },
   methods: {
+    sortedResource(resource){
+      return resource.slice().sort((a: { sort_key: number }, b: { sort_key: number }) => a.sort_key - b.sort_key)
+    },
     async deleteGstGg(gst_gg_cd: string) {
       await axios.delete(`${store.state.APIurl}/gst-gg/${gst_gg_cd}`)
       this.$emit('recordUpdated')
@@ -183,11 +193,11 @@ export default defineComponent({
         color: store.state.snackbar.succes_color,
       })
     },
-    getEntityRecordHref(relation, resource, primaryKey, indexGstGg) {
+    getEntityRecordHref(relation, resourceItem, primaryKey) {
       return this.$router.resolve({
         name: 'entityRecord',
         params: {
-          id: resource[indexGstGg][primaryKey],
+          id: resourceItem[primaryKey],
           resource: relation.resource,
           recordResource: relation.resource,
           tab: 'data',
