@@ -1,40 +1,22 @@
-from datetime import datetime
-
-from sqlalchemy import (
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-)
-from sqlalchemy.orm import (
-    Mapped,
-    mapped_column,
-    relationship,
-)
+from sqlalchemy import VARCHAR, ForeignKey, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.database import Base
+from app.models._default_columns import DefaultColumns
 
 
-class Ibron(Base):
+class Ibron(Base, DefaultColumns):
     """
-    Informatiebron
-    TabelLabelLang: Registraties waar organisatorische eenheden gegevens vastleggen
-    Comment: Registratie waar de gegevens afkomstig van zijn.
+    Table description: register waar de gegevens afkomstig van zijn.
     """
 
     __tablename__ = "ibron"
+    __table_args__ = {"comment": "register waar de gegevens afkomstig van zijn"}
 
-    ibron_cd: Mapped[int] = mapped_column(Integer, primary_key=True)
-    oe_cd: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"))
-    omschrijving: Mapped[str] = mapped_column(String)
-    notitie: Mapped[str] = mapped_column(String)
-    ts_mut: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    user_nm: Mapped[str] = mapped_column(String)
-    ts_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    ts_end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    ibron_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Informatiebron code")
+    oe_cd: Mapped[int | None] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Organisatie code")
+    omschrijving: Mapped[str] = mapped_column(VARCHAR(80), comment="Omschrijving van de bron")
 
-    # Relationships
-    entity_oe = relationship(
-        "Oe",
+    entity_oe: Mapped["Oe"] = relationship(  # type: ignore # noqa: F821
         foreign_keys=[oe_cd],
     )

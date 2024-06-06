@@ -7,9 +7,9 @@
         <h3>{{ props.title }}</h3>
       </div>
     </div>
-    <p v-if="!props.loading">
+    <!-- <p v-if="!props.loading">
       {{ props.description }}
-    </p>
+    </p> -->
 
     <div v-if="!props.loading" class="white-box">
       <div

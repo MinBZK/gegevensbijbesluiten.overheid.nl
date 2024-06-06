@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class Rge(BaseModel):
@@ -14,5 +14,4 @@ class Rge(BaseModel):
     ts_mut: datetime
     user_nm: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

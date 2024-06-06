@@ -70,11 +70,15 @@
     "thisData": "deze gegevens:",
     "sourceOrganisation": "Afkomstig van:",
     "evtpCommunication": "Hoe wordt het besluit aan u meegedeeld?",
-    "youReceiveMessage": "U ontvangt bericht:"
+    "youReceiveMessage": "U ontvangt bericht:",
+    "additionalInfoTitle": "Overige informatie",
+    "additionalInfoLink": "Bezoek deze website voor verdere informatie",
+    "wantToKnowMore": "Meer weten?"
+
   },
   "gegevensstromen": {
     "dataStorage": "De gegevens staan opgeslagen in {article}",
-    "registrationSourceOrganisation": "Deze registratie wordt bijgehouden door {article} {source_organisation}.",
+    "registrationSourceOrganisation": "Deze registratie wordt beheerd door {article} {source_organisation}.",
     "dataExchangeBySourceOrganisation": "{article} {source_organisation} stelt de gegevens beschikbaar:",
     "wantToKnowMore": "Meer weten?",
     "checkYourDataInRegister": "Bekijk uw gegevens in {article} {register}",
@@ -116,10 +120,9 @@
         "h3": "Open source software",
         "p3_1": "Dit overzicht wordt ontwikkeld met open source software. Deze site wordt ontwikkeld zodat deze voor zoveel mogelijk mensen bruikbaar is.",
         "h4": "Disclaimer",
-        "p4_1": "Er is de grootst mogelijke zorg besteed aan de betrouwbaarheid en actualiteit van de informatie op deze website. Toch kan het zijn dat bepaalde informatie onjuistheden bevat of verouderd is. U kunt aan de informatie op deze website dan ook geen rechten ontlenen.",
-        "p4_2": "Voor informatie die desondanks onvolledig of onjuist is opgenomen, aanvaardt het ministerie van BZK geen enkele aansprakelijkheid. Evenmin geldt deze aansprakelijkheid voor de inhoud of betrouwbaarheid van websites waarnaar is doorgelinkt.",
-        "p4_3": "Raadpleeg bij onduidelijkheden over de getoonde informatie altijd de website en/of contactpersoon van de betreffende overheidsorganisatie of schakel een expert in.",
-        "p4_4": "Inhoud in deze site is begrensd door wettelijke of gerechtvaardigde uitzonderingen die van toepassing zijn bij belangenafwegingen in het kader van bijvoorbeeld opsporing, rechtshandhaving, Defensie of inlichtingenverzameling."
+        "p4_1": "Aan de informatie op deze website kunnen geen rechten worden ontleend.",
+        "p4_2": "De informatie op deze website is met de grootste zorgvuldigheid samengesteld. Wijzigingen en typefouten zijn voorbehouden. Het is echter niet uitgesloten dat de weergegeven informatie onvolledig, niet actueel of onjuist is. Het ministerie van Binnenlandse Zaken aanvaardt geen enkele verantwoordelijkheid voor schade op welke manier dan ook ontstaan door gebruik, onvolledigheid of onjuistheid van de aangeboden informatie.",
+        "p4_3": "De website toont verwijzingen (hyperlinks) naar externe websites. Het ministerie van Binnenlandse Zaken is niet verantwoordelijk voor de inhoud van deze websites en de informatie van derden."
       },
       "privacyverklaring": "Privacy",
       "privacyverklaringPage": {
@@ -130,8 +133,10 @@
         "li1_3": "Van welke site is de bezoeker gekomen",
         "li1_4": "Heeft de bezoeker de site meteen weer verlaten ('bouncing').",
         "p2": "Deze cookies worden niet gebruikt om een profiel aan te maken of u verder te volgen. Deze website plaatst geen cookies van derde partijen (third-party cookies).",
-        "h2": "Gegevens via e-mail",
-        "p3": "Persoonlijke informatie die via e-mail bij ons bekend wordt, behandelt het team vertrouwelijk. Dergelijke persoonlijke gegevens bewaart het team alleen voor de duur van de behandeling van het bericht. Nadat u antwoord hebt gekregen of als er geen antwoord gevraagd wordt, slaat het team alleen de vraag en het antwoord op. Op verzoek verwijdert het team ook de vraag en het antwoord."
+        "h2": "AVG",
+        "p3": "In de Algemene Verordening Gegevensbescherming (AVG) staat hoe de overheid moet omgaan met het verwerken van persoonsgegevens. Deze website vermeldt uitsluitend welke besluiten de overheid neemt en welke soort gegevens hierbij worden gebruikt.",
+        "h3": "Gegevens via e-mail",
+        "p4": "Persoonlijke informatie die via e-mail bij ons bekend wordt, behandelt het team vertrouwelijk. Dergelijke persoonlijke gegevens bewaart het team alleen voor de duur van de behandeling van het bericht. Nadat u antwoord hebt gekregen of als er geen antwoord gevraagd wordt, slaat het team alleen de vraag en het antwoord op. Op verzoek verwijdert het team ook de vraag en het antwoord."
       },
       "toegankelijkheid": "Toegankelijkheid",
       "toegankelijkheidPage": {
@@ -281,6 +286,11 @@
       "answer_3": "Meer informatie vindt u op:",
       "link_3_text": "Woo",
       "link_3_url": "https://www.rijksoverheid.nl/onderwerpen/wet-open-overheid-woo"
+    },
+    "7": {
+      "question": "Waarom zie ik alleen algemene gegevens en niet mijn persoonlijke gegevens?",
+      "answer_1": "Bij sommige overheidsorganisaties is het al mogelijk om (gedeeltelijk) persoonlijke gegevens in te zien, zoals de vooringevulde belastingaangifte van de Belastingdienst. Maar om alle systemen volledig op elkaar af te stemmen en vervolgens inzage te kunnen bieden, moeten nog grote stappen worden gezet.",
+      "answer_2": "Deze website levert daar een belangrijke bijdrage aan. Hier is inzichtelijk welke gegevens door welke organisatie worden geregistreerd en bijgehouden. Maar ook in welke situaties zij de gegevens met welke andere partijen delen voor besluitvorming. Voor die gegevensstromen en de openheid hierover is deze website bedoeld - niet als eindpunt, maar als een stap in de goede richting naar meer transparantie en helderheid."
     }
   },
   "getGgPropertyExplanation": "Uitgebreide uitleg van het gegevensgroep '{field}'",

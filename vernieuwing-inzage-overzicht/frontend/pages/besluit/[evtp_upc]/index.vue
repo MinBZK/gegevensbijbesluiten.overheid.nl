@@ -224,6 +224,78 @@
           @click="() => hideUnhideAccordionAllAccordions(hideUnhideAccordion)"
         />
       </div>
+
+      <div
+        v-if="
+          evtpGg.besluit_communicatie.overige_informatie_link ||
+          evtpGg.besluit_communicatie.overige_informatie
+        "
+        class="accordion accordion-margin"
+      >
+        <div
+          ref="AccordionHeaderAdditionalInfo"
+          class="accordion-header"
+          tabindex="0"
+          role="button"
+          :aria-expanded="
+            isAccordionActive(evtpGg.besluit_communicatie.overige_informatie)
+          "
+          @click="
+            () =>
+              openCloseAccordion(
+                evtpGg.besluit_communicatie.overige_informatie,
+                AccordionHeaderAdditionalInfo
+              )
+          "
+          @keydown.enter="
+            () =>
+              openCloseAccordion(
+                evtpGg.besluit_communicatie.overige_informatie,
+                AccordionHeaderAdditionalInfo
+              )
+          "
+          @keydown.space.prevent="
+            () =>
+              openCloseAccordion(
+                evtpGg.besluit_communicatie.overige_informatie,
+                AccordionHeaderAdditionalInfo
+              )
+          "
+        >
+          <h3 class="psentence accordion-header-with-chevron">
+            {{ t('gegevensgroepen.additionalInfoTitle') }}
+          </h3>
+          <NuxtIcon
+            :name="
+              getIconAccordion(evtpGg.besluit_communicatie.overige_informatie)
+            "
+          />
+        </div>
+        <div
+          v-show="
+            isAccordionActive(evtpGg.besluit_communicatie.overige_informatie)
+          "
+          :id="evtpGg.besluit_communicatie.overige_informatie"
+          class="accordion-body"
+        >
+          <span v-if="evtpGg.besluit_communicatie.overige_informatie">
+            <p class="white-card lowercase">
+              {{ evtpGg.besluit_communicatie.overige_informatie }}
+            </p>
+          </span>
+
+          <span v-if="evtpGg.besluit_communicatie.overige_informatie_link">
+            <h4>{{ t('gegevensgroepen.wantToKnowMore') }}</h4>
+            <p>
+              <ExternalLink
+                :href="evtpGg.besluit_communicatie.overige_informatie_link"
+              >
+                {{ t('gegevensgroepen.additionalInfoLink') }}
+              </ExternalLink>
+            </p>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -253,6 +325,7 @@ const evtpUpc = route.params.evtp_upc as string
 const evtpVersionNr = parseInt(route.query.versionNr as string)
 const ggAccordionHeader = ref<HTMLElement[]>([])
 const gstAccordionHeaderEvtpCom = ref<HTMLElement | null>(null)
+const AccordionHeaderAdditionalInfo = ref<HTMLElement | null>(null)
 
 let data
 if (channelIfConcept.value) {
@@ -276,6 +349,13 @@ activeItem.value.push({
   active,
   iconAccordion,
   index: 100,
+})
+
+activeItem.value.push({
+  header: evtpGg.value.besluit_communicatie.overige_informatie,
+  active,
+  iconAccordion,
+  index: 101,
 })
 
 if (!evtpGg.value) {
@@ -390,6 +470,10 @@ p:first-letter {
 
 .md-padding {
   padding: 0.8em 0em;
+}
+
+.accordion-margin {
+  margin-bottom: 3.25em;
 }
 
 ul.no-list {

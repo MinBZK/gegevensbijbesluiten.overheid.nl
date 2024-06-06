@@ -25,11 +25,19 @@
     <p class="mb-4 mt-4">
       {{ t('footer.paths.privacyverklaringPage.p2') }}
     </p>
+
     <h2>
       {{ t('footer.paths.privacyverklaringPage.h2') }}
     </h2>
     <p class="p-margin-bottom-footer">
       {{ t('footer.paths.privacyverklaringPage.p3') }}
+    </p>
+
+    <h2>
+      {{ t('footer.paths.privacyverklaringPage.h3') }}
+    </h2>
+    <p class="p-margin-bottom-footer">
+      {{ t('footer.paths.privacyverklaringPage.p4') }}
     </p>
   </div>
 </template>

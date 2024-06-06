@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.schemas.filters import (
     EvtpFilterData,
@@ -15,16 +15,12 @@ from app.schemas.oe import (
 
 class Ond(BaseModel):
     titel: str
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class EvtpOnd(BaseModel):
     entity_ond: Ond
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class EvtpVersion(BaseModel):
@@ -41,8 +37,7 @@ class EvtpVersion(BaseModel):
     entity_oe_best: OeName
     entities_evtp_ond: list[EvtpOnd]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class EvtpVersionForOnd(BaseModel):
@@ -51,9 +46,6 @@ class EvtpVersionForOnd(BaseModel):
     versie_nr: int
     evtp_nm: str
     omschrijving: str | None
-
-    class Config:
-        from_attributes = True
 
 
 class EvtpQueryResult(BaseModel):
@@ -71,8 +63,8 @@ class EvtpQuery(BaseModel):
 
 
 class EvtpOeComType(BaseModel):
-    omschrijving: str
-    link: str | None
+    evtp_oe_com_type_cd: int
+    oe_com_type_cd: int
 
 
 class Gegevensgroep(BaseModel):
@@ -88,7 +80,7 @@ class Besluit(BaseModel):
     evtp_cd: int
     evtp_upc: int
     evtp_nm: str
-    omschrijving: str
+    omschrijving: str | None
     aanleiding: str
     gebr_dl: str
     soort_besluit: str | None
@@ -104,6 +96,8 @@ class EvtpCommunication(BaseModel):
     evtp_oe_com_type: List[EvtpOeComType] | None
     oe_best_internetdomein: str | None
     evtp_oebest: str
+    overige_informatie: str | None
+    overige_informatie_link: str | None
 
 
 class EvtpGg(BaseModel):

@@ -11,9 +11,7 @@ from .filters import (
     GgFilterData,  # noqa: I001
     SelectedFilters,  # noqa: I001
 )
-from .gebruiker import Gebruiker  # noqa: I001
 from .gg import ChildGg, ParentGg, ParentGgStructuur  # noqa: I001
-from .gst import Gst, GstGg  # noqa: I001
 from .oe import Oe, OeName  # noqa: I001
 from .ond import Ond  # noqa: I001
 from .rge import Rge  # noqa: I001

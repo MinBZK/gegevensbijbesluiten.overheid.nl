@@ -53,11 +53,8 @@
     <p>
       {{ t(`footer.paths.overPage.p4_2`) }}
     </p>
-    <p>
-      {{ t(`footer.paths.overPage.p4_3`) }}
-    </p>
     <p class="p-margin-bottom-footer">
-      {{ t(`footer.paths.overPage.p4_4`) }}
+      {{ t(`footer.paths.overPage.p4_3`) }}
     </p>
   </div>
 </template>

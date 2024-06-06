@@ -1,13 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
-
-from sqlalchemy import (
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-)
+from sqlalchemy import VARCHAR, Boolean, ForeignKey, Integer
 from sqlalchemy.ext.hybrid import (
     hybrid_property,
 )
@@ -18,77 +11,74 @@ from sqlalchemy.orm import (
 )
 
 from app.database.database import Base
+from app.models._default_columns import DefaultColumns
 
 
-class GgStruct(Base):
+class GgStruct(Base, DefaultColumns):
     """
-    GegevensgroepStructuur
-    TabelLabelLang: Hiërarchie van gegevens(groepen)
-    Comment: Relatie tussen gegevensgroepen van een bepaalde soort
+    Table description: hiërarchische structuur van gegevensgroepen wat resulteert in een sub(=child)-sup(=parent) relatie
     """
 
     __tablename__ = "gg_struct"
+    __table_args__ = {
+        "comment": "Hiërarchische structuur van gegevensgroepen wat resulteert in een sub(=child)-sup(=parent) relatie"
+    }
 
-    gg_struct_cd: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        index=True,
-    )
-    gg_cd_sub: Mapped[int] = mapped_column(Integer, ForeignKey("gg.gg_cd"))
-    gg_cd_sup: Mapped[int] = mapped_column(Integer, ForeignKey("gg.gg_cd"))
-    notitie: Mapped[str] = mapped_column(String)
-    ts_mut: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    user_nm: Mapped[str] = mapped_column(String)
-    ts_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    ts_end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    gg_struct_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Gegevensgroepen structuur code")
+    gg_cd_sub: Mapped[int] = mapped_column(Integer, ForeignKey("gg.gg_cd"), comment="Sub (child) gegevensgroep code")
+    gg_cd_sup: Mapped[int] = mapped_column(Integer, ForeignKey("gg.gg_cd"), comment="Super (parent) gegevensgroep code")
 
     # Relationships
-    child_entity = relationship(
-        "Gg",
-        foreign_keys=[gg_cd_sub],
-    )
-    parent_gg_entity = relationship(
+    parent_entity: Mapped["Gg"] = relationship(
         "Gg",
         foreign_keys=[gg_cd_sup],
+        back_populates="child_gg_struct",
+    )
+
+    child_entity: Mapped["Gg"] = relationship(
+        "Gg",
+        foreign_keys=[gg_cd_sub],
+        back_populates="parent_gg_struct",
     )
 
 
-class Gg(Base):
+class Gg(Base, DefaultColumns):
     """
-    Gegevensgroep
-    TabelLabelLang: Gegevensgroep die in een gegevensstroom voorkomt
-    Comment: Gegevensgroepen die in gegevensstromen worden gebruikt om uit te wisselen
+    Table description: groepen of elementaire soorten gegevens
     """
 
     __tablename__ = "gg"
+    __table_args__ = {"comment": "Groepen of elementaire soorten gegevens"}
 
-    gg_cd: Mapped[int] = mapped_column(
+    gg_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Gegevensgroep code")
+    gg_upc: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("gg_struct.gg_cd_sub"),
-        primary_key=True,
         index=True,
+        comment="Uniforme product code dat hoort bij een gegevensgroep",
     )
-    gg_upc: Mapped[int] = mapped_column(Integer)
-    omschrijving: Mapped[str] = mapped_column(String)
-    omschrijving_uitgebreid: Mapped[str] = mapped_column(String)
-    user_nm: Mapped[str] = mapped_column(String)
-    ts_mut: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    notitie: Mapped[str] = mapped_column(String)
-    sort_key: Mapped[int] = mapped_column(Integer)
-    ts_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    ts_end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    omschrijving: Mapped[str] = mapped_column(VARCHAR(4000), comment="Naam van de gegevensgroep")
+    omschrijving_uitgebreid: Mapped[str] = mapped_column(
+        VARCHAR(4000), comment="Uitgebreide omschrijving van de gegevensgroep"
+    )
+    sort_key: Mapped[int | None] = mapped_column(
+        Integer, comment="Sorteer volgorde van de koepelgegevensgroep in een besluit"
+    )
+    koepel: Mapped[bool | None] = mapped_column(Boolean, comment="Wel of geen koepel")
 
-    parent_gg_struct = relationship(
+    # Relationships
+    parent_gg_struct: Mapped["GgStruct"] = relationship(
         "GgStruct",
         primaryjoin="Gg.gg_cd == GgStruct.gg_cd_sub",
+        back_populates="child_entity",
     )
 
-    child_gg_struct = relationship(
+    child_gg_struct: Mapped["GgStruct"] = relationship(
         "GgStruct",
         primaryjoin="Gg.gg_cd == GgStruct.gg_cd_sup",
+        back_populates="parent_entity",
     )
 
-    gst_gg_entity = relationship(
+    gst_gg_entity: Mapped["GstGg"] = relationship(  # type: ignore # noqa: F821
         "GstGg",
         primaryjoin="Gg.gg_cd == GstGg.gg_cd",
     )
@@ -99,6 +89,7 @@ class Gg(Base):
         primaryjoin="Gg.gg_cd == GgStruct.gg_cd_sub",
         secondaryjoin="Gg.gg_cd == GgStruct.gg_cd_sup",
         back_populates="child_gg_entity",
+        viewonly=True,
     )
 
     child_gg_entity = relationship(
@@ -107,7 +98,7 @@ class Gg(Base):
         primaryjoin="Gg.gg_cd == GgStruct.gg_cd_sup",
         secondaryjoin="Gg.gg_cd == GgStruct.gg_cd_sub",
         back_populates="parent_gg_entity",
-        # viewonly=True
+        viewonly=True,
     )
 
     evtp_sort = relationship(
@@ -126,13 +117,14 @@ class Gg(Base):
         return {item.evtp_cd: item.sort_key for item in self.evtp_sort}
 
 
-class GgEvtpSort(Base):
+class GgEvtpSort(Base, DefaultColumns):
     """
     Table description: sorteertabel om individueel de sorteersleutel van een (koepel)gegevensgroep te overrulen per besluit
     """
 
     __tablename__ = "gg_evtp_sort"
     __table_args__ = {"comment": "sort_key gg op basis van evtp"}
+
     gg_evtp_sort_cd: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
@@ -153,7 +145,9 @@ class GgEvtpSort(Base):
         Integer,
         comment="Sorteer volgorde van de koepelgegevensgroep in een besluit",
     )
-    gg = relationship(
+
+    # Relationships
+    gg: Mapped["Gg"] = relationship(
         "Gg",
         foreign_keys=[gg_cd],
     )

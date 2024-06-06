@@ -1,7 +1,6 @@
 import logging
 
 import pytest
-
 from app import preditor
 
 logging = logging.getLogger(__name__)

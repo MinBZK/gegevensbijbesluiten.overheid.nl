@@ -2,12 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel
-
-from app.schemas.filters import (
-    OeFilterData,
-    SelectedFilters,
-)
+from pydantic import BaseModel, ConfigDict
 
 
 class Oe(BaseModel):
@@ -31,15 +26,13 @@ class Oe(BaseModel):
     ts_mut: datetime
     ibron_cd: int | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OeName(BaseModel):
     naam_spraakgbr: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OeQuery(BaseModel):
@@ -52,8 +45,6 @@ class OeQuery(BaseModel):
 class OeQueryResult(BaseModel):
     results: list[ParentOe]
     total_count: int
-    filter_data: OeFilterData
-    selected_filters: list[SelectedFilters]
 
 
 class OeRelations(BaseModel):
@@ -65,8 +56,7 @@ class OeRelations(BaseModel):
 
     entity_ibron: Ibron | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Ibron(BaseModel):
@@ -75,8 +65,7 @@ class Ibron(BaseModel):
 
     entity_oe: OeRelations
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OeByEvtp(BaseModel):
@@ -89,38 +78,32 @@ class OeByEvtpTotal(BaseModel):
 
 
 class OeBase(BaseModel):
-    oe_cd: int
     oe_upc: int
     naam_officieel: str | None
-    naam_spraakgbr: str
 
 
 class ChildOeStructuur(BaseModel):
     # parent_gg_entity: ChildGg | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ChildOe(OeBase):
     parent_oe_struct: ChildOeStructuur | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ParentOeStructuur(BaseModel):
     child_entity: ChildOe | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ParentOe(OeBase):
     child_oe_struct: list[ParentOeStructuur] | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 OeName.model_rebuild()
