@@ -63,8 +63,8 @@ class EvtpQuery(BaseModel):
 
 
 class EvtpOeComType(BaseModel):
-    evtp_oe_com_type_cd: int
-    oe_com_type_cd: int
+    omschrijving: str | None
+    link: str | None
 
 
 class Gegevensgroep(BaseModel):

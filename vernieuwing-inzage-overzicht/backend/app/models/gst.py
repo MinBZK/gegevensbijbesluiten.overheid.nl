@@ -44,11 +44,6 @@ class Gst(Base, DefaultColumns):
         "Ibron",
         foreign_keys=[ibron_cd],
     )
-    entities_gst_gstt: Mapped[list["EvtpGst"]] = relationship(  # type: ignore # noqa: F821
-        "GstGstt",
-        primaryjoin="and_(Gst.gst_cd == GstGstt.gst_cd, EvtpVersion.ts_start < GstGstt.ts_end, EvtpVersion.ts_end > GstGstt.ts_start)",
-        uselist=True,
-    )
 
 
 class GstType(Base, DefaultColumns):

@@ -325,11 +325,11 @@ def get_evtp_gst(
             joinedload(model_evtp_version.entities_evtp_gst)
             .joinedload(models.evtp.EvtpGst.entity_gst)
             .joinedload(models.gst.Gst.entity_oe_best),
-            joinedload(model_evtp_version.entities_evtp_gst)
-            .joinedload(models.evtp.EvtpGst.entity_gst)
-            .joinedload(models.gst.Gst.entities_gst_gstt)
-            .joinedload(models.gst.GstGstt.entity_gst_type),
+            joinedload(model_evtp_version.entities_evtp_gst).joinedload(models.evtp.EvtpGst.entity_gst),
             joinedload(model_evtp_version.entities_evtp_oe_com_type),
+            joinedload(model_evtp_version.entities_evtp_gst)
+            .joinedload(models.evtp.EvtpGst.entities_gst_gstt)
+            .joinedload(models.gst.GstGstt.entity_gst_type),
         )
         .join(
             model_evtp_version,
@@ -394,9 +394,7 @@ def get_evtp_gst(
             ),
             ibron_oe_naam_spraakgbr=ibron_oe_naam_spraakgbr,
             oe_bron_naampraakgebr=query_object_evtp_gst.entity_gst.entity_oe_bron.naam_spraakgbr,
-            gsttype_gsttoms=[
-                gst_type.entity_gst_type.gstt_oms for gst_type in query_object_evtp_gst.entity_gst.entities_gst_gstt
-            ],
+            gsttype_gsttoms=[gst_type.entity_gst_type.gstt_oms for gst_type in query_object_evtp_gst.entities_gst_gstt],
             ibron_oe_econtact=ibron_oe_econtact,
             gst_extlnkaut=(
                 query_object_evtp_gst.entity_gst.ext_lnk_aut

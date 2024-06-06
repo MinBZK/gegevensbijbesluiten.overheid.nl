@@ -129,6 +129,11 @@ class EvtpGst(Base, DefaultColumns):
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpGst.evtp_cd, EvtpVersion.id_publicatiestatus < 4, EvtpVersion.ts_start < EvtpGst.ts_end, EvtpVersion.ts_end > EvtpGst.ts_start)",
         back_populates="entities_evtp_gst",
     )
+    entities_gst_gstt: Mapped[list["GstGstt"]] = relationship(  # type: ignore # noqa: F821
+        "GstGstt",
+        primaryjoin="and_(EvtpGst.gst_cd == foreign(GstGstt.gst_cd), EvtpGst.ts_start < foreign(GstGstt.ts_end), EvtpGst.ts_end > foreign(GstGstt.ts_start))",
+        uselist=True,
+    )
     entities_gst_gg: Mapped[list["GstGstt"]] = relationship(  # type: ignore # noqa: F821
         "GstGg",
         primaryjoin="and_(EvtpGst.gst_cd == foreign(GstGg.gst_cd), EvtpGst.ts_start < foreign(GstGg.ts_end), EvtpGst.ts_end >= foreign(GstGg.ts_end))",

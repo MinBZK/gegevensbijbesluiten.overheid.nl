@@ -4,6 +4,9 @@
       v-for="article in reversedArticles"
       :key="article.title"
       class="article-card"
+      @click.prevent="navigateTo(article.link, { external: true })"
+      @keydown.enter.prevent="navigateTo(article.link, { external: true })"
+      @keydown.space.prevent="navigateTo(article.link, { external: true })"
     >
       <img
         :src="article.image"
@@ -48,6 +51,7 @@ const { t } = useI18n()
 
   &:hover {
     box-shadow: 0 0 10px rgb(147, 180, 205);
+    cursor: pointer;
   }
   .article-card-text {
     padding: 1em;

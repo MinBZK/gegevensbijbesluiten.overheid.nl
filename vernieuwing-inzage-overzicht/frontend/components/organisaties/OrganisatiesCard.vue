@@ -22,7 +22,7 @@
           {{ item.description }}
         </NuxtLink>
       </div>
-      <div class="card-sub-content">
+      <div v-if="props.content.length > 3" class="card-sub-content">
         <img
           src="assets/images/icons/icon-hamburger.svg"
           aria-hidden
