@@ -11,10 +11,12 @@ from app.schemas.rge import RgeMinimalList
 class GstRge(BaseModel):
     gst_rge_cd: int
     rge_cd: int
+    versie_nr: int
     notitie: str | None
     user_nm: str
     sort_key: int | None
     ts_mut: datetime
+    ts_end: datetime
 
 
 class GstRgeMinimalList(BaseModel):
@@ -29,5 +31,6 @@ class GstRgeWithRelations(GstRge):
 class GstRgeIn(BaseModel):
     gst_cd: int
     rge_cd: int
+    versie_nr: int
     notitie: str | None = None
     sort_key: int | None = None

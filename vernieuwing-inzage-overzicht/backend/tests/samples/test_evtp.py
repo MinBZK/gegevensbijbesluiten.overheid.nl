@@ -5,7 +5,6 @@ import random
 
 import pandas as pd
 import pytest
-
 from app.crud.sitemap import get_evtps
 from app.utils.decorators import timeit, timeit_once
 
@@ -36,7 +35,7 @@ RESOURCE_PAYLOADS = {
 
 # '/api/evtp-tree/61846917/gst/4763'
 @pytest.fixture()
-def randomised_urls(db) -> list[str]:
+def randomised_urls(db):
     evtps = get_evtps(db)
     urls = []
     for _ in range(15):

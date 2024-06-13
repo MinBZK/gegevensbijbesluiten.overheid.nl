@@ -10,14 +10,15 @@ from app.core.config import (
 
 
 def get_evtps(db: Session):
+    model_evtp_version = models.evtp.EvtpVersion
     return (
         db.execute(
-            select(models.EvtpVersion)
+            select(model_evtp_version)
             .filter(
-                models.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
-                models.EvtpVersion.huidige_versie.in_(CURRENT_VERSION),
+                model_evtp_version.id_publicatiestatus.in_(PUBLICATION_RANGE),
+                model_evtp_version.huidige_versie.in_(CURRENT_VERSION),
             )
-            .order_by(models.EvtpVersion.evtp_nm)
+            .order_by(model_evtp_version.evtp_nm)
         )
         .scalars()
         .all()

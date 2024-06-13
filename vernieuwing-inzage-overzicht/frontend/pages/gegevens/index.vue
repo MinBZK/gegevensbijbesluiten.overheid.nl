@@ -106,11 +106,14 @@ const page = computed(() => query.value.page)
 const totalCount = computed(() => data.value?.total_count || 0)
 const ggResults = computed(() => data.value?.results || [])
 const nPages = computed(() => Math.ceil(totalCount.value / query.value.limit))
+const scrollToCards = () => {
+  searchbar.value.$el.scrollIntoView({ behavior: 'smooth' })
+}
 
 const searchbar = ref()
 const setPage = (newPage: number) => {
   router.push({ query: { ...query.value, page: newPage } })
-  searchbar.value.$el.scrollIntoView({ behavior: 'smooth' })
+  scrollToCards()
 }
 
 const readTitle = ref<boolean>(false)
@@ -125,6 +128,7 @@ const doSearch = (searchtext: string) => {
   }
   router.push({ query: newQuery })
   newFocusIsRequested.value = true
+  scrollToCards()
 
   // In some situations, say the page title again. Everytime state changes, the title is updated and read.
   readTitle.value = !readTitle.value

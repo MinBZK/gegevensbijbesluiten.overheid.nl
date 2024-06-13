@@ -46,8 +46,8 @@ def get_count(
     Returns: number of evtps
     """
     return db.scalar(
-        select(func.count(models.EvtpVersion.evtp_cd)).filter(
-            models.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE)
+        select(func.count(models.evtp.EvtpVersion.evtp_cd)).filter(
+            models.evtp.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE)
         )
     )
 
@@ -60,6 +60,7 @@ def get_filtered(
     Gets event type with filtered organization
     Returns: schema of event type with organization joined and metadata
     """
+    model_evtp_version = models.evtp.EvtpVersion
     selected_columns = [
         "omschrijving",
         "evtp_nm",
@@ -69,8 +70,8 @@ def get_filtered(
 
     filters = []
     selected_filters = []
-    filters.append(models.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE))
-    filters.append(models.EvtpVersion.huidige_versie.in_(CURRENT_VERSION))
+    filters.append(model_evtp_version.id_publicatiestatus.in_(PUBLICATION_RANGE))
+    filters.append(model_evtp_version.huidige_versie.in_(CURRENT_VERSION))
 
     if evtp_query.searchtext:
         selected_filters.append(
@@ -82,7 +83,7 @@ def get_filtered(
 
         search_clauses = []
         # Select columns to search in from the table
-        columns = models.EvtpVersion.__table__.columns
+        columns = model_evtp_version.__table__.columns
         columns_filtered = [c for c in columns if c.key in selected_columns]
         for col in columns_filtered:
             search_clauses.append(col.ilike(f"%{evtp_query.searchtext.lower()}%"))
@@ -95,19 +96,19 @@ def get_filtered(
                 "value": evtp_query.organisation,
             }
         )
-        filters.append(models.Oe.naam_spraakgbr == evtp_query.organisation)
+        filters.append(models.oe.Oe.naam_spraakgbr == evtp_query.organisation)
 
     where_clause = and_(*filters)
 
     query_evtp = (
         db.execute(
-            select(models.EvtpVersion)
-            .options(joinedload(models.EvtpVersion.entity_oe_best))
-            .join(models.Oe)
+            select(model_evtp_version)
+            .options(joinedload(model_evtp_version.entity_oe_best))
+            .join(models.oe.Oe)
             .filter(where_clause)
             .offset((evtp_query.page - 1) * evtp_query.limit)
             .limit(evtp_query.limit)
-            .order_by(models.EvtpVersion.evtp_nm)
+            .order_by(model_evtp_version.evtp_nm)
         )
         .scalars()
         .all()
@@ -115,25 +116,25 @@ def get_filtered(
 
     organisation_filter_data = (
         db.query(
-            models.Oe.naam_spraakgbr.label("label"),
-            models.Oe.naam_spraakgbr.label("key"),
-            func.count(models.EvtpVersion.oe_best).label("count"),
+            models.oe.Oe.naam_spraakgbr.label("label"),
+            models.oe.Oe.naam_spraakgbr.label("key"),
+            func.count(model_evtp_version.oe_best).label("count"),
         )
-        .select_from(models.EvtpVersion)
+        .select_from(model_evtp_version)
         .join(
-            models.Oe,
+            models.oe.Oe,
         )
         .filter(where_clause)
-        .group_by(models.Oe.naam_spraakgbr)
-        .order_by(models.Oe.naam_spraakgbr)
+        .group_by(models.oe.Oe.naam_spraakgbr)
+        .order_by(models.oe.Oe.naam_spraakgbr)
         .all()
     )
 
     # Constructs returning total count.
     total_count = db.execute(
-        select(func.count(models.EvtpVersion.evtp_cd))
+        select(func.count(model_evtp_version.evtp_cd))
         .join(
-            models.Oe,
+            models.oe.Oe,
         )
         .filter(where_clause)
     ).scalar_one()
@@ -160,37 +161,34 @@ def get_evtp_gg(
     Gets the gg related to a specific evtp based on the latest version.
     Returns: evtp with nested gg object
     """
-
+    model_evtp_version = models.evtp.EvtpVersion
     query_object = (
         db.execute(
-            select(models.EvtpVersion)
-            .join(models.Evtp)
+            select(model_evtp_version)
+            .join(models.evtp.Evtp)
             .options(
-                joinedload(models.EvtpVersion.entities_evtp_gst)
-                .joinedload(models.EvtpGst.entities_gst_gg)
-                .joinedload(models.GstGg.entity_gg_child)
-                .joinedload(models.Gg.parent_gg_struct)
-                .joinedload(models.GgStruct.parent_gg_entity)
-                .joinedload(models.Gg.parent_gg_struct)
-                .joinedload(models.GgStruct.child_entity),
-                joinedload(models.EvtpVersion.entities_evtp_gst)
-                .joinedload(models.EvtpGst.entity_gst)
-                .joinedload(models.Gst.entity_oe_best),
-                joinedload(models.EvtpVersion.entities_evtp_oe_com_type),
-                joinedload(models.EvtpVersion.entities_evtp_ond).joinedload(models.EvtpOnd.entity_evtp),
-                joinedload(models.EvtpVersion.entities_evtp_gst)
-                .joinedload(models.EvtpGst.entities_gst_rge)
-                .joinedload(models.GstRge.entity_rge),
-                joinedload(models.EvtpVersion.entities_evtp_oe_com_type)
-                .joinedload(models.EvtpOeComType.entity_oe_com_type)
-                .joinedload(models.OeComType.entities_oe_com_type),
+                joinedload(model_evtp_version.entities_evtp_gst)
+                .joinedload(models.evtp.EvtpGst.entities_gst_gg)
+                .joinedload(models.gst.GstGg.entity_gg_child)
+                .joinedload(models.gg.Gg.parent_gg_struct)
+                .joinedload(models.gg.GgStruct.parent_entity)
+                .joinedload(models.gg.Gg.parent_gg_struct)
+                .joinedload(models.gg.GgStruct.child_entity),
+                joinedload(model_evtp_version.entities_evtp_gst)
+                .joinedload(models.evtp.EvtpGst.entity_gst)
+                .joinedload(models.gst.Gst.entity_oe_best),
+                joinedload(model_evtp_version.entities_evtp_oe_com_type),
+                joinedload(model_evtp_version.entities_evtp_ond).joinedload(models.ond.EvtpOnd.entity_evtp_version),
+                joinedload(model_evtp_version.entities_evtp_gst)
+                .joinedload(models.evtp.EvtpGst.entities_gst_rge)
+                .joinedload(models.gst.GstRge.entity_rge),
             )
             .where(
                 and_(
-                    models.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
-                    models.EvtpVersion.huidige_versie.in_(CURRENT_VERSION),
-                    models.Evtp.evtp_upc == evtp_upc,
-                    models.EvtpVersion.versie_nr == (version_nr or models.EvtpVersion.versie_nr),
+                    model_evtp_version.id_publicatiestatus.in_(PUBLICATION_RANGE),
+                    model_evtp_version.huidige_versie.in_(CURRENT_VERSION),
+                    model_evtp_version.evtp_upc == evtp_upc,
+                    model_evtp_version.versie_nr == (version_nr or model_evtp_version.versie_nr),
                 )
             )
         )
@@ -205,17 +203,17 @@ def get_evtp_gg(
 
     for gst in query_object.entities_evtp_gst:
         parent_entity_gg_omschrijving = [
-            child.entity_gg_child.parent_gg_struct.parent_gg_entity.omschrijving for child in gst.entities_gst_gg
+            child.entity_gg_child.parent_gg_struct.parent_entity.omschrijving for child in gst.entities_gst_gg
         ][0]
         parent_entity_gg_sort_key = [
             (
                 # set sort value to 1000 unless evtp_sort_key or sort_key is defined.
                 # evtp_sort_key can overrule sort_key
-                child.entity_gg_child.parent_gg_struct.parent_gg_entity.evtp_sort_key.get(query_object.evtp_cd)
-                if query_object.evtp_cd in child.entity_gg_child.parent_gg_struct.parent_gg_entity.evtp_sort_key.keys()
+                child.entity_gg_child.parent_gg_struct.parent_entity.evtp_sort_key.get(query_object.evtp_cd)
+                if query_object.evtp_cd in child.entity_gg_child.parent_gg_struct.parent_entity.evtp_sort_key.keys()
                 else (
-                    child.entity_gg_child.parent_gg_struct.parent_gg_entity.sort_key
-                    if child.entity_gg_child.parent_gg_struct.parent_gg_entity.sort_key
+                    child.entity_gg_child.parent_gg_struct.parent_entity.sort_key
+                    if child.entity_gg_child.parent_gg_struct.parent_entity.sort_key
                     else 1000
                 )
             )
@@ -288,6 +286,8 @@ def get_evtp_gg(
             ),
             oe_best_internetdomein=query_object.entity_oe_best.internet_domein,
             evtp_oebest=query_object.entity_oe_best.naam_spraakgbr,
+            overige_informatie=query_object.overige_informatie,
+            overige_informatie_link=query_object.overige_informatie_link,
         ),
     )
 
@@ -302,48 +302,50 @@ def get_evtp_gst(
     Gets the gst related to a specific evtp.
     Returns: Evtp with nested gst object
     """
-    query_gst_cd = db.execute(select(models.Gst.gst_cd).filter(models.Gst.gst_upc == gst_upc)).scalar()
+    model_evtp_version = models.evtp.EvtpVersion
+    query_gst_cd = db.execute(select(models.gst.Gst.gst_cd).filter(models.gst.Gst.gst_upc == gst_upc)).scalar()
 
     if not query_gst_cd:
         raise HTTPException(404)
 
     query_object_evtp_gst = db.execute(
         select(
-            models.EvtpGst,
-            models.EvtpVersion,
+            models.evtp.EvtpGst,
+            model_evtp_version,
         )
         .options(
-            joinedload(models.EvtpGst.entities_gst_gg)
-            .joinedload(models.GstGg.entity_gg_child)
-            .joinedload(models.Gg.parent_gg_struct)
-            .joinedload(models.GgStruct.parent_gg_entity)
-            .joinedload(models.Gg.parent_gg_struct)
-            .joinedload(models.GgStruct.child_entity),
-            joinedload(models.EvtpGst.entities_gst_rge).joinedload(models.GstRge.entity_rge),
-            joinedload(models.EvtpGst.entity_evtp_version),
-            joinedload(models.EvtpVersion.entities_evtp_gst)
-            .joinedload(models.EvtpGst.entity_gst)
-            .joinedload(models.Gst.entity_oe_best),
-            joinedload(models.EvtpVersion.entities_evtp_gst)
-            .joinedload(models.EvtpGst.entity_gst)
-            .joinedload(models.Gst.entities_gst_gstt)
-            .joinedload(models.GstGstt.entity_gst_type),
+            joinedload(models.evtp.EvtpGst.entities_gst_gg)
+            .joinedload(models.gst.GstGg.entity_gg_child)
+            .joinedload(models.gg.Gg.parent_gg_struct)
+            .joinedload(models.gg.GgStruct.parent_entity)
+            .joinedload(models.gg.Gg.parent_gg_struct)
+            .joinedload(models.gg.GgStruct.child_entity),
+            joinedload(models.evtp.EvtpGst.entities_gst_rge).joinedload(models.gst.GstRge.entity_rge),
+            joinedload(models.evtp.EvtpGst.entity_evtp_version),
+            joinedload(model_evtp_version.entities_evtp_gst)
+            .joinedload(models.evtp.EvtpGst.entity_gst)
+            .joinedload(models.gst.Gst.entity_oe_best),
+            joinedload(model_evtp_version.entities_evtp_gst).joinedload(models.evtp.EvtpGst.entity_gst),
+            joinedload(model_evtp_version.entities_evtp_oe_com_type),
+            joinedload(model_evtp_version.entities_evtp_gst)
+            .joinedload(models.evtp.EvtpGst.entities_gst_gstt)
+            .joinedload(models.gst.GstGstt.entity_gst_type),
         )
         .join(
-            models.EvtpVersion,
+            model_evtp_version,
             and_(
-                models.EvtpVersion.evtp_cd == models.EvtpGst.evtp_cd,
-                models.EvtpVersion.ts_start < models.EvtpGst.ts_end,
-                models.EvtpVersion.ts_end > models.EvtpGst.ts_start,
+                model_evtp_version.evtp_cd == models.evtp.EvtpGst.evtp_cd,
+                model_evtp_version.ts_start < models.evtp.EvtpGst.ts_end,
+                model_evtp_version.ts_end > models.evtp.EvtpGst.ts_start,
             ),
         )
         .where(
             and_(
-                models.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
-                models.EvtpVersion.huidige_versie.in_(CURRENT_VERSION),
-                models.EvtpVersion.evtp_upc == evtp_upc,
-                models.EvtpVersion.versie_nr == (version_nr or models.EvtpVersion.versie_nr),
-                models.EvtpGst.gst_cd == query_gst_cd,
+                model_evtp_version.id_publicatiestatus.in_(PUBLICATION_RANGE),
+                model_evtp_version.huidige_versie.in_(CURRENT_VERSION),
+                model_evtp_version.evtp_upc == evtp_upc,
+                model_evtp_version.versie_nr == (version_nr or model_evtp_version.versie_nr),
+                models.evtp.EvtpGst.gst_cd == query_gst_cd,
             )
         )
     ).scalar()
@@ -392,9 +394,7 @@ def get_evtp_gst(
             ),
             ibron_oe_naam_spraakgbr=ibron_oe_naam_spraakgbr,
             oe_bron_naampraakgebr=query_object_evtp_gst.entity_gst.entity_oe_bron.naam_spraakgbr,
-            gsttype_gsttoms=[
-                gst_type.entity_gst_type.gstt_oms for gst_type in query_object_evtp_gst.entity_gst.entities_gst_gstt
-            ],
+            gsttype_gsttoms=[gst_type.entity_gst_type.gstt_oms for gst_type in query_object_evtp_gst.entities_gst_gstt],
             ibron_oe_econtact=ibron_oe_econtact,
             gst_extlnkaut=(
                 query_object_evtp_gst.entity_gst.ext_lnk_aut
@@ -413,7 +413,7 @@ def get_evtp_gst(
             ],
             gg_parent=query_object_evtp_gst.entities_gst_gg[
                 0
-            ].entity_gg_child.parent_gg_struct.parent_gg_entity.omschrijving,
+            ].entity_gg_child.parent_gg_struct.parent_entity.omschrijving,
             gg_omschrijvinguitgebreid=[
                 gg_child.entity_gg_child.omschrijving_uitgebreid
                 for gg_child in sorted(
@@ -445,11 +445,11 @@ def download_evtp(
 ) -> StreamingResponse:
     query_object = (
         db.execute(
-            select(models.EvtpVersion)
+            select(models.evtp.EvtpVersion)
             .filter(
-                models.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
+                models.evtp.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
             )
-            .order_by(models.EvtpVersion.evtp_nm)
+            .order_by(models.evtp.EvtpVersion.evtp_nm)
         )
         .scalars()
         .all()
@@ -513,18 +513,18 @@ def get_by_publicatiestatus_oe(
     """
     results = db.execute(
         select(
-            models.Oe.naam_officieel,
-            func.count(models.EvtpVersion.id_publicatiestatus),
+            models.oe.Oe.naam_officieel,
+            func.count(models.evtp.EvtpVersion.id_publicatiestatus),
         )
-        .join(models.Oe)
+        .join(models.oe.Oe)
         .where(
             and_(
-                models.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
-                models.EvtpVersion.huidige_versie.is_(True),
+                models.evtp.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
+                models.evtp.EvtpVersion.huidige_versie.is_(True),
             )
         )
-        .group_by(models.Oe.naam_officieel)
-        .order_by(desc(func.count(models.EvtpVersion.id_publicatiestatus)))
+        .group_by(models.oe.Oe.naam_officieel)
+        .order_by(desc(func.count(models.evtp.EvtpVersion.id_publicatiestatus)))
     ).all()
 
     oe_by_evtp = [

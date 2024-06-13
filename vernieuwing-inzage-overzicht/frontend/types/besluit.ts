@@ -41,6 +41,8 @@ type EvtpCommunication = {
   evtp_oe_com_type: EvtpOeComType[]
   oe_best_internetdomein: string
   evtp_oebest: string
+  overige_informatie: string
+  overige_informatie_link: string
 }
 
 export interface Evtp {

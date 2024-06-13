@@ -1,11 +1,4 @@
-from datetime import datetime
-
-from sqlalchemy import (
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-)
+from sqlalchemy import VARCHAR, Boolean, ForeignKey, Integer
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -13,96 +6,116 @@ from sqlalchemy.orm import (
 )
 
 from app.database.database import Base
+from app.models._default_columns import DefaultColumns
 
 
-class OeStruct(Base):
+class OeStruct(Base, DefaultColumns):
     """
-    OrganisatieStructuur
-    TabelLabelLang: Hiërarchie van organisatorische eenheden
-    Comment: Relatie van een bepaald type tussen twee organisatorische eenheden/instanties
+    Table description: hiërarchische structuur van organisaties wat resulteert in een sub(=child)-sup(=parent) relatie
     """
 
     __tablename__ = "oe_struct"
+    __table_args__ = {
+        "comment": "Hiërarchische structuur van organisaties wat resulteert in een sub(=child)-sup(=parent) relatie"
+    }
 
-    oe_struct_cd: Mapped[int] = mapped_column(Integer, primary_key=True)
-    oe_cd_sub: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"))
-    oe_cd_sup: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"))
-    notitie: Mapped[str] = mapped_column(String)
-    ts_mut: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    user_nm: Mapped[str] = mapped_column(String)
-    ts_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    ts_end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    oe_struct_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Organisatie structuur code")
+    oe_cd_sub: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Sub (child) organisatie code")
+    oe_cd_sup: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Sup (parent) organisatie code")
+    koepel: Mapped[bool | None] = mapped_column(Boolean, comment="Wel of geen koepel")
 
-    child_entity = relationship(
-        "Oe",
-        foreign_keys=[oe_cd_sub],
-    )
-    parent_oe_entity = relationship(
+    # Relationships
+    parent_entity: Mapped["Oe"] = relationship(
         "Oe",
         foreign_keys=[oe_cd_sup],
+        back_populates="child_oe_struct",
+    )
+    child_entity: Mapped["Oe"] = relationship(
+        "Oe",
+        foreign_keys=[oe_cd_sub],
+        back_populates="child_oe_struct",
     )
 
 
-class Oe(Base):
+class Oe(Base, DefaultColumns):
     """
-    Organisatie
-    TabelLabelLang: De organisaties die gegevens uitwisselen t.b.v. een gegevensstroom
-    Comment: Organisatorische eenheid/instantie of soort van organisatorische entiteit
+    Table description: organisatorische eenheid en of instantie
     """
 
     __tablename__ = "oe"
+    __table_args__ = {"comment": "Organisatorische eenheid en of instantie"}
 
-    oe_cd: Mapped[int] = mapped_column(Integer, primary_key=True)
-    oe_upc: Mapped[int] = mapped_column(Integer, primary_key=True)
-    afko: Mapped[str] = mapped_column(String)
-    e_contact: Mapped[str] = mapped_column(String)
-    huisnummer: Mapped[str] = mapped_column(String)
-    huisnummer_toev: Mapped[str] = mapped_column(String)
-    ibron_cd: Mapped[int] = mapped_column(
+    oe_cd: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("ibron.ibron_cd"),
+        primary_key=True,
+        comment="Organisatie code",
     )
-    internet_domein: Mapped[str] = mapped_column(String)
-    lidw_sgebr: Mapped[str] = mapped_column(String)
-    naam_officieel: Mapped[str] = mapped_column(String)
-    naam_spraakgbr: Mapped[str] = mapped_column(String)
-    notitie: Mapped[str] = mapped_column(String)
-    plaats: Mapped[str] = mapped_column(String)
-    postcode: Mapped[str] = mapped_column(String)
-    provincie: Mapped[str] = mapped_column(String)
-    straat: Mapped[str] = mapped_column(String)
-    telefoon: Mapped[str] = mapped_column(String)
-    ts_mut: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    user_nm: Mapped[str] = mapped_column(String)
-    ts_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    ts_end: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    oe_upc: Mapped[int] = mapped_column(Integer)
+
+    afko: Mapped[str | None] = mapped_column(VARCHAR(15), comment="Afkorting van de organisatorische eenheid")
+    e_contact: Mapped[str | None] = mapped_column(
+        VARCHAR(200),
+        comment="E-mail contactadres - indien alleen een prefix is opgenomen wordt de domeinnaam ge-append",
+    )
+    huisnummer: Mapped[str | None] = mapped_column(VARCHAR(10), comment="Huisnummer")
+    huisnummer_toev: Mapped[str | None] = mapped_column(VARCHAR(10), comment="Huisnummer toevoeging")
+    ibron_cd: Mapped[int | None] = mapped_column(Integer, ForeignKey("ibron.ibron_cd"), comment="Informatiebron code")
+    internet_domein: Mapped[str | None] = mapped_column(VARCHAR(200), comment="Internet domeinnaam")
+    lidw_sgebr: Mapped[str | None] = mapped_column(VARCHAR(12), comment="Lidwoord van de organisatie")
+    naam_officieel: Mapped[str] = mapped_column(VARCHAR(4000), comment="Taken van de organistorische eenheid")
+    naam_spraakgbr: Mapped[str] = mapped_column(
+        VARCHAR(255), comment="Naam die gebruikt voor in het 'normale' spraakgebruik"
+    )
+    plaats: Mapped[str | None] = mapped_column(VARCHAR(30), comment="(Woon)plaats")
+    postcode: Mapped[str | None] = mapped_column(VARCHAR(7), comment="Nederlandse postcode")
+    provincie: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Provincie")
+    straat: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Straatnaam")
+    telefoon: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Telefoonnummer")
 
     # Relationships
-    entity_ibron = relationship("Ibron", foreign_keys=[ibron_cd])
-
-    parent_oe_struct = relationship(
+    entity_ibron: Mapped["Ibron"] = relationship("Ibron", foreign_keys=[ibron_cd])  # type: ignore # noqa: F821
+    parent_oe_struct: Mapped["OeStruct"] = relationship(
         "OeStruct",
         primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sub",
+        back_populates="child_entity",
     )
-
-    child_oe_struct = relationship(
+    child_oe_struct: Mapped["OeStruct"] = relationship(
         "OeStruct",
         primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sup",
+        back_populates="parent_entity",
     )
-
-    parent_oe_entity = relationship(
+    parent_entity = relationship(
         "Oe",
         secondary=OeStruct.__table__,
         primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sub",
         secondaryjoin="Oe.oe_cd == OeStruct.oe_cd_sup",
         back_populates="child_oe_entity",
+        viewonly=True,
     )
-
     child_oe_entity = relationship(
         "Oe",
         secondary=OeStruct.__table__,
         primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sup",
         secondaryjoin="Oe.oe_cd == OeStruct.oe_cd_sub",
-        back_populates="parent_oe_entity",
-        # viewonly=True
+        back_populates="parent_entity",
+        viewonly=True,
+    )
+
+
+class OeComType(Base):
+    """
+    Table description: communicatie kanalen die gebruikt worden door organisaties
+    """
+
+    __tablename__ = "oe_com_type"
+    __table_args__ = {"comment": "Communicatie kanalen die gebruikt worden door organisaties"}
+
+    oe_com_type_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Communicatiekanaal type code")
+    omschrijving: Mapped[str] = mapped_column(VARCHAR(4000), comment="Omschrijving van het kanaal")
+
+    # Relationships
+    entities_oe_com_type: Mapped["EvtpOeComType"] = relationship(  # type: ignore # noqa: F821
+        "EvtpOeComType",
+        primaryjoin="and_(OeComType.oe_com_type_cd == EvtpOeComType.oe_com_type_cd)",
+        back_populates="entity_oe_com_type",
     )

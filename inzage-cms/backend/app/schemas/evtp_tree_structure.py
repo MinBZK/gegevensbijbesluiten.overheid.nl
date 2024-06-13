@@ -5,6 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 from app.schemas.evtp_ond import OndMinimalList
+from app.schemas.oe_com_type import OeComTypeMinimalList
 
 
 # Base classes, have no relations
@@ -136,7 +137,7 @@ class GstGsttBase(BaseModel):
     gst_cd: int
     gstt_cd: int
     gst_gstt_cd: int
-    entity_gsttype: GstTypeBase
+    entity_gst_type: GstTypeBase
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -144,6 +145,7 @@ class GstGsttBase(BaseModel):
 class EvtpOeComType(BaseModel):
     evtp_oe_com_type_cd: int
     oe_com_type_cd: int
+    entity_oe_com_type: OeComTypeMinimalList
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -151,7 +153,7 @@ class EvtpOeComType(BaseModel):
 # Relational classes
 class GstGgTreeStructure(BaseModel):
     gst_gg_cd: int
-
+    sort_key: int | None
     entity_gg: GgWithParentsChildren | None
 
     model_config = ConfigDict(from_attributes=True)
@@ -159,6 +161,7 @@ class GstGgTreeStructure(BaseModel):
 
 class GstRgeTreeStructure(BaseModel):
     gst_rge_cd: int
+    sort_key: int | None
     entity_rge: RgeBase | None
 
     model_config = ConfigDict(from_attributes=True)
@@ -177,7 +180,6 @@ class GstTreeStructure(BaseModel):
     entity_oe_best: OeWithNestedRelations | None
     entity_oe_bron: OeWithNestedRelations | None
     entity_ibron: IbronWithRelations | None
-    entities_gst_gstt: list[GstGsttBase] | None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -188,7 +190,9 @@ class EvtpGstTreeStructure(BaseModel):
     gst_cd: int
     notitie: str | None
     conditie: str | None
+
     entity_gst: GstTreeStructure | None
+    entities_gst_gstt: list[GstGsttBase] | None
     entities_gst_gg: list[GstGgTreeStructure] | None
     entities_gst_rge: list[GstRgeTreeStructure] | None
 

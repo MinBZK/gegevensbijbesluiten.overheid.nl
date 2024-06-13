@@ -1,7 +1,14 @@
 import logging
+from typing import Sequence
 
-import numpy as np
-from sqlalchemy import and_, func, or_, select, text, true
+from sqlalchemy import (
+    and_,
+    func,
+    or_,
+    select,
+    text,
+    true,
+)
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import (
     case,
@@ -23,33 +30,27 @@ logger = logging.getLogger(__name__)
 
 def get_all(
     db: Session,
-) -> list[models.gg.Gg]:
+) -> Sequence[models.gg.Gg]:
     """Return all (child) gg's"""
     return (
         db.execute(
-            select(models.Gg).filter(models.Gg.parent_gg_entity is not None).filter(models.Gg.gst_gg_entity is not None)
+            select(models.gg.Gg).filter(models.gg.Gg.parent_gg_entity.any()).filter(models.gg.Gg.gst_gg_entity.has())
         )
         .scalars()
         .all()
     )
 
 
-def get_one(db: Session, gg_cd: int) -> schemas.gg.ChildGg:
-    gg = models.Gg
-    res = db.execute(select(gg).filter(gg.gg_cd == gg_cd)).scalars().one()
-    return res
-
-
 def get_details(db: Session, gg_upc: int) -> schemas.details.GgDetails:
     """
     Get details of a single selected Gg
     """
-    gg = models.Gg
-    evtp = models.EvtpVersion
-    gst_gg = models.GstGg
-    evtp_gst = models.EvtpGst
-    gst = models.Gst
-    oe = models.Oe
+    gg = models.gg.Gg
+    evtp_version = models.evtp.EvtpVersion
+    gst_gg = models.gst.GstGg
+    evtp_gst = models.evtp.EvtpGst
+    gst = models.gst.Gst
+    oe = models.oe.Oe
     # ibron = models.Ibron
 
     # Fetch all connected gst's
@@ -58,17 +59,17 @@ def get_details(db: Session, gg_upc: int) -> schemas.details.GgDetails:
     _gst_publicated = (
         select(evtp_gst.gst_cd)
         .join(
-            evtp,
+            evtp_version,
             and_(
-                evtp.evtp_cd == evtp_gst.evtp_cd,
-                evtp.ts_start < evtp_gst.ts_end,
-                evtp.ts_end > evtp_gst.ts_start,
-                evtp.ts_end > func.now(),
-                evtp.ts_start < func.now(),
+                evtp_version.evtp_cd == evtp_gst.evtp_cd,
+                evtp_version.ts_start < evtp_gst.ts_end,
+                evtp_version.ts_end > evtp_gst.ts_start,
+                evtp_version.ts_end > func.now(),
+                evtp_version.ts_start < func.now(),
             ),
         )
-        .filter(evtp.id_publicatiestatus.in_(PUBLICATION_RANGE))
-        .filter(evtp.huidige_versie.in_(CURRENT_VERSION))
+        .filter(evtp_version.id_publicatiestatus.in_(PUBLICATION_RANGE))
+        .filter(evtp_version.huidige_versie.in_(CURRENT_VERSION))
         .subquery()
     )
 
@@ -98,27 +99,19 @@ def get_details(db: Session, gg_upc: int) -> schemas.details.GgDetails:
         .all()
     )
 
-    # get all registers for this gg
-    # ibron_list = (
-    #     db.execute(select(ibron).filter(ibron.ibron_cd.in_([gst.entity_oe_bron.ibron_cd for gst in gst_list])))
-    #     .unique()
-    #     .scalars()
-    #     .all()
-    # )
-
     _evtp_cd_subquery = (
         select(evtp_gst.evtp_cd).filter(evtp_gst.gst_cd.in_([gst.gst_cd for gst in gst_list])).subquery()
     )
 
     evtp_list = (
         db.execute(
-            select(evtp)
-            .distinct(evtp.evtp_cd)
-            .filter(evtp.evtp_cd.in_(select(_evtp_cd_subquery)))
+            select(evtp_version)
+            .distinct(evtp_version.evtp_cd)
+            .filter(evtp_version.evtp_cd.in_(select(_evtp_cd_subquery)))
             # Note that we have to filter the publication status and current version again to prevent
             # that the query returns all only evtps that are publicated and current
-            .filter(evtp.id_publicatiestatus.in_(PUBLICATION_RANGE))
-            .filter(evtp.huidige_versie.in_(CURRENT_VERSION))
+            .filter(evtp_version.id_publicatiestatus.in_(PUBLICATION_RANGE))
+            .filter(evtp_version.huidige_versie.in_(CURRENT_VERSION))
         )
         .unique()
         .scalars()
@@ -127,15 +120,11 @@ def get_details(db: Session, gg_upc: int) -> schemas.details.GgDetails:
 
     # create proper response
     result = schemas.details.GgDetails(
-        gg=selected_gg,
-        evtp=evtp_list,
-        # ibron=ibron_list,
-        oe_bron=oe_bron_list,
-        oe_best=oe_best_list,
+        gg=selected_gg,  # type: ignore
+        evtp=[schemas.EvtpVersion.model_validate(evtp_item) for evtp_item in evtp_list],
+        oe_bron=oe_bron_list,  # type: ignore
+        oe_best=oe_best_list,  # type: ignore
     )
-    # logging.info(ibron_list[0].oe_cd)
-    # logging.info(oe_bron_list[0].oe_cd)
-
     return result
 
 
@@ -148,102 +137,77 @@ def get_filtered(
     Get list of Gg's based on search parameters
     Q1 - Queries all Parent Gg's matching the search queries, including all child Gg's
     Q2 - Queries all Child Gg's matching the search queries, grouped under their parent Gg's
+    Q2 - Queries all Child Gg's matching the search queries, grouped under their parent Gg's
     Returns: Concatenated list of Q1 + Q2 (in that order)
     """
     selected_columns = ["omschrijving"]
-
     filters = []
     selected_filters = []
 
     if gg_query.searchtext:
-        selected_filters.append(
-            {
-                "key": "searchtext",
-                "value": gg_query.searchtext,
-            }
-        )
-
-        search_clauses = []
-        # Select columns to search in from the table
-        columns = models.Gg.__table__.columns
-        columns_filtered = [c for c in columns if c.key in selected_columns]
-        for col in columns_filtered:
-            search_clauses.append(col.ilike(f"%{gg_query.searchtext.lower()}%"))
+        selected_filters.append({"key": "searchtext", "value": gg_query.searchtext})
+        search_clauses = [
+            col.ilike(f"%{gg_query.searchtext.lower()}%")
+            for col in [c for c in models.gg.Gg.__table__.columns if c.key in selected_columns]
+        ]
         filters.append(or_(*search_clauses))
+
     where_clause = and_(true(), *filters)
 
-    # --------------- Q1 query for parent gg's ---------------
+    # --------------- Q1 query for parent gg's --------------- #
     # apply the filters and searchqueries to find parent_gg's and generate a list of all its children
     # this query is not fast, so skip it when there is no searchquery
     if gg_query.searchtext:
-        _parent_searchresult = (
-            db.execute(select(models.Gg).filter(models.Gg.child_gg_struct.any()).filter(where_clause)).scalars().all()
+        parent_searchresult = (
+            db.execute(select(models.gg.Gg).filter(models.gg.Gg.child_gg_struct.has()).filter(where_clause))
+            .scalars()
+            .all()
         )
-        grouped_children = np.array(
-            [
-                [
-                    item.gg_cd,
-                    child.gg_cd,
-                ]
-                for item in _parent_searchresult
-                for child in item.child_gg_entity
-            ]
-        )
+        grouped_children = [[item.gg_cd, child.gg_cd] for item in parent_searchresult for child in item.child_gg_entity]
     else:
-        grouped_children = np.array([])
+        grouped_children = []
 
     # --------------- Q2 query for child gg's ---------------
     children_searchresult = (
         db.execute(
-            select(models.Gg.gg_cd)
-            .filter(models.Gg.parent_gg_entity is not None)
-            .filter(models.Gg.gst_gg_entity is not None)
+            select(models.gg.Gg.gg_cd)
+            .filter(models.gg.Gg.parent_gg_entity.any())
+            .filter(models.gg.Gg.gst_gg_entity.has())
             .filter(where_clause)
         )
         .scalars()
         .all()
     )
 
-    # match the children to their parents (gg_cd only)
+    # Match the children to their parents (gg_cd only)
     if children_searchresult:
-        isolated_children = np.array(
-            db.execute(
-                text(
-                    f"""
-                    SELECT parent_gg.gg_cd, child_gg.gg_cd
-                    FROM gg AS parent_gg
-                    JOIN gg_struct ON parent_gg.gg_cd = gg_struct.gg_cd_sup
-                    JOIN gg AS child_gg ON gg_struct.gg_cd_sub = child_gg.gg_cd
-                    WHERE child_gg.gg_cd IN ({', '.join(map(repr, children_searchresult))})
-                    ORDER BY parent_gg.gg_cd, child_gg.gg_cd;
-                    """
-                )
-            ).all()
-        )
-    else:
-        isolated_children = np.array([[]])
-    # Locatie asverstrooiing
-
-    # --------------- combine and process Q1 + Q2 ---------------
-    # concatenate the matched parents and the children
-    if not grouped_children.any():
-        child_parent_cds = isolated_children
-    elif not isolated_children.any():
-        child_parent_cds = grouped_children
-    else:
-        child_parent_cds = np.concatenate(
-            (
-                np.array(grouped_children),
-                isolated_children,
+        isolated_children = db.execute(
+            text(
+                f"""
+                SELECT parent_gg.gg_cd, child_gg.gg_cd
+                FROM gg AS parent_gg
+                JOIN gg_struct ON parent_gg.gg_cd = gg_struct.gg_cd_sup
+                JOIN gg AS child_gg ON gg_struct.gg_cd_sub = child_gg.gg_cd
+                WHERE child_gg.gg_cd IN ({', '.join(map(repr, children_searchresult))})
+                ORDER BY parent_gg.gg_cd, child_gg.gg_cd;
+                """
             )
-        )
-    if not child_parent_cds.any():
-        # no results found
+        ).all()
+    else:
+        isolated_children = []
+
+    # --------------- combine and process Q1 + Q2 --------------- #
+    # Concatenate the matched parents and the children
+    child_parent_cds = list(grouped_children) + isolated_children  # type: ignore
+
+    if not child_parent_cds:
+        # No results found
+        parents = []
         num_results = 0
 
     else:
-        # Filter any child gg's without any publicated evtp's
-        valid_child_gg_cds = np.array(
+        # Filter any child gg's without any published evtp's
+        valid_child_gg_cds = (
             db.execute(
                 text(
                     f"""
@@ -260,72 +224,65 @@ def get_filtered(
                             AND evtp_version.id_publicatiestatus IN ({', '.join(map(repr, PUBLICATION_RANGE))})
                             AND evtp_version.ts_start < evtp_gst.ts_end
                             AND evtp_version.ts_end > evtp_gst.ts_start;
-                    """
+                """
                 )
-            ).all()
-        ).flatten()
-        child_parent_cds = child_parent_cds[np.isin(child_parent_cds[:, 1], valid_child_gg_cds.flatten())]
-        num_results = len(np.unique(child_parent_cds[:, 0]))
-
-    if num_results == 0:
-        parents = []
-    else:
-        # clip the results to 6 parents per page
-        result_range = (
-            (gg_query.page - 1) * gg_query.limit,
-            gg_query.page * gg_query.limit,
-        )
-        _parent_cds = np.unique(child_parent_cds[:, 0])[result_range[0] : result_range[1]]
-        child_parent_cds_ranged = child_parent_cds[np.isin(child_parent_cds[:, 0], _parent_cds)]
-
-        # reorder items to place parent_gg matches first
-        indexes = np.unique(
-            child_parent_cds_ranged[:, 0],
-            return_index=True,
-        )[1]
-        parent_cd_ordened = [int(child_parent_cds_ranged[:, 0][index]) for index in sorted(indexes)]
-        id_ordering = case(
-            {_id: index for index, _id in enumerate(parent_cd_ordened)},
-            value=models.Gg.gg_cd,
-        )
-
-        # query parents in proper order
-        q_parents = (
-            db.execute(
-                select(models.Gg)
-                .filter(models.Gg.gg_cd.in_(child_parent_cds_ranged[:, 0].tolist()))
-                .order_by(id_ordering)
             )
             .scalars()
             .all()
         )
 
-        # Generate response where parent gg's only have a partial list of child gg
+        child_parent_cds = [
+            (parent_cd, child_cd) for parent_cd, child_cd in child_parent_cds if child_cd in valid_child_gg_cds
+        ]
+        num_results = len(set(cp[0] for cp in child_parent_cds))
+
+        # Clip the results to the desired limit and offset
+        result_range = (
+            (gg_query.page - 1) * gg_query.limit,
+            gg_query.page * gg_query.limit,
+        )
+        parent_cds = sorted(set(cp[0] for cp in child_parent_cds))[result_range[0] : result_range[1]]
+        child_parent_cds_ranged = [
+            (parent_cd, child_cd) for parent_cd, child_cd in child_parent_cds if parent_cd in parent_cds
+        ]
+
+        # Reorder items to place parent_gg matches first
+        if parent_cds:
+            id_ordering = case(
+                {_id: index for index, _id in enumerate(parent_cds)},
+                value=models.gg.Gg.gg_cd,
+            )
+        else:
+            id_ordering = None
+
+        # Query parents in the desired order
         parents = []
-        for item in q_parents:
-            q_children_cds = child_parent_cds_ranged[child_parent_cds_ranged[:, 0] == item.gg_cd][:, 1].tolist()
-            q_children = (
-                db.execute(select(models.GgStruct).filter(models.GgStruct.gg_cd_sub.in_(q_children_cds)))
-                .scalars()
-                .all()
+        if id_ordering is not None:
+            q_parents = db.scalars(
+                select(models.gg.Gg).filter(models.gg.Gg.gg_cd.in_(parent_cds)).order_by(id_ordering)
             )
-            parent = schemas.gg.ParentGg(
-                gg_cd=item.gg_cd,
-                omschrijving=item.omschrijving,
-                omschrijving_uitgebreid=item.omschrijving_uitgebreid,
-                sort_key=item.sort_key,
-                evtp_sort_key=None,
-                child_gg_struct=q_children,
-            )
-            parents.append(parent)
+
+            for item in q_parents:
+                q_children_cds = [
+                    child_cd for parent_cd, child_cd in child_parent_cds_ranged if parent_cd == item.gg_cd
+                ]
+
+                q_children = db.scalars(
+                    select(models.gg.GgStruct).filter(models.gg.GgStruct.gg_cd_sub.in_(q_children_cds))
+                )
+
+                parent = schemas.gg.ParentGg(
+                    gg_cd=item.gg_cd,
+                    omschrijving=item.omschrijving,
+                    omschrijving_uitgebreid=item.omschrijving_uitgebreid,
+                    child_gg_struct=[child for child in q_children],  # type: ignore
+                )
+                parents.append(parent)
+        else:
+            q_parents = []
 
     response = schemas.gg.GgQueryResult(
         results=parents,
         total_count=num_results,
-        filter_data=schemas.filters.GgFilterData(
-            organisation=[],
-            onderwerp=[],
-        ),  #  No filters availlable
-        selected_filters=[schemas.filters.SelectedFilters(**dict(s)) for s in selected_filters],
     )
     return response

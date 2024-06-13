@@ -3,7 +3,6 @@ import logging
 from random import randint
 
 import pytest
-
 from app.crud.gg import get_all
 
 logging = logging.getLogger(__name__)

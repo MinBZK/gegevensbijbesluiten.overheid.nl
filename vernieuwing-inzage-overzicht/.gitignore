@@ -19,6 +19,8 @@ venv
 docs.zip
 archive.zip
 .env
+.docker
+vernieuwing-inzage-overzicht
 
 node_modules
 reports

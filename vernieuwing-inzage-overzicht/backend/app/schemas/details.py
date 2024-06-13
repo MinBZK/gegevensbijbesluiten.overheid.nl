@@ -18,6 +18,6 @@ class OeDetails(BaseModel):
 
 class GgDetails(BaseModel):
     gg: ChildGg
+    evtp: list[EvtpVersion]
     oe_best: list[Oe]
     oe_bron: list[Oe]
-    evtp: list[EvtpVersion]

@@ -26,7 +26,6 @@ def crud_operations_files(router, *args):
         bestand_acc_cd: int,
         documents: list[UploadFile] = File(...),
         db: AsyncSession = Depends(get_async_session),
-        # current_gebruiker: schemas.gebruiker.Gebruiker = Depends(dependencies.get_current_gebruiker),
     ) -> Literal["OK"]:
         """
         Takes a list of input files and applies all relevant rules.

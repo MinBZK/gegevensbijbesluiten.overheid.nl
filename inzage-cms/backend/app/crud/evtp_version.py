@@ -181,12 +181,8 @@ def get_tree_structure_one(
     relationships = [rel.key for rel in BASE_MODEL.__mapper__.relationships]
     eager_loads = [joinedload(getattr(BASE_MODEL, rel)) for rel in relationships]
 
-    # relationship entities_gst_gstt required eager loading to properly compare with evtp_version timestapms
-    eager_loads.append(
-        joinedload(models.evtp.EvtpVersion.entities_evtp_gst)
-        .joinedload(models.evtp.EvtpGst.entity_gst)
-        .joinedload(models.gst.Gst.entities_gst_gstt)
-    )
+    # relationship entities_gst_gstt required eager loading to properly compare with evtp_version timestamp
+    eager_loads.append(joinedload(models.evtp.EvtpVersion.entities_evtp_gst).joinedload(models.evtp.EvtpGst.entity_gst))
 
     result = db.execute(
         select(BASE_MODEL)
@@ -472,8 +468,10 @@ async def duplicate(
         await create_related_models(
             db=db,
             existing_evtp_cd=evtp_cd,
+            new_versie_nr=1,
             current_date=current_date,
             gebruiker=gebruiker or "ICTU",
+            new_version=False,
             new_evtp_cd=evtp.evtp_cd,
         )
 
@@ -528,7 +526,12 @@ async def create_new_version(
 
         # Create related models with new versions
         await create_related_models(
-            db=db, existing_evtp_cd=evtp_cd, current_date=current_date, gebruiker=gebruiker or "ICTU"
+            db=db,
+            existing_evtp_cd=evtp_cd,
+            new_versie_nr=body.versie_nr,
+            current_date=current_date,
+            new_version=True,
+            gebruiker=gebruiker or "ICTU",
         )
 
     return await db.scalar(
@@ -536,16 +539,69 @@ async def create_new_version(
     )
 
 
+async def duplicate_gst(db: AsyncSession, existing_gst_cd: int, current_date: datetime, gebruiker: str) -> int:
+    """
+    Duplicate a gst
+
+    Args:
+        existing_gst_cd: The gst code of the original.
+        current_date: The current date.
+        gebruiker: The user name. Defaults to None.
+
+    Returns: integer code gst_cd for the new gst
+    """
+
+    _gst_list = await db.execute(select(models.gst.Gst).filter(and_(models.gst.Gst.gst_cd == existing_gst_cd)))
+    existing_gst = _gst_list.scalar_one()
+
+    _result = await db.execute(select(models.gst.Gst))
+    list_gst_upc = _result.scalars().all()
+
+    # Create new gst objects
+    while True:
+        gst_upc = create_upc()
+        if gst_upc not in list_gst_upc:
+            break
+
+    new_gst = models.gst.Gst(
+        gst_upc=gst_upc,
+        notitie=existing_gst.notitie,
+        omschrijving=existing_gst.omschrijving,
+        oe_bron=existing_gst.oe_bron,
+        oe_best=existing_gst.oe_best,
+        ibron_cd=existing_gst.ibron_cd,
+        ext_lnk_aut=existing_gst.ext_lnk_aut,
+        user_nm=gebruiker,
+        ts_mut=current_date,
+        ts_start=current_date,
+        ts_end=datetime(9999, 12, 31),
+    )
+    db.add(new_gst)
+
+    await db.flush()
+    return int(new_gst.gst_cd)
+
+
 async def create_related_models(
-    db: AsyncSession, existing_evtp_cd: int, current_date: datetime, gebruiker: str, new_evtp_cd: int = 0
+    db: AsyncSession,
+    existing_evtp_cd: int,
+    new_versie_nr: int,
+    current_date: datetime,
+    gebruiker: str,
+    new_version: bool,
+    new_evtp_cd: int = 0,
 ) -> None:
     """
     Creates related models for a given evtp_cd.
 
     Args:
         evtp_cd: The evtp_cd value.
+        existing_evtp_cd: The existing evtp_cd value.
+        new_versie_nr: The new version number.
         current_date: The current date.
         gebruiker: The user name.
+        new_version: A boolean indicating whether to the models are being versioned.
+        new_evtp_cd: The new evtp_cd value. Defaults to 0.
     """
     # Set enddate for all related evtp_gst and create duplicates with different startdate
     evtp_gst_list = await db.scalars(
@@ -575,14 +631,14 @@ async def create_related_models(
     )
 
     for evtp_ond in evtp_ond_list:
-        evtp_ond.ts_end = current_date
+        evtp_ond.ts_end = current_date if new_version else evtp_ond.ts_end
         new_evtp_ond = models.ond.EvtpOnd(
             evtp_cd=new_evtp_cd if new_evtp_cd else evtp_ond.evtp_cd,
+            versie_nr=new_versie_nr,
             ond_cd=evtp_ond.ond_cd,
             user_nm=gebruiker,
             ts_mut=current_date,
             ts_start=current_date,
-            ts_end=datetime(9999, 12, 31),
         )
         new_evtp_onds.append(new_evtp_ond)
 
@@ -597,37 +653,49 @@ async def create_related_models(
     )
 
     for evtp_oe_com in evtp_oe_com_list:
-        evtp_oe_com.ts_end = current_date
+        evtp_oe_com.ts_end = current_date if new_version else evtp_oe_com.ts_end
         new_evtp_oe_com_type = models.evtp.EvtpOeComType(
             evtp_cd=new_evtp_cd if new_evtp_cd else evtp_oe_com.evtp_cd,
+            versie_nr=new_versie_nr,
             oe_com_type_cd=evtp_oe_com.oe_com_type_cd,
             link=evtp_oe_com.link,
             notitie=evtp_oe_com.notitie,
             user_nm=gebruiker,
             ts_mut=current_date,
             ts_start=current_date,
-            ts_end=datetime(9999, 12, 31),
         )
         new_evtp_oe_com_types.append(new_evtp_oe_com_type)
 
     # Create new evtp_gst objects
     for evtp_gst in evtp_gst_list:
-        evtp_gst.ts_end = current_date
+        evtp_gst.ts_end = current_date if new_version else evtp_gst.ts_end
+        new_gst_cd = (
+            await duplicate_gst(db, evtp_gst.gst_cd, current_date, gebruiker) if new_evtp_cd else evtp_gst.gst_cd
+        )
         new_evtp_gst = models.evtp.EvtpGst(
             evtp_cd=new_evtp_cd if new_evtp_cd else evtp_gst.evtp_cd,
-            gst_cd=evtp_gst.gst_cd,
+            versie_nr=new_versie_nr,
+            gst_cd=new_gst_cd,
             sort_key=evtp_gst.sort_key,
             notitie=evtp_gst.notitie,
             conditie=evtp_gst.conditie,
             user_nm=gebruiker,
             ts_mut=current_date,
             ts_start=current_date,
-            ts_end=datetime(9999, 12, 31),
         )
         new_evtp_gsts.append(new_evtp_gst)
 
         await create_gst_related_models(
-            db, evtp_gst.gst_cd, current_date, gebruiker, new_gst_gstts, new_gst_ggs, new_gst_rges
+            db,
+            new_evtp_gst.gst_cd,
+            evtp_gst.gst_cd,
+            new_versie_nr,
+            current_date,
+            gebruiker,
+            new_gst_gstts,
+            new_gst_ggs,
+            new_gst_rges,
+            new_version=new_version,
         )
 
     db.add_all(new_evtp_onds)
@@ -640,43 +708,48 @@ async def create_related_models(
 
 async def create_gst_related_models(
     db: AsyncSession,
-    gst_cd: int,
+    new_gst_cd: int,
+    original_gst_cd: int,
+    new_versie_nr: int,
     current_date: datetime,
     gebruiker: str,
     new_gst_gstts: List[models.gst.GstGstt],
     new_gst_ggs: List[models.gst.GstGg],
     new_gst_rges: List[models.gst.GstRge],
+    new_version: bool,
 ) -> None:
     """
     Creates duplicate models with different start dates and sets end dates for related models.
 
     Args:
         gst_cd: The gst primary key.
+        new_gst_cd: The new gst primary key.
+        original_gst_cd: The original gst primary key.
         current_date: The current date.
         gebruiker The user name.
         new_gst_gstts: The list of new GstGstt models.
         new_gst_ggs: The list of new GstGg models.
         new_gst_rges: The list of new GstRge models.
-
+        new_version: A boolean indicating whether to the models are being versioned.
     """
     # Set enddate for all related gst_gstt and create duplicates with different startdate
     gst_gstt_list = await db.scalars(
         select(models.gst.GstGstt).filter(
             and_(
-                models.gst.GstGstt.gst_cd == gst_cd,
+                models.gst.GstGstt.gst_cd == original_gst_cd,
                 models.gst.GstGstt.ts_end > current_date,
             )
         )
     )
 
     for gst_gstt in gst_gstt_list:
-        gst_gstt.ts_end = current_date
+        gst_gstt.ts_end = current_date if new_version else gst_gstt.ts_end
         new_gst_gstt = models.gst.GstGstt(
-            gst_cd=gst_gstt.gst_cd,
+            gst_cd=new_gst_cd,
             gstt_cd=gst_gstt.gstt_cd,
+            versie_nr=new_versie_nr,
             notitie=gst_gstt.notitie,
             ts_start=current_date,
-            ts_end=datetime(9999, 12, 31),
             user_nm=gebruiker,
             ts_mut=current_date,
         )
@@ -686,22 +759,22 @@ async def create_gst_related_models(
     gst_gg_list = await db.scalars(
         select(models.gst.GstGg).filter(
             and_(
-                models.gst.GstGg.gst_cd == gst_cd,
+                models.gst.GstGg.gst_cd == original_gst_cd,
                 models.gst.GstGg.ts_end > current_date,
             )
         )
     )
     for gst_gg in gst_gg_list:
-        gst_gg.ts_end = current_date
+        gst_gg.ts_end = current_date if new_version else gst_gg.ts_end
         new_gst_gg = models.gst.GstGg(
-            gst_cd=gst_gg.gst_cd,
+            gst_cd=new_gst_cd,
             gg_cd=gst_gg.gg_cd,
+            versie_nr=new_versie_nr,
             sort_key=gst_gg.sort_key,
             notitie=gst_gg.notitie,
             user_nm=gebruiker,
             ts_mut=current_date,
             ts_start=current_date,
-            ts_end=datetime(9999, 12, 31),
         )
         new_gst_ggs.append(new_gst_gg)
 
@@ -709,22 +782,22 @@ async def create_gst_related_models(
     gst_rge_list = await db.scalars(
         select(models.gst.GstRge).filter(
             and_(
-                models.gst.GstRge.gst_cd == gst_cd,
+                models.gst.GstRge.gst_cd == original_gst_cd,
                 models.gst.GstRge.ts_end > current_date,
             )
         )
     )
     for gst_rge in gst_rge_list:
-        gst_rge.ts_end = current_date
+        gst_rge.ts_end = current_date if new_version else gst_rge.ts_end
         new_gst_rge = models.gst.GstRge(
-            gst_cd=gst_rge.gst_cd,
+            gst_cd=new_gst_cd,
             rge_cd=gst_rge.rge_cd,
+            versie_nr=new_versie_nr,
             sort_key=gst_rge.sort_key,
             notitie=gst_rge.notitie,
             user_nm=gebruiker,
             ts_mut=current_date,
             ts_start=current_date,
-            ts_end=datetime(9999, 12, 31),
         )
         new_gst_rges.append(new_gst_rge)
 

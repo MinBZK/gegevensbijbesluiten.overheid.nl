@@ -12,9 +12,11 @@ class EvtpOeComType(BaseModel):
     evtp_oe_com_type_cd: int
     evtp_cd: int
     oe_com_type_cd: int
+    versie_nr: int
     link: str | None
     user_nm: str
     ts_mut: datetime
+    ts_end: datetime
 
 
 class EvtpOeComTypeMinimalList(BaseModel):
@@ -22,11 +24,12 @@ class EvtpOeComTypeMinimalList(BaseModel):
 
 
 class EvtpOeComTypeWithRelations(EvtpOeComType):
-    entity_evtp_oe_com_type: EvtpVersionMinimalList | None
+    entity_evtp_version_oe_com_type: EvtpVersionMinimalList | None
     entity_oe_com_type: OeComTypeMinimalList | None
 
 
 class EvtpOeComTypeIn(BaseModel):
     evtp_cd: int
     oe_com_type_cd: int
+    versie_nr: int
     link: str | None = None

@@ -2,10 +2,9 @@ import logging
 from typing import Any, Generator
 
 import pytest
-from fastapi.testclient import TestClient
-
 from app.app_factory import create_app
 from app.database.database import get_sync_session
+from fastapi.testclient import TestClient
 
 logging = logging.getLogger(__name__)
 app = create_app()

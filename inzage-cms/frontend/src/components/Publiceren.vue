@@ -198,8 +198,8 @@
 import axios from 'axios'
 import { defineComponent } from 'vue'
 import store from '@/store/index'
-import { PublicatieStatus } from '@/types/PublicatieStatus'
 import { EvtpVersion } from '@/types/EvtpVersion'
+import { PublicatieStatus, getPublicatieStatus } from '@/types/PublicatieStatus'
 
 export default defineComponent({
   name: 'OE',
@@ -246,7 +246,7 @@ export default defineComponent({
     },
     evtpsForAutocomplete() {
       return this.evtpList?.map((obj) => ({
-        title: `${obj['evtp_nm']} versie: ${obj['versie_nr']}`,
+        title: `${obj['evtp_nm']} (${obj['evtp_cd']}) versie: ${obj['versie_nr']} - ${getPublicatieStatus(obj['id_publicatiestatus'])}`,
         value: obj['evtp_cd'],
         versie: obj['versie_nr'],
       }))

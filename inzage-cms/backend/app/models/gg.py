@@ -25,9 +25,9 @@ class Gg(Base, DefaultColumns):
     sort_key: Mapped[int | None] = mapped_column(
         Integer, comment="Sorteer volgorde van de koepelgegevensgroep in een besluit"
     )
-
     koepel: Mapped[bool | None] = mapped_column(Boolean, comment="Wel of geen koepel")
 
+    # Relationships
     parent_entities: Mapped[list["GgStruct"]] = relationship(
         "GgStruct",
         primaryjoin="Gg.gg_cd == GgStruct.gg_cd_sub",
@@ -38,6 +38,7 @@ class Gg(Base, DefaultColumns):
         primaryjoin="Gg.gg_cd == GgStruct.gg_cd_sup",
         viewonly=True,
     )
+    evtp_sort = relationship("GgEvtpSort", primaryjoin="Gg.gg_cd == GgEvtpSort.gg_cd", viewonly=True)
 
     @hybrid_property
     def count_parents(self) -> int:
@@ -46,8 +47,6 @@ class Gg(Base, DefaultColumns):
     @hybrid_property
     def count_children(self) -> int:
         return len(self.child_entities)
-
-    evtp_sort = relationship("GgEvtpSort", primaryjoin="Gg.gg_cd == GgEvtpSort.gg_cd", viewonly=True)
 
 
 class GgStruct(Base, DefaultColumns):
@@ -64,6 +63,7 @@ class GgStruct(Base, DefaultColumns):
     gg_cd_sub: Mapped[int] = mapped_column(Integer, ForeignKey("gg.gg_cd"), comment="Sub (child) gegevensgroep code")
     gg_cd_sup: Mapped[int] = mapped_column(Integer, ForeignKey("gg.gg_cd"), comment="Super (parent) gegevensgroep code")
 
+    # Relationships
     parent_entity: Mapped["Gg"] = relationship(
         "Gg",
         foreign_keys=[gg_cd_sup],
@@ -91,11 +91,11 @@ class GgEvtpSort(Base, DefaultColumns):
     )
     gg_cd: Mapped[int] = mapped_column(Integer, ForeignKey("gg.gg_cd"), comment="Koepelgegevensgroep code")
     evtp_cd: Mapped[int] = mapped_column(Integer, ForeignKey("evtp_version.evtp_cd"), comment="Besluit code")
-
     sort_key: Mapped[int] = mapped_column(Integer, comment="Sorteer volgorde van de koepelgegevensgroep in een besluit")
 
-    entity_gg: Mapped["Oe"] = relationship("Gg", foreign_keys=[gg_cd], viewonly=True)  # noqa: F821
-    entity_evtp: Mapped["EvtpVersion"] = relationship(  # noqa: F821
+    # Relationships
+    entity_gg: Mapped["Oe"] = relationship("Gg", foreign_keys=[gg_cd], viewonly=True)  # type: ignore # noqa: F821
+    entity_evtp_version: Mapped["EvtpVersion"] = relationship(  # type: ignore # noqa: F821
         "EvtpVersion",
         foreign_keys=[evtp_cd],
     )

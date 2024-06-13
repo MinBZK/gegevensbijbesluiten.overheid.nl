@@ -55,4 +55,9 @@ export const questions: Question[] = [
     link_3_text: 'faq.6.link_3_text',
     link_3_url: 'faq.6.link_3_url',
   },
+  {
+    question: 'faq.7.question',
+    answer_1: 'faq.7.answer_1',
+    answer_2: 'faq.7.answer_2',
+  },
 ]

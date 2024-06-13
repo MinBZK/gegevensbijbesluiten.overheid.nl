@@ -132,7 +132,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         primary_key=models.gg.GgEvtpSort.gg_evtp_sort_cd.name,
         foreign_key_mapping={
             "gg_cd": "entity_gg",
-            "evtp_cd": "entity_evtp",
+            "evtp_cd": "entity_evtp_version",
         },
         input_schema=schemas.gg_evtp_sort.GgEvtpSortIn,
     ),
@@ -206,7 +206,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         description_key="",
         primary_key=models.evtp.EvtpGst.evtp_gst_cd.name,
         foreign_key_mapping={
-            "evtp_cd": "entity_evtp",
+            "evtp_cd": "entity_evtp_version",
             "gst_cd": "entity_gst",
         },
         input_schema=schemas.evtp_gst.EvtpGstIn,
@@ -223,7 +223,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         description_key="",
         primary_key=models.gst.GstGstt.gst_gstt_cd.name,
         foreign_key_mapping={
-            "gstt_cd": "entity_gsttype",
+            "gstt_cd": "entity_gst_type",
             "gst_cd": "entity_gst_gstt",
         },
         input_schema=schemas.gst_gstt.GstGsttIn,
@@ -233,7 +233,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         description_key=models.evtp_acc.EvtpAcc.notitie.name,
         primary_key=models.evtp_acc.EvtpAcc.evtp_acc_cd.name,
         foreign_key_mapping={
-            "evtp_cd": "entity_evtp",
+            "evtp_cd": "entity_evtp_version",
             "oe_cd": "entity_oe",
         },
         input_schema=schemas.evtp_acc.EvtpAccIn,
@@ -250,7 +250,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         description_key="",
         primary_key=models.evtp.EvtpOeComType.evtp_oe_com_type_cd.name,
         foreign_key_mapping={
-            "evtp_cd": "entity_evtp_oe_com_type",
+            "evtp_cd": "entity_evtp_version_oe_com_type",
             "oe_com_type_cd": "entity_oe_com_type",
         },
         input_schema=schemas.evtp_oe_com_type.EvtpOeComTypeIn,
@@ -274,7 +274,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         description_key="",
         primary_key=models.ond.EvtpOnd.evtp_ond_cd.name,
         foreign_key_mapping={
-            "evtp_cd": "entity_evtp",
+            "evtp_cd": "entity_evtp_version",
             "ond_cd": "entity_ond",
         },
         input_schema=schemas.evtp_ond.EvtpOndIn,

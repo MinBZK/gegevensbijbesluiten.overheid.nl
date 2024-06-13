@@ -30,6 +30,7 @@
                 :content="extractContent(oe)"
                 :loading="loading"
                 :chips="[]"
+                description="None"
                 @focus-has-been-set="() => (newFocusIsRequested = false)"
               >
               </OrganisatiesCard>
@@ -102,11 +103,14 @@ const page = computed(() => query.value.page)
 const totalCount = computed(() => data.value?.total_count || 0)
 const oeResults = computed(() => data.value?.results || [])
 const nPages = computed(() => Math.ceil(totalCount.value / query.value.limit))
+const scrollToCards = () => {
+  searchbar.value.$el.scrollIntoView({ behavior: 'smooth' })
+}
 
 const searchbar = ref()
 const setPage = (newPage: number) => {
   router.push({ query: { ...query.value, page: newPage } })
-  searchbar.value.$el.scrollIntoView({ behavior: 'smooth' })
+  scrollToCards()
 }
 
 const readTitle = ref<boolean>(false)
@@ -121,6 +125,7 @@ const doSearch = (searchtext: string) => {
   }
   router.push({ query: newQuery })
   newFocusIsRequested.value = true
+  scrollToCards()
 
   // In some situations, say the page title again. Everytime state changes, the title is updated and read.
   readTitle.value = !readTitle.value
@@ -167,6 +172,7 @@ ul.no-results {
 li {
   padding-left: 1em;
 }
+
 .card-container {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -176,6 +182,7 @@ li {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 35em) {
   .card-container {
     grid-template-columns: repeat(1, 1fr);

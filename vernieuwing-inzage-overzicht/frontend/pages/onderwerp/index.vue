@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <OnderwerpenCards
-      :number-of-tiles="11"
+      :number-of-tiles="12"
       :show-icons="true"
       class="tiles-container"
     />

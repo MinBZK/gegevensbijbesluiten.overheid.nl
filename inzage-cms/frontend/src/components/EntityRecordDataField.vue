@@ -24,6 +24,17 @@
         density="comfortable"
         variant="outlined"
       />
+      <v-textarea
+        v-else-if="fieldKey === 'versie_nr'"
+        :model-value="getModelValue()"
+        :label="(label || fieldKey) + (required ? '' : '')"
+        density="compact"
+        persistent-hint
+        variant="outlined"
+        persistent-placeholder
+        disabled
+        rows="1"
+      />
       <v-select
         v-else-if="fieldKey === 'id_publicatiestatus'"
         v-model="selectedIdPublicatiestatus"
@@ -83,7 +94,7 @@ import type { PropType } from 'vue'
 import axios from 'axios'
 import store from '@/store/index'
 import { getTableValue, getTableKey, formatDateToLocale } from '@/util/misc'
-import { PublicatieStatus } from '@/types/PublicatieStatus'
+import { getPublicatieStatus } from '@/types/PublicatieStatus'
 import { tables } from '@/config/tables'
 
 export default defineComponent({
@@ -170,7 +181,7 @@ export default defineComponent({
       selectedIdPublicatiestatus: '' as string,
     }
   },
-  computed: {     
+  computed: {
     store() {
       return store
     },
@@ -205,7 +216,7 @@ export default defineComponent({
       return this.foreignKey?.foreign_table.description_key || ''
     },
     recordsList() {
-      if (this.records.some((r) => 'versie_nr' in r)) {
+      if ((this.records.some((r) => 'versie_nr' in r))) {
         return this.records.map(
           (r) =>
             `${r[this.descriptionKey]} (${r[this.primaryKey]}) versie: ${r['versie_nr']
@@ -229,7 +240,7 @@ export default defineComponent({
     selectedForeignRecord() {
       const selectedForeignRecordObject = Object.assign(
         {},
-        this.records.some((r) => 'versie_nr' in r)
+        (this.records.some((r) => 'versie_nr' in r))
           ? this.records.filter(
             (r) =>
               `${r[this.descriptionKey]} (${r[this.primaryKey]}) versie: ${r['versie_nr']
@@ -284,7 +295,7 @@ export default defineComponent({
     setSelectedidPublicationStatus() {
       if (this.fieldKey === 'id_publicatiestatus') {
         const statusNumber = this.initialValue as number
-        this.selectedIdPublicatiestatus = Object.values(PublicatieStatus)[statusNumber-1] || 'Nieuw'
+        this.selectedIdPublicatiestatus = getPublicatieStatus(statusNumber)
       }
     },
     async updateForeignRecord() {

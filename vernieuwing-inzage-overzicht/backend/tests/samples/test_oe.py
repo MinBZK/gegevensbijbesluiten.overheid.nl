@@ -2,7 +2,6 @@ import logging
 from random import randint
 
 import pytest
-
 from app.crud.oe import get_all
 
 logging = logging.getLogger(__name__)

@@ -7,9 +7,9 @@
         <h3>{{ props.title }}</h3>
       </div>
     </div>
-    <p v-if="!props.loading">
+    <!-- <p v-if="!props.loading">
       {{ props.description }}
-    </p>
+    </p> -->
 
     <div v-if="!props.loading" class="white-box">
       <div
@@ -22,7 +22,7 @@
           {{ item.description }}
         </NuxtLink>
       </div>
-      <div class="card-sub-content">
+      <div v-if="props.content.length > 3" class="card-sub-content">
         <img
           src="assets/images/icons/icon-hamburger.svg"
           aria-hidden

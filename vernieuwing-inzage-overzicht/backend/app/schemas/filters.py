@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class FilterData(BaseModel):
@@ -6,8 +6,7 @@ class FilterData(BaseModel):
     key: str
     count: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class EvtpFilterData(BaseModel):

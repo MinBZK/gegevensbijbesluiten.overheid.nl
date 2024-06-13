@@ -1,11 +1,10 @@
 import logging
 from random import randint
 
-import pytest
-from sqlalchemy import select
-
 import app.models as models
+import pytest
 from app.config.resource import TableResource
+from sqlalchemy import select
 
 logging = logging.getLogger(__name__)
 

@@ -171,6 +171,7 @@ export default defineComponent({
       } as TableModel,
       evtp_gst_model: {
         evtp_cd: null,
+        versie_nr: null,
         gst_cd: null as number | null,
       },
       recordLoaded: false as boolean,
@@ -490,6 +491,7 @@ export default defineComponent({
           // For adding a new gst relation
         } else if (this.isNewGSTRelation) {
           this.evtp_gst_model.evtp_cd = this.record['evtp_cd']
+          this.evtp_gst_model.versie_nr = this.record['versie_nr']
           this.evtp_gst_model.gst_cd = this.newId
           const endpoint_evtp_gst = `${store.state.APIurl}/evtp-gst/`
           await axios.post(endpoint_evtp_gst, this.evtp_gst_model)

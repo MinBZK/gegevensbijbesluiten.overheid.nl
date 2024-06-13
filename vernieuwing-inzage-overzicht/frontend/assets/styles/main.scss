@@ -201,7 +201,9 @@ a.focus-border:focus {
 [data-icon='Belastingen'] {
   background-image: url('../images/icons/onderwerp/icon-tax.svg');
 }
-
+[data-icon='Ondernemen'] {
+  background-image: url('../images/icons/onderwerp/icon-undertaking.svg');
+}
 
 .card-container {
   max-width: 1280px;
@@ -250,4 +252,8 @@ a.focus-border:focus {
 
 .capitalise-first:first-letter {
   text-transform: uppercase;
+}
+
+p {
+  white-space: pre-line
 }
