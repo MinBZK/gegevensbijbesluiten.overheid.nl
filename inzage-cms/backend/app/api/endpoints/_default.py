@@ -32,8 +32,8 @@ def determine_if_relations_included(model_name: str, schema_module: ModuleType, 
 
 
 def delete_relation_parent_child(router: APIRouter, base_model: Type[Base], *args) -> None:
-    child_column = [attr for attr in dir(base_model) if attr.endswith("_cd_sub")][0]
-    parent_column = [attr for attr in dir(base_model) if attr.endswith("_cd_sup")][0]
+    child_column = [attr for attr in dir(base_model) if attr.endswith(("_cd_sub", "oe_cd"))][0]
+    parent_column = [attr for attr in dir(base_model) if attr.endswith(("_cd_sup", "_koepel_cd"))][0]
 
     @router.delete("/{child_cd}/parent/{parent_cd}")
     async def delete_relation_parent_child(
@@ -182,7 +182,7 @@ def generate_router(
             models.gst.GstGstt,
             models.gg.GgEvtpSort,
             models.gg.GgStruct,
-            models.oe.OeStruct,
+            models.oe.OeKoepelOe,
         ]:
             return await crud._default_crud_operations.get_filtered(
                 db=db,

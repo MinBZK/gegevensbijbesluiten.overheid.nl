@@ -98,9 +98,32 @@
           <v-icon>mdi-plus-box-multiple-outline</v-icon>
         </v-btn>
         <v-btn
-          v-if="['gg', 'gg-koepel', 'oe', 'evtp-version'].includes(resource)"
+          v-if="['gg', 'gg-koepel', 'oe', 'oe-koepel'].includes(resource)"
           :to="{
             name: 'entityRecordRelations',
+            params: {
+              id,
+              resource,
+              recordResource: resource,
+              tab: 'relations',
+            },
+          }"
+          color="secondary"
+          flat
+          class="mx-2 table-button"
+        >
+          <v-tooltip
+            activator="parent"
+            location="top"
+          >
+            {{ ['gg', 'gg-koepel'].includes(resource) ? 'Relatie gegevensgroep' : ['oe', 'oe-koepel'].includes(resource) ? 'Relatie organisatie' : '' }}
+          </v-tooltip>
+          <v-icon>mdi-arrow-up-down-bold-outline</v-icon>
+        </v-btn>
+        <v-btn
+          v-if="['evtp-version'].includes(resource)"
+          :to="{
+            name: 'entityEvtpStructure',
             params: {
               id,
               resource,
@@ -117,7 +140,7 @@
             activator="parent"
             location="top"
           >
-            {{ ['gg', 'gg-koepel'].includes(resource) ? 'Relatie gegevensgroep' : resource == 'oe' ? 'Relatie organisatie' : 'Besluitenboom structuur' }}
+            {{ 'Besluitenboom structuur' }}
           </v-tooltip>
           <v-icon>mdi-arrow-up-down-bold-outline</v-icon>
         </v-btn>

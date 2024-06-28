@@ -73,8 +73,6 @@ def _get_relationships_nested() -> List[tuple[Type[Base], Type[Base], str, str]]
     Get the nested relationships for a given base model.
     """
     return [
-        (models.oe.Oe, models.oe.OeStruct, "child_entities", "child_entity"),
-        (models.oe.Oe, models.oe.OeStruct, "parent_entities", "parent_entity"),
         (models.gg.Gg, models.gg.GgStruct, "parent_entities", "parent_entity"),
         (models.gg.Gg, models.gg.GgStruct, "child_entities", "child_entity"),
     ]
@@ -223,7 +221,7 @@ async def get_filtered(
     stmt.join(gg_alias_1, onclause=models.gg.GgStruct.gg_cd_sub == gg_alias_1.gg_cd)
     stmt.join(gg_alias_2, onclause=models.gg.GgStruct.gg_cd_sup == gg_alias_2.gg_cd)
 
-    if base_model not in [models.gg.GgStruct, models.oe.OeStruct, models.gst.Gst, models.oe.Oe, models.gg.Gg]:
+    if base_model not in [models.gg.GgStruct, models.oe.OeKoepel, models.gst.Gst, models.oe.Oe, models.gg.Gg]:
         for rel in relationships:
             stmt = stmt.join(getattr(base_model, rel))
 

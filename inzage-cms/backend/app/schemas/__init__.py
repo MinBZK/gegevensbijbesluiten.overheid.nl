@@ -16,8 +16,9 @@ from . import (
     gst_type,  # noqa: F401
     ibron,  # noqa: F401
     oe,  # noqa: F401
-    oe_com_type,  # noqa: F401
-    oe_struct,  # noqa: F401
+    oe_com_type,
+    oe_koepel_oe,  # noqa: F401
+    oe_koepel,  # noqa: F401
     ond,  # noqa: F401
     rge,  # noqa: F401
     rules,  # noqa: F401

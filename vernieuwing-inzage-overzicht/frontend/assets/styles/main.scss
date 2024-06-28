@@ -253,7 +253,9 @@ a.focus-border:focus {
 .capitalise-first:first-letter {
   text-transform: uppercase;
 }
-
 p {
   white-space: pre-line
+}
+.modal-title-padding {
+  padding-right: 1em;
 }

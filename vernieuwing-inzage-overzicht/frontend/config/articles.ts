@@ -64,4 +64,20 @@ export const articles: Article[] = [
     image: 'articles/article_7.png',
     alt: 'articles.7.alt',
   },
+  {
+    title: 'articles.8.title',
+    date: 'articles.8.date',
+    summary: 'articles.8.summary',
+    link: 'https://rog.pleio.nl/groups/view/60cfba39-0fb2-4020-a0e1-3ce97a95c8ae/beleidsdossier-regie-op-gegevens/wiki/view/9d1194c6-578b-476b-8c26-72b2cea7811f/230524-webinar-algemene-inzage-persoonsgegevens',
+    image: 'articles/article_8.png',
+    alt: 'articles.8.alt',
+  },
+  {
+    title: 'articles.9.title',
+    date: 'articles.9.date',
+    summary: 'articles.9.summary',
+    link: 'https://rog.pleio.nl/groups/view/a1bbf721-7c04-4bb6-9477-6d8ce34af338/inzicht-in-gegegevensgebruik-bij-besluiten/news/view/3fcc1818-e46f-4429-a7b8-236f17a2915e/meer-grip-op-eigen-gegevens',
+    image: 'articles/article_9.png',
+    alt: 'articles.9.alt',
+  },
 ]

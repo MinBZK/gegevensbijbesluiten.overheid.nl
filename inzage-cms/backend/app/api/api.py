@@ -63,9 +63,15 @@ router.include_router(
 )
 
 router.include_router(
-    _generic_tables.oe_struct_router,
-    prefix="/oe-struct",
-    tags=["Organisatie structuur"],
+    _generic_tables.oe_koepel_router,
+    prefix="/oe-koepel",
+    tags=["Organisatie koepel"],
+)
+
+router.include_router(
+    _generic_tables.oe_koepel_oe_router,
+    prefix="/oe-koepel-oe",
+    tags=["Organisatie koepel koppeling"],
 )
 
 router.include_router(

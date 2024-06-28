@@ -141,12 +141,11 @@
       "toegankelijkheid": "Toegankelijkheid",
       "toegankelijkheidPage": {
         "p1": "Bij het ontwikkelen van deze website worden de wensen en eisen voor een toegankelijke website direct ingebouwd. De makers van deze website zijn getraind in digitale toegankelijkheid. Een onafhankelijke toegankelijkheidsexpert levert regelmatig advies.",
-        "p2": "Deze website voldoet aan WCAG 2.1 niveau AA, de Web Content Accesibility Guidelines.",
-        "p3": "Dit betekent dat de website gebruikt kan worden door iedereen, inclusief mensen met een functiebeperking.",
-        "p4": "Vanwege recente aanpassingen wordt de website binnenkort opnieuw getoetst op toegankelijkheid.",
-        "p5": "Voor meer informatie:",
+        "p2": "Deze website moet voldoen aan WCAG 2.1 niveau AA, de Web Content Accesibility Guidelines. Dit betekent dat de website gebruikt kan worden door iedereen, inclusief mensen met een functiebeperking.",
+        "p3": "Vanwege recente aanpassingen wordt de website binnenkort opnieuw getoetst op toegankelijkheid.",
+        "p4": "Voor meer informatie:",
         "li1": "Register van Toegankelijkheidsverklaringen van de overheid",
-        "li1_link": "https://www.toegankelijkheidsverklaring.nl/register?w=wiegebruiktmijngegevens",
+        "li1_link": "https://www.toegankelijkheidsverklaring.nl/register?w=gegevens+bij+besluiten",
         "li2": "Toegankelijkheidscertificaat",
         "li2_link": "https://www.toegankelijkheidscertificaat.nl/wiegebruiktmijngegevens.nl"
       },
@@ -270,14 +269,9 @@
       "answer_2": "In de wet staat bijvoorbeeld wanneer een gemeente, ministerie of uitvoeringsorganisatie gegevens mag gebruiken."
     },
     "5": {
-      "question": "Wat kan ik doen als ik een fout ontdek in de gebruikte gegevens?",
-      "answer_1": "De overheidsorganisatie die uw gegevens beheert, is volgens de wet verantwoordelijk voor de juistheid ervan. Komt u onjuistheden tegen? Dan kunt u het volgende doen:",
-      "answer_2": "1. U neemt contact op met de betreffende organisatie om een klacht in te dienen of bezwaar te maken.",
-      "answer_3": "2. U neemt contact op met het Meldpunt Fouten in Overheidsregistraties (MFO).",
-      "link_4_text": "Voor burgers",
-      "link_4_url": "https://www.rvig.nl/mfo-burgers",
-      "link_5_text": "Voor ondernemers",
-      "link_5_url": "https://www.rvig.nl/mfo"
+      "question": "Waarom zie ik alleen algemene gegevens en niet mijn persoonlijke gegevens?",
+      "answer_1": "Bij sommige overheidsorganisaties is het al mogelijk om (gedeeltelijk) persoonlijke gegevens in te zien, zoals de vooringevulde belastingaangifte van de Belastingdienst. Maar om alle systemen volledig op elkaar af te stemmen en vervolgens inzage te kunnen bieden, moeten nog grote stappen worden gezet.",
+      "answer_2": "Deze website levert daar een belangrijke bijdrage aan. Hier is inzichtelijk welke gegevens door welke organisatie worden geregistreerd en bijgehouden. Maar ook in welke situaties zij de gegevens met welke andere partijen delen voor besluitvorming. Voor die gegevensstromen en de openheid hierover is deze website bedoeld - niet als eindpunt, maar als een stap in de goede richting naar meer transparantie en helderheid."
     },
     "6": {
       "question": "Waar vind ik uitleg over mijn recht op overheidsinformatie?",
@@ -288,9 +282,14 @@
       "link_3_url": "https://www.rijksoverheid.nl/onderwerpen/wet-open-overheid-woo"
     },
     "7": {
-      "question": "Waarom zie ik alleen algemene gegevens en niet mijn persoonlijke gegevens?",
-      "answer_1": "Bij sommige overheidsorganisaties is het al mogelijk om (gedeeltelijk) persoonlijke gegevens in te zien, zoals de vooringevulde belastingaangifte van de Belastingdienst. Maar om alle systemen volledig op elkaar af te stemmen en vervolgens inzage te kunnen bieden, moeten nog grote stappen worden gezet.",
-      "answer_2": "Deze website levert daar een belangrijke bijdrage aan. Hier is inzichtelijk welke gegevens door welke organisatie worden geregistreerd en bijgehouden. Maar ook in welke situaties zij de gegevens met welke andere partijen delen voor besluitvorming. Voor die gegevensstromen en de openheid hierover is deze website bedoeld - niet als eindpunt, maar als een stap in de goede richting naar meer transparantie en helderheid."
+      "question": "Wat kan ik doen als ik een fout ontdek in de gebruikte gegevens?",
+      "answer_1": "De overheidsorganisatie die uw gegevens beheert, is volgens de wet verantwoordelijk voor de juistheid ervan. Komt u onjuistheden tegen? Dan kunt u het volgende doen:",
+      "answer_2": "1. U neemt contact op met de betreffende organisatie om een klacht in te dienen of bezwaar te maken.",
+      "answer_3": "2. U neemt contact op met het Meldpunt Fouten in Overheidsregistraties (MFO).",
+      "link_4_text": "Voor burgers",
+      "link_4_url": "https://www.rvig.nl/mfo-burgers",
+      "link_5_text": "Voor ondernemers",
+      "link_5_url": "https://www.rvig.nl/mfo"
     }
   },
   "getGgPropertyExplanation": "Uitgebreide uitleg van het gegevensgroep '{field}'",
@@ -371,6 +370,18 @@
       "date": "1 mei 2024",
       "summary": "Ons team verzorgt donderdag 23 mei (10.00 – 11.00 uur) een webinar om overheidsorganisaties inzicht te geven in hoe ze kunnen samenwerken met ons, hoe ze hun besluiten kunnen nomineren en hoe het resultaat er op de website uitziet.",
       "alt": "Website banner van gegevensbijbesluiten"
+    },
+    "8": {
+      "title": "Webinar Algemene Inzage Persoonsgegevens",
+      "date": "6 juni 2024",
+      "summary": "Ons team verzorgde donderdag 23 mei een webinar om overheidsorganisaties inzicht te geven in hoe ze kunnen samenwerken met ons, hoe ze hun besluiten kunnen nomineren en hoe het resultaat er op de website uitziet.",
+      "alt": "Website banner van gegevensbijbesluiten"
+    }, 
+    "9": {
+      "title": "Onderzoek digitale tools",
+      "date": "12 juni 2024",
+      "summary": "Waag Futurelab heeft onderzoek gedaan naar de vele digitale tools waarmee inwoners meer grip kunnen krijgen op het gebruik van hun gegevens door overheidsdiensten. Een samenvatting van de uitkomsten en hoe ‘gegevensbijbesluiten’ aansluit met meer transparantie voor de burger.",
+      "alt": "Plaatje van Waag futurelab"
     }
   },
   "onderwerpen": {
@@ -401,7 +412,8 @@
     "organisaties": {
       "title": "Organisaties",
       "searchText": "Zoek naar organisaties",
-      "description": "Dit overzicht toont organisaties die verantwoordelijk zijn voor het uitvoeren van overheidsbesluiten. Het gaat om overheidsorganisaties én niet-overheidsorganisaties die namens de overheid een wettelijke taak uitvoeren. Per organisatie vindt u de bijbehorende besluiten."
+      "description_1": "Op deze pagina ziet u welke overheidsinstanties de besluiten die op deze website staan, nemen. Ook andere organisaties die een wettelijke taak uitvoeren en besluiten mogen nemen, worden hier vermeld.",
+      "description_italics": "Het overzicht is nog niet compleet en zal verder worden uitgebreid. Hier worden alleen organisaties weergegeven waarvan op dit moment een besluit op de website staat."
     }
   },
   "uitleg": {

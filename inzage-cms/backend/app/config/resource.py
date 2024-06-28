@@ -23,7 +23,8 @@ class TableResource(str, Enum):
     gg_evtp_sort = "gg-evtp-sort"
     gst = "gst"
     rge = "rge"
-    oe_struct = "oe-struct"
+    oe_koepel_oe = "oe-koepel-oe"
+    oe_koepel = "oe-koepel"
     ibron = "ibron"
     gst_gg = "gst-gg"
     gst_rge = "gst-rge"
@@ -46,7 +47,8 @@ MAPPING_RESOURCE_TO_TABLE = {
     TableResource.gg_evtp_sort.value: models.gg.GgEvtpSort.__tablename__,
     TableResource.gst.value: models.gst.Gst.__tablename__,
     TableResource.rge.value: models.rge.Rge.__tablename__,
-    TableResource.oe_struct.value: models.oe.OeStruct.__tablename__,
+    TableResource.oe_koepel_oe.value: models.oe.OeKoepelOe.__tablename__,
+    TableResource.oe_koepel.value: models.oe.OeKoepel.__tablename__,
     TableResource.ibron.value: models.ibron.Ibron.__tablename__,
     TableResource.gst_gg.value: models.gst.GstGg.__tablename__,
     TableResource.gst_rge.value: models.gst.GstRge.__tablename__,
@@ -77,7 +79,8 @@ EXCEPTIONS_REQUIRED_FIELDS = {
     TableResource.gg_evtp_sort.value: [],
     TableResource.gst.value: [],
     TableResource.rge.value: [],
-    TableResource.oe_struct.value: [],
+    TableResource.oe_koepel_oe.value: [],
+    TableResource.oe_koepel.value: [],
     TableResource.ibron.value: [],
     TableResource.gst_gg.value: [],
     TableResource.gst_type.value: ["gstt_oms"],
@@ -111,9 +114,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         resource=TableResource.gg,
         description_key=models.gg.Gg.omschrijving.name,
         primary_key=models.gg.Gg.gg_cd.name,
-        foreign_key_mapping={
-            "ibron_cd": "entity_ibron",
-        },
+        foreign_key_mapping={},
         input_schema=schemas.gg.GgIn,
     ),
     models.gg.GgStruct.__tablename__: TableToResourceMapping(
@@ -184,15 +185,22 @@ MAPPING_TABLE_TO_RESOURCE = {
         },
         input_schema=schemas.evtp_version.EvtpVersionIn,
     ),
-    models.oe.OeStruct.__tablename__: TableToResourceMapping(
-        resource=TableResource.oe_struct,
+    models.oe.OeKoepel.__tablename__: TableToResourceMapping(
+        resource=TableResource.oe_koepel,
+        description_key="titel",
+        primary_key=models.oe.OeKoepel.oe_koepel_cd.name,
+        foreign_key_mapping={},
+        input_schema=schemas.oe_koepel.OeKoepelIn,
+    ),
+    models.oe.OeKoepelOe.__tablename__: TableToResourceMapping(
+        resource=TableResource.oe_koepel_oe,
         description_key="",
-        primary_key=models.oe.OeStruct.oe_struct_cd.name,
+        primary_key=models.oe.OeKoepelOe.oe_koepel_oe_cd.name,
         foreign_key_mapping={
-            "oe_cd_sub": "child_entity",
-            "oe_cd_sup": "parent_entity",
+            "oe_cd": "child_entity",
+            "oe_koepel_cd": "parent_entity",
         },
-        input_schema=schemas.oe_struct.OeStructIn,
+        input_schema=schemas.oe_koepel_oe.OeKoepelOeIn,
     ),
     models.ibron.Ibron.__tablename__: TableToResourceMapping(
         resource=TableResource.ibron,

@@ -189,10 +189,12 @@ onMounted(() => {
 <style scoped lang="scss">
 .h2-size {
   font-size: 48.375px;
+
   @media (max-width: 51em) {
     font-size: 32px;
   }
 }
+
 ul.no-results {
   list-style-image: url(@/assets/images/icons/icon-dart-right-blue.svg);
   line-height: 2 !important;
@@ -203,6 +205,7 @@ ul.no-results {
 li {
   padding-left: 1em;
 }
+
 .ul-padding {
   padding-left: 0px;
 }

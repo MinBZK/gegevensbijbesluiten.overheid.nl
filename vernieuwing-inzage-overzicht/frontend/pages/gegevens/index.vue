@@ -8,7 +8,7 @@
     <div class="row container columns no-padding">
       <div class="column-d-9">
         <h2 role="status">
-          {{ t(`gegevens.foundResults`, { n: totalCount }) }}
+          {{ t(`gegevens.foundResults`, { n: totalCountUnderlying }) }}
           {{ readTitle ? '&nbsp;' : null }}
         </h2>
         <div v-if="ggResults.length != 0" class="row no-padding">
@@ -48,7 +48,7 @@
             />
           </div>
         </div>
-        <div v-if="totalCount == 0">
+        <div v-if="totalCountUnderlying == 0">
           <p>{{ t('ggIndex.noResults.p1') }}</p>
           <ul class="no-results">
             <li>
@@ -103,9 +103,14 @@ watch(query, async () => {
 })
 
 const page = computed(() => query.value.page)
-const totalCount = computed(() => data.value?.total_count || 0)
+const totalCountUnderlying = computed(
+  () => data.value?.total_count_underlying || 0
+)
+const totalCountKoepel = computed(() => data.value?.total_count_koepel || 0)
 const ggResults = computed(() => data.value?.results || [])
-const nPages = computed(() => Math.ceil(totalCount.value / query.value.limit))
+const nPages = computed(() =>
+  Math.ceil(totalCountKoepel.value / query.value.limit)
+)
 const scrollToCards = () => {
   searchbar.value.$el.scrollIntoView({ behavior: 'smooth' })
 }
@@ -136,7 +141,7 @@ const doSearch = (searchtext: string) => {
 
 const extractContent = (data: Gg) => {
   const content = data.child_gg_struct.map((item) => ({
-    link: getLink(`/gegevens/${item.child_entity.gg_upc}`, 0).value,
+    link: getLink(`/gegevens/${item.child_entity.gg_upc}`).value,
     description: item.child_entity.omschrijving || t('ontbreekt'),
   }))
 
@@ -166,6 +171,7 @@ ul.no-results {
 li {
   padding-left: 1em;
 }
+
 .card-container {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -175,6 +181,7 @@ li {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 35em) {
   .card-container {
     grid-template-columns: repeat(1, 1fr);

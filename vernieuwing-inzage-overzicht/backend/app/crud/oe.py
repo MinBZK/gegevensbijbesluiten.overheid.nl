@@ -8,7 +8,7 @@ from sqlalchemy import (
     text,
     true,
 )
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.sql.expression import (
     case,
 )
@@ -19,6 +19,7 @@ from app.core.config import (
     CURRENT_VERSION,
     PUBLICATION_RANGE,
 )
+from app.database.database import Base
 from app.utils.decorators import (
     timeit_once,
 )
@@ -96,6 +97,23 @@ def get_details(
     return response
 
 
+def __gen_where_clause(oe_query: schemas.oe.OeQuery, selected_columns: list[str], model: Base):
+    """
+    Create a where clause based on the model to filter on search query
+    """
+    filters = []
+    selected_filters = []
+    if oe_query.searchtext:
+        selected_filters.append({"key": "searchtext", "value": oe_query.searchtext})
+        search_clauses = [
+            col.ilike(f"%{oe_query.searchtext.lower()}%")
+            for col in [c for c in model.__table__.columns if c.key in selected_columns]
+        ]
+        filters.append(or_(*search_clauses))
+    where_clause = and_(true(), *filters)
+    return where_clause
+
+
 @timeit_once
 def get_filtered(
     db: Session,
@@ -107,54 +125,41 @@ def get_filtered(
     Q2 - Queries all CHild Oe's matching the search queries, grouped under their parent Oe's
     Returns: Concatenated list of Q1 + Q2 (in that order)
     """
-    selected_columns = ["naam_officieel"]
-    filters = []
-    selected_filters = []
-
-    if oe_query.searchtext:
-        selected_filters.append({"key": "searchtext", "value": oe_query.searchtext})
-        search_clauses = [
-            col.ilike(f"%{oe_query.searchtext.lower()}%")
-            for col in [c for c in models.oe.Oe.__table__.columns if c.key in selected_columns]
-        ]
-        filters.append(or_(*search_clauses))
-
-    where_clause = and_(true(), *filters)
 
     # Apply filters and search queries to find parent_oe's and their children
     if oe_query.searchtext:
         parent_searchresult = (
-            db.execute(select(models.oe.Oe).filter(models.oe.Oe.child_oe_struct.has()).filter(where_clause))
+            db.execute(
+                select(models.oe.OeKoepel)
+                .filter(models.oe.OeKoepel.child_oe_struct.has())
+                .filter(__gen_where_clause(oe_query, ["titel", "omschrijving"], models.oe.OeKoepel))
+            )
             .scalars()
             .all()
         )
-        grouped_children = [[item.oe_cd, child.oe_cd] for item in parent_searchresult for child in item.child_oe_entity]
+        grouped_children = [
+            [item.oe_koepel_cd, child.oe_cd] for item in parent_searchresult for child in item.child_entities
+        ]
     else:
         grouped_children = []
 
     # Apply filters and search queries to find child_oe's
     children_searchresult = (
-        db.execute(select(models.oe.Oe.oe_cd).filter(models.oe.Oe.parent_entity.any()).filter(where_clause))
+        db.execute(
+            select(models.oe.Oe)
+            .options(joinedload(models.oe.Oe.parent_entities))
+            .filter(__gen_where_clause(oe_query, ["naam_officieel"], models.oe.Oe))
+            .filter(models.oe.Oe.parent_oe_struct.has())
+        )
+        .unique()
         .scalars()
         .all()
     )
 
     # Match the children to their parents (oe_cd only)
-    if children_searchresult:
-        isolated_children = db.execute(
-            text(
-                f"""
-                SELECT parent_oe.oe_cd, child_oe.oe_cd
-                FROM oe AS parent_oe
-                JOIN oe_struct ON parent_oe.oe_cd = oe_struct.oe_cd_sup
-                JOIN oe AS child_oe ON oe_struct.oe_cd_sub = child_oe.oe_cd
-                WHERE child_oe.oe_cd IN ({', '.join(map(repr, children_searchresult))})
-                ORDER BY parent_oe.oe_cd, child_oe.oe_cd;
-                """
-            )
-        ).all()
-    else:
-        isolated_children = []
+    isolated_children = [
+        [parent.oe_koepel_cd, item.oe_cd] for item in children_searchresult for parent in item.parent_entities
+    ]
 
     # Concatenate the matched parents and the children
     child_parent_cds = list(grouped_children) + isolated_children  # type: ignore
@@ -162,7 +167,6 @@ def get_filtered(
     if not child_parent_cds:
         # No results found
         parents = []
-        num_results = 0
     else:
         # Filter any child oe's without any published evtp's
         orphaned_children = (
@@ -183,7 +187,6 @@ def get_filtered(
         child_parent_cds = [
             (parent_cd, child_cd) for parent_cd, child_cd in child_parent_cds if child_cd in orphaned_children
         ]
-        num_results = len(set(cp[0] for cp in child_parent_cds))
 
         # Clip the results to the desired limit and offset
         result_range = (
@@ -199,7 +202,7 @@ def get_filtered(
         if parent_cds:
             id_ordering = case(
                 {_id: index for index, _id in enumerate(parent_cds)},
-                value=models.oe.Oe.oe_cd,
+                value=models.oe.OeKoepel.oe_koepel_cd,
             )
         else:
             id_ordering = None
@@ -208,29 +211,37 @@ def get_filtered(
         parents = []
         if id_ordering is not None:
             q_parents = db.scalars(
-                select(models.oe.Oe).filter(models.oe.Oe.oe_cd.in_(parent_cds)).order_by(id_ordering)
+                select(models.oe.OeKoepel).filter(models.oe.OeKoepel.oe_koepel_cd.in_(parent_cds)).order_by(id_ordering)
             )
 
             for item in q_parents:
                 q_children_cds = [
-                    child_cd for parent_cd, child_cd in child_parent_cds_ranged if parent_cd == item.oe_cd
+                    child_cd for parent_cd, child_cd in child_parent_cds_ranged if parent_cd == item.oe_koepel_cd
                 ]
 
                 q_children = db.scalars(
-                    select(models.oe.OeStruct).filter(models.oe.OeStruct.oe_cd_sub.in_(q_children_cds))
+                    select(models.oe.OeKoepelOe).filter(
+                        models.oe.OeKoepelOe.oe_cd.in_(q_children_cds),
+                        models.oe.OeKoepelOe.oe_koepel_cd == item.oe_koepel_cd,
+                    )
                 )
 
-                parent = schemas.oe.ParentOe(
-                    oe_upc=item.oe_upc,
-                    naam_officieel=item.naam_officieel,
-                    child_oe_struct=[child for child in q_children],  # type: ignore
+                children = [child for child in q_children]
+                parent = schemas.oe.OeKoepel(
+                    titel=item.titel,
+                    omschrijving=item.omschrijving,
+                    child_oe_struct=children,
                 )
                 parents.append(parent)
         else:
             q_parents = []
 
+    unique_parents = set(item[0] for item in child_parent_cds)
+    unique_children = set([item[1] for item in child_parent_cds])
+
     response = schemas.oe.OeQueryResult(
         results=parents,
-        total_count=num_results,
+        total_count_koepel=len(unique_parents),
+        total_count_underlying=len(unique_children),
     )
     return response

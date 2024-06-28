@@ -30,7 +30,8 @@ class ResourcePks:
     gst: PrimaryKeys
     ibron: PrimaryKeys
     oe_com_type: PrimaryKeys
-    oe_struct: PrimaryKeys
+    oe_koepel: PrimaryKeys
+    oe_koepel_oe: PrimaryKeys
     oe: PrimaryKeys
     rge: PrimaryKeys
     ond: PrimaryKeys
@@ -52,7 +53,8 @@ class ResourcePayloads:
     gst: schemas.gst.GstIn
     ibron: schemas.ibron.IbronIn
     oe_com_type: schemas.oe_com_type.OeComTypeIn
-    oe_struct: schemas.oe_struct.OeStructIn
+    oe_koepel_oe: schemas.oe_koepel_oe.OeKoepelOeIn
+    oe_koepel: schemas.oe_koepel.OeKoepelIn
     oe: schemas.oe.OeIn
     rge: schemas.rge.RgeIn
     ond: schemas.ond.OndIn
@@ -79,8 +81,8 @@ def populate_payloads(resource_pks: ResourcePks, resource_payloads: ResourcePayl
     resource_payloads.gst_gstt.gst_cd = resource_pks.gst.database_pk
     resource_payloads.gst_gstt.gstt_cd = resource_pks.gst_gstt.database_pk
     resource_payloads.ibron.oe_cd = resource_pks.oe.database_pk
-    resource_payloads.oe_struct.oe_cd_sub = resource_pks.oe.database_pk
-    resource_payloads.oe_struct.oe_cd_sup = resource_pks.oe.database_pk
+    resource_payloads.oe_koepel_oe.oe_cd = resource_pks.oe.database_pk
+    resource_payloads.oe_koepel_oe.oe_koepel_cd = resource_pks.oe_koepel.database_pk
     resource_payloads.oe.ibron_cd = resource_pks.ibron.database_pk
     resource_payloads.evtp_ond.evtp_cd = resource_pks.evtp_version.database_pk
     resource_payloads.evtp_ond.ond_cd = resource_pks.ond.database_pk
@@ -104,7 +106,8 @@ def resource_pks(db):
         gst=PrimaryKeys(db.scalars(select(models.gst.Gst.gst_cd)).first(), None),
         ibron=PrimaryKeys(db.scalars(select(models.ibron.Ibron.ibron_cd)).first(), None),
         oe_com_type=PrimaryKeys(db.scalars(select(models.oe.OeComType.oe_com_type_cd)).first(), None),
-        oe_struct=PrimaryKeys(db.scalars(select(models.oe.OeStruct.oe_cd_sub)).first(), None),
+        oe_koepel_oe=PrimaryKeys(db.scalars(select(models.oe.OeKoepelOe.oe_koepel_oe_cd)).first(), None),
+        oe_koepel=PrimaryKeys(db.scalars(select(models.oe.OeKoepel.oe_koepel_cd)).first(), None),
         oe=PrimaryKeys(db.scalars(select(models.oe.Oe.oe_cd)).first(), None),
         rge=PrimaryKeys(db.scalars(select(models.rge.Rge.rge_cd)).first(), None),
         ond=PrimaryKeys(db.scalars(select(models.ond.Ond.ond_cd)).first(), None),
@@ -194,11 +197,12 @@ def resource_payloads(resource_pks):
             omschrijving=standard_text,
             notitie=standard_text,
         ),
-        oe_struct=schemas.oe_struct.OeStructIn(
+        oe_koepel_oe=schemas.oe_koepel_oe.OeKoepelOeIn(
             notitie=standard_text,
-            oe_cd_sub=standard_value,
-            oe_cd_sup=standard_value,
+            oe_cd=standard_value,
+            oe_koepel_cd=standard_value,
         ),
+        oe_koepel=schemas.oe_koepel.OeKoepelIn(titel=standard_text, omschrijving=standard_text),
         oe=schemas.oe.OeIn(
             afko=standard_text,
             e_contact=standard_text,

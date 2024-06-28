@@ -34,7 +34,7 @@
               >
               <span v-if="crumb.routeName == null">{{ crumb.label }}</span>
             </li>
-            <li>{{ pathTail.label }}</li>
+            <li>{{ capitaliseFirstLetter(pathTail.label) }}</li>
           </ol>
         </ClientOnly>
       </div>
@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { navigationItems } from '@/config/config'
 import { evtpNm, ggNm, oeNm } from '@/utils/index'
-import { getLink } from '~/common/common-functions'
+import { getLink, capitaliseFirstLetter } from '~/common/common-functions'
 
 const error = useError()
 
@@ -114,7 +114,6 @@ const pathTail = computed(() => breadcrumbs.value.slice(-1)[0])
 
 <style scoped lang="scss">
 .container {
-  // width: $page-width;
   padding-top: 38px;
 }
 </style>

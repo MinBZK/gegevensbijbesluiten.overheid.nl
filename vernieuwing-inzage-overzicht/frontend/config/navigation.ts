@@ -7,6 +7,7 @@ interface navigationHeader {
   pageDescriptionParagraph_1: string
   pageDescriptionParagraph_2: string
   pageDescriptionParagraph_3: string
+  pageDescriptionItalic: string
   pageLink_1: string
   pageLink_2: string
 }
@@ -21,6 +22,7 @@ export const navigationHeaders: navigationHeader[] = [
     pageDescriptionParagraph_1: 'pages: home.description_1',
     pageDescriptionParagraph_2: 'pages: home.description_2',
     pageDescriptionParagraph_3: '',
+    pageDescriptionItalic: '',
     pageLink_1: 'pages: onderwerpen.title',
     pageLink_2: 'pages: besluiten.title',
   },
@@ -33,6 +35,7 @@ export const navigationHeaders: navigationHeader[] = [
     pageDescriptionParagraph_1: 'pages: onderwerpen.description_1',
     pageDescriptionParagraph_2: 'pages: onderwerpen.description_2',
     pageDescriptionParagraph_3: '',
+    pageDescriptionItalic: '',
     pageLink_1: '',
     pageLink_2: '',
   },
@@ -49,6 +52,7 @@ export const navigationHeaders: navigationHeader[] = [
     pageDescriptionParagraph_1: 'pages: besluiten.description_1',
     pageDescriptionParagraph_2: 'pages: besluiten.description_2',
     pageDescriptionParagraph_3: 'pages: besluiten.description_3',
+    pageDescriptionItalic: '',
     pageLink_1: '',
     pageLink_2: '',
   },
@@ -61,21 +65,23 @@ export const navigationHeaders: navigationHeader[] = [
     pageDescriptionParagraph_1: 'pages: gegevens.description_1',
     pageDescriptionParagraph_2: 'pages: gegevens.description_2',
     pageDescriptionParagraph_3: '',
+    pageDescriptionItalic: '',
     pageLink_1: '',
     pageLink_2: '',
   },
-  // {
-  //   label: 'navigation.organisaties',
-  //   routeName: 'organisaties',
-  //   highlightOnRoutes: ['organisaties', 'organisaties-oe_upc'],
-  //   banner: 'heroes/organisaties-hero.svg',
-  //   pageTitle: 'pages: organisaties.title',
-  //   pageDescriptionParagraph_1: 'pages: organisaties.description_1',
-  //   pageDescriptionParagraph_2: '',
-  //   pageDescriptionParagraph_3: '',
-  //   pageLink_1: '',
-  //   pageLink_2: '',
-  // },
+  {
+    label: 'navigation.organisaties',
+    routeName: 'organisaties',
+    highlightOnRoutes: ['organisaties', 'organisaties-oe_upc'],
+    banner: 'heroes/organisaties-hero.svg',
+    pageTitle: 'pages: organisaties.title',
+    pageDescriptionParagraph_1: 'pages: organisaties.description_1',
+    pageDescriptionParagraph_2: '',
+    pageDescriptionParagraph_3: '',
+    pageDescriptionItalic: 'pages: organisaties.description_italics',
+    pageLink_1: '',
+    pageLink_2: '',
+  },
   // {
   //   label: 'navigation.dashboard',
   //   routeName: 'dashboard',

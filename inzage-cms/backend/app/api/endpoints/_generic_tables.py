@@ -28,11 +28,13 @@ gst_type_router = generate_router(model_name=TableResource.gst_type.name, base_m
 gst_router = generate_router(model_name=TableResource.gst.name, base_model=models.gst.Gst)
 ibron_router = generate_router(model_name=TableResource.ibron.name, base_model=models.ibron.Ibron)
 oe_com_type_router = generate_router(model_name=TableResource.oe_com_type.name, base_model=models.oe.OeComType)
-oe_struct_router = generate_router(
-    model_name=TableResource.oe_struct.name,
-    base_model=models.oe.OeStruct,
+oe_koepel_oe_router = generate_router(
+    model_name=TableResource.oe_koepel_oe.name,
+    base_model=models.oe.OeKoepelOe,
     additional_routes=[delete_relation_parent_child],
 )
+oe_koepel_router = generate_router(model_name=TableResource.oe_koepel.name, base_model=models.oe.OeKoepel)
+
 oe_router = generate_router(model_name=TableResource.oe.name, base_model=models.oe.Oe)
 rge_router = generate_router(model_name=TableResource.rge.name, base_model=models.rge.Rge)
 ond_router = generate_router(model_name=TableResource.ond.name, base_model=models.ond.Ond)

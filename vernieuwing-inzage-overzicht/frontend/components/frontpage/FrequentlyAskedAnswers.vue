@@ -17,9 +17,9 @@
           link4.text
         }}</ExternalLink>
       </p>
-      <p v-if="link5">
-        <ExternalLink :href="link5.url" :is-mobile="isMobile">{{
-          link5.text
+      <p v-if="link7">
+        <ExternalLink :href="link7.url" :is-mobile="isMobile">{{
+          link7.text
         }}</ExternalLink>
       </p>
     </div>
@@ -64,7 +64,7 @@ const link4 = computed(() => {
   }
   return null
 })
-const link5 = computed(() => {
+const link7 = computed(() => {
   if (props.question?.link_5_url && props.question?.link_5_text) {
     return {
       url: t(props.question.link_5_url),

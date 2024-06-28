@@ -1,4 +1,4 @@
-from sqlalchemy import VARCHAR, Boolean, ForeignKey, Integer
+from sqlalchemy import VARCHAR, ForeignKey, Integer
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -9,32 +9,22 @@ from app.database.database import Base
 from app.models._default_columns import DefaultColumns
 
 
-class OeStruct(Base, DefaultColumns):
+class OeKoepelOe(Base, DefaultColumns):
     """
-    Table description: hiërarchische structuur van organisaties wat resulteert in een sub(=child)-sup(=parent) relatie
+    Table description: hiërarchische structuur van organisaties en koepelorganisaties
     """
 
-    __tablename__ = "oe_struct"
-    __table_args__ = {
-        "comment": "Hiërarchische structuur van organisaties wat resulteert in een sub(=child)-sup(=parent) relatie"
-    }
+    __tablename__ = "oe_koepel_oe"
+    __table_args__ = {"comment": "Hiërarchische structuur van organisaties en koepelorganisaties"}
 
-    oe_struct_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Organisatie structuur code")
-    oe_cd_sub: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Sub (child) organisatie code")
-    oe_cd_sup: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Sup (parent) organisatie code")
-    koepel: Mapped[bool | None] = mapped_column(Boolean, comment="Wel of geen koepel")
+    oe_koepel_oe_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Koppeling organisatie code")
+    oe_cd: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="(child) organisatie code")
+    oe_koepel_cd: Mapped[int] = mapped_column(
+        Integer, ForeignKey("oe_koepel.oe_koepel_cd"), comment="Koepel organisatie code"
+    )
 
-    # Relationships
-    parent_entity: Mapped["Oe"] = relationship(
-        "Oe",
-        foreign_keys=[oe_cd_sup],
-        back_populates="child_oe_struct",
-    )
-    child_entity: Mapped["Oe"] = relationship(
-        "Oe",
-        foreign_keys=[oe_cd_sub],
-        back_populates="child_oe_struct",
-    )
+    child_entity: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_cd], single_parent=True)
+    parent_entity: Mapped["OeKoepel"] = relationship("OeKoepel", foreign_keys=[oe_koepel_cd], single_parent=True)
 
 
 class Oe(Base, DefaultColumns):
@@ -74,30 +64,15 @@ class Oe(Base, DefaultColumns):
 
     # Relationships
     entity_ibron: Mapped["Ibron"] = relationship("Ibron", foreign_keys=[ibron_cd])  # type: ignore # noqa: F821
-    parent_oe_struct: Mapped["OeStruct"] = relationship(
-        "OeStruct",
-        primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sub",
-        back_populates="child_entity",
+    parent_oe_struct: Mapped["OeKoepelOe"] = relationship(
+        "OeKoepelOe", primaryjoin="Oe.oe_cd == OeKoepelOe.oe_cd", back_populates="child_entity", single_parent=True
     )
-    child_oe_struct: Mapped["OeStruct"] = relationship(
-        "OeStruct",
-        primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sup",
-        back_populates="parent_entity",
-    )
-    parent_entity = relationship(
-        "Oe",
-        secondary=OeStruct.__table__,
-        primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sub",
-        secondaryjoin="Oe.oe_cd == OeStruct.oe_cd_sup",
-        back_populates="child_oe_entity",
-        viewonly=True,
-    )
-    child_oe_entity = relationship(
-        "Oe",
-        secondary=OeStruct.__table__,
-        primaryjoin="Oe.oe_cd == OeStruct.oe_cd_sup",
-        secondaryjoin="Oe.oe_cd == OeStruct.oe_cd_sub",
-        back_populates="parent_entity",
+    parent_entities: Mapped[list["OeKoepel"]] = relationship(
+        "OeKoepel",
+        secondary=OeKoepelOe.__table__,
+        primaryjoin="Oe.oe_cd == OeKoepelOe.oe_cd",
+        secondaryjoin="OeKoepel.oe_koepel_cd == OeKoepelOe.oe_koepel_cd",
+        back_populates="child_entities",
         viewonly=True,
     )
 
@@ -118,4 +93,35 @@ class OeComType(Base):
         "EvtpOeComType",
         primaryjoin="and_(OeComType.oe_com_type_cd == EvtpOeComType.oe_com_type_cd)",
         back_populates="entity_oe_com_type",
+    )
+
+
+class OeKoepel(Base, DefaultColumns):
+    """
+    Table description: Overkoepelende organisatie
+    """
+
+    __tablename__ = "oe_koepel"
+    __table_args__ = {"comment": "Overkoepelende organisatie"}
+
+    oe_koepel_cd: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        comment="Koepel organisatie code",
+    )
+    titel: Mapped[str] = mapped_column(VARCHAR(255), comment="Titel van de koepelorganisatie")
+    omschrijving: Mapped[str] = mapped_column(VARCHAR(4000), comment="Omschrijving van de koepelorganisatie")
+
+    child_oe_struct: Mapped["OeKoepelOe"] = relationship(
+        "OeKoepelOe",
+        primaryjoin="OeKoepel.oe_koepel_cd == OeKoepelOe.oe_koepel_cd",
+        back_populates="parent_entity",
+    )
+    child_entities: Mapped[list["Oe"]] = relationship(
+        "Oe",
+        secondary=OeKoepelOe.__table__,
+        primaryjoin="OeKoepel.oe_koepel_cd == OeKoepelOe.oe_koepel_cd",
+        secondaryjoin="Oe.oe_cd == OeKoepelOe.oe_cd",
+        back_populates="parent_entities",
+        viewonly=True,
     )

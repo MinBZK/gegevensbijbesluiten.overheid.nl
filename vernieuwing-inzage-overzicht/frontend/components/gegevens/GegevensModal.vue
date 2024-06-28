@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-header">
-      <h1 class="h1--small no-margin">{{ props.title }}</h1>
+      <h1 class="h1--small no-margin modal-title-padding">{{ props.title }}</h1>
     </div>
     <p>
       <ModalSearchBar

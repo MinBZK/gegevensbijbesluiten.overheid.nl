@@ -37,6 +37,9 @@
         >
           {{ p(`${pageData[0].pageDescriptionParagraph_3}`) }}
         </p>
+        <p v-if="pageData[0].pageDescriptionItalics">
+          <i> {{ p(`${pageData[0].pageDescriptionItalics}`) }}</i>
+        </p>
         <FormOverheidButton
           v-if="pageData[0].routeName === 'index'"
           :label="t('readMore')"
@@ -81,6 +84,9 @@ const navigationItemsTranslated = computed(() =>
         : '',
       pageLink_1: matchedHeader ? matchedHeader.pageLink_1 : '',
       pageLink_2: matchedHeader ? matchedHeader.pageLink_2 : '',
+      pageDescriptionItalic: matchedHeader
+        ? matchedHeader.pageDescriptionItalic
+        : '',
     }
   })
 )
@@ -92,6 +98,7 @@ type pageMeta = {
   pageDescriptionParagraph_1: string
   pageDescriptionParagraph_2: string
   pageDescriptionParagraph_3: string
+  pageDescriptionItalics: string
   pageLink_1: string
   pageLink_2: string
   show: boolean
@@ -116,6 +123,7 @@ const pageData = computed<pageMeta[]>(() => {
       pageDescriptionParagraph_1: item ? item.pageDescriptionParagraph_1 : '',
       pageDescriptionParagraph_2: item ? item.pageDescriptionParagraph_2 : '',
       pageDescriptionParagraph_3: item ? item.pageDescriptionParagraph_3 : '',
+      pageDescriptionItalics: item ? item.pageDescriptionItalic : '',
       pageLink_1: item ? item.pageLink_1 : '',
       pageLink_2: item ? item.pageLink_2 : '',
       show: !!item?.banner,
@@ -131,6 +139,7 @@ const pageData = computed<pageMeta[]>(() => {
     margin-bottom: 0em;
   }
 }
+
 .banner {
   background-color: $tertiary;
   padding-top: 30px;
@@ -162,6 +171,7 @@ const pageData = computed<pageMeta[]>(() => {
   position: relative;
   display: flex;
   justify-content: right;
+
   @media (max-width: 50em) {
     justify-content: center;
   }

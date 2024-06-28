@@ -30,3 +30,4 @@ backend/.env
 mnt
 .docker
 inzage-cms
+.ruff_cache

@@ -2,7 +2,7 @@
   <div>
     <ul class="white-card-list">
       <li
-        v-for="item in evtp.slice(0, 3)"
+        v-for="item in evtpListSorted.slice(0, 3)"
         :key="item.evtp_nm"
         class="white-card-list"
       >
@@ -10,7 +10,6 @@
           :to="getLink(`/besluit/${item.evtp_upc}`, item.versie_nr).value"
           class="linked-content"
         >
-          {{ item.aanleiding }}:
           <span class="underline"> {{ item.evtp_nm }} </span>
         </NuxtLink>
       </li>

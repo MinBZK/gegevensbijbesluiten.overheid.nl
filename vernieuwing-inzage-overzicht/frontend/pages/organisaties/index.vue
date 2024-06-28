@@ -8,7 +8,7 @@
     <div class="row container columns no-padding">
       <div class="column-d-9">
         <h2 role="status">
-          {{ t(`organisaties.foundResults`, { n: totalCount }) }}
+          {{ t(`organisaties.foundResults`, { n: totalCountUnderlying }) }}
           {{ readTitle ? '&nbsp;' : null }}
         </h2>
         <div v-if="oeResults.length != 0" class="row no-padding">
@@ -23,14 +23,14 @@
         </div>
         <div v-if="oeResults.length != 0" class="result--list__data">
           <div class="card-container ul-padding">
-            <div v-for="(oe, index) in oeResults" :key="index">
+            <div v-for="(Koepel, index) in oeResults" :key="index">
               <OrganisatiesCard
                 :set-focus="index == 0 && newFocusIsRequested"
-                :title="oe.naam_officieel"
-                :content="extractContent(oe)"
+                :title="Koepel.titel"
+                :description="Koepel.omschrijving"
+                :content="extractContent(Koepel)"
                 :loading="loading"
                 :chips="[]"
-                description="None"
                 @focus-has-been-set="() => (newFocusIsRequested = false)"
               >
               </OrganisatiesCard>
@@ -48,7 +48,7 @@
             />
           </div>
         </div>
-        <div v-if="totalCount == 0">
+        <div v-if="totalCountUnderlying == 0">
           <p>{{ t('oeIndex.noResults.p1') }}</p>
           <ul class="no-results">
             <li>
@@ -68,7 +68,7 @@
 import { computed } from 'vue'
 import { getLink } from '~/common/common-functions'
 import oeService from '~~/services/organisaties'
-import type { Oe } from '~~/types/organisaties'
+import type { OeKoepel } from '~~/types/organisaties'
 
 import type { UrlQuery } from '~/types/filter'
 import type { OeContent } from '@/components/organisaties/OrganisatiesCard.vue'
@@ -100,9 +100,14 @@ watch(query, async () => {
 })
 
 const page = computed(() => query.value.page)
-const totalCount = computed(() => data.value?.total_count || 0)
+const totalCountUnderlying = computed(
+  () => data.value?.total_count_underlying || 0
+)
+const totalCountKoepel = computed(() => data.value?.total_count_koepel || 0)
 const oeResults = computed(() => data.value?.results || [])
-const nPages = computed(() => Math.ceil(totalCount.value / query.value.limit))
+const nPages = computed(() =>
+  Math.ceil(totalCountKoepel.value / query.value.limit)
+)
 const scrollToCards = () => {
   searchbar.value.$el.scrollIntoView({ behavior: 'smooth' })
 }
@@ -132,9 +137,9 @@ const doSearch = (searchtext: string) => {
 }
 
 // TODO implement me
-const extractContent = (data: Oe) => {
+const extractContent = (data: OeKoepel) => {
   const content = data.child_oe_struct.map((item) => ({
-    link: getLink(`/organisaties/${item.child_entity.oe_upc}`, 0).value,
+    link: getLink(`/organisaties/${item.child_entity.oe_upc}`).value,
     description: item.child_entity.naam_officieel || t('ontbreekt'),
   }))
   content.sort((a, b) => a.description.localeCompare(b.description)) // Sort alphabetically

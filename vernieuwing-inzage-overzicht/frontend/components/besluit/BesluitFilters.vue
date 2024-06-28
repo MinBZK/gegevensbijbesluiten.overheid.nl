@@ -8,7 +8,6 @@
       />
       <FilterSingleSelect
         v-if="!orgFilterActive"
-        query-key="organisation"
         :options="filterData.organisation"
         enable-read-more
         enable-read-less
@@ -26,7 +25,6 @@
           />
           <FilterSingleSelect
             v-if="!orgFilterActive"
-            query-key="organisation"
             :options="filterData.organisation"
             enable-read-more
             enable-read-less
