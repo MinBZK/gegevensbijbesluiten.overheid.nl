@@ -30,6 +30,8 @@
       "goBack": "Terug naar alle organisaties",
       "h1": "Voor welke besluiten is deze organisatie verantwoordelijk?",
       "p1": "Deze organisatie is verantwoordelijk voor de volgende besluiten:",
+      "p1-empty": "Deze organisatie is niet verantwoordelijk voor besluiten, of er zijn nog geen besluiten op de website opgenomen voor deze organisatie. Bezoek de volgende pagina om alle organisaties te zien waarvoor wel besluiten zijn opgenomen.",
+      "p1-empty-link": "Deze organisatie is niet verantwoordelijk voor besluiten, of er zijn nog geen besluiten op de website opgenomen voor deze organisatie. Bezoek de volgende pagina om alle organisaties te zien waarvoor wel besluiten zijn opgenomen.",
       "h2": "Welke gegevens beheert deze organisatie?",
       "p2": "Deze organisatie heeft de volgende gegevens:",
       "p2-empty": "Deze organisatie beheert zelf geen gegevens",
@@ -65,7 +67,8 @@
     },
     "pages: organisaties": {
       "title": "Organisaties",
-      "description_1": "Dit overzicht toont organisaties die verantwoordelijk zijn voor het uitvoeren van overheidsbesluiten. Het gaat om overheidsorganisaties én niet-overheidsorganisaties die namens de overheid een wettelijke taak uitvoeren. Per organisatie vindt u de bijbehorende besluiten.",
+      "description_1": "Op deze pagina ziet u welke overheidsinstanties de besluiten die op deze website staan, nemen. Ook andere organisaties die een wettelijke taak uitvoeren en besluiten mogen nemen, worden hier vermeld.",
+      "description_italics": "Het overzicht is nog niet compleet en zal verder worden uitgebreid. Hier worden alleen organisaties weergegeven waarvan op dit moment een besluit op de website staat.",
       "searchText": "Zoek naar organisaties"
     },
     "navigation": {

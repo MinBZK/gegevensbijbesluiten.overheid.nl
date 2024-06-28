@@ -39,7 +39,8 @@ class GgQuery(BaseModel):
 
 class GgQueryResult(BaseModel):
     results: list[ParentGg]
-    total_count: int
+    total_count_koepel: int
+    total_count_underlying: int
 
 
 ChildGgStructuur.model_rebuild()

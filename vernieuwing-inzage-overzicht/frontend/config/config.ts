@@ -17,10 +17,10 @@ const navigationItems = [
     localeName: 'navigation.gegevens',
     routeName: 'gegevens',
   },
-  // {
-  //   localeName: 'navigation.organisaties',
-  //   routeName: 'organisaties',
-  // },
+  {
+    localeName: 'navigation.organisaties',
+    routeName: 'organisaties',
+  },
   {
     localeName: 'navigation.uitleg',
     routeName: 'uitleg',

@@ -88,7 +88,7 @@ v-show="isAccordionActive(EvtpGstHeader.gegevensgroep_grondslag)"
             </p>
             <ul class="white-card-list">
               <li v-for="(gg, index) in gst.gegevensgroep_grondslag.gg_child" :key="gg" class="white-card-list">
-                {{ `${gg}` }}
+                {{ gg }}
                 <img
 src="@/assets/images/icons/icon-explanation.svg"
                   :alt="t('getGgPropertyExplanation', { field: gg })" class="img-question-mark" tabindex="0"

@@ -41,11 +41,6 @@ export const questions: Question[] = [
     question: 'faq.5.question',
     answer_1: 'faq.5.answer_1',
     answer_2: 'faq.5.answer_2',
-    answer_3: 'faq.5.answer_3',
-    link_4_text: 'faq.5.link_4_text',
-    link_4_url: 'faq.5.link_4_url',
-    link_5_text: 'faq.5.link_5_text',
-    link_5_url: 'faq.5.link_5_url',
   },
   {
     question: 'faq.6.question',
@@ -59,5 +54,10 @@ export const questions: Question[] = [
     question: 'faq.7.question',
     answer_1: 'faq.7.answer_1',
     answer_2: 'faq.7.answer_2',
+    answer_3: 'faq.7.answer_3',
+    link_4_text: 'faq.7.link_4_text',
+    link_4_url: 'faq.7.link_4_url',
+    link_5_text: 'faq.7.link_5_text',
+    link_5_url: 'faq.7.link_5_url',
   },
 ]

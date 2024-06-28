@@ -2,11 +2,18 @@
   <div>
     <ul class="white-card-list">
       <li
-        v-for="item in oe.slice(0, 3)"
+        v-for="item in oeListSorted.slice(0, 3)"
         :key="item.oe_cd"
         class="white-card-list"
       >
-        {{ item.naam_spraakgbr }}
+        <NuxtLink
+          :to="getLink(`/organisaties/${item.oe_upc}`).value"
+          class="linked-content"
+        >
+          <span class="underline">{{
+            capitaliseFirstLetter(item.naam_spraakgbr)
+          }}</span>
+        </NuxtLink>
       </li>
 
       <div v-if="oe.length > 3" class="show-more capitalise-first underline">
@@ -46,9 +53,16 @@
         <li
           v-for="item in oeListSorted"
           :key="item.oe_cd"
-          class="card-sub-content capitalise-first"
+          class="card-sub-content"
         >
-          {{ item.naam_spraakgbr }}
+          <NuxtLink
+            :to="getLink(`/organisaties/${item.oe_upc}`).value"
+            class="linked-content"
+          >
+            <span class="underline">{{
+              capitaliseFirstLetter(item.naam_spraakgbr)
+            }}</span>
+          </NuxtLink>
         </li>
       </ul>
     </ModalShell>
@@ -57,6 +71,7 @@
 
 <script setup lang="ts">
 import type { Oe } from '@/types/besluit'
+import { getLink, capitaliseFirstLetter } from '~/common/common-functions'
 
 const isMobile = useMobileBreakpoint().medium
 const { t } = useI18n()

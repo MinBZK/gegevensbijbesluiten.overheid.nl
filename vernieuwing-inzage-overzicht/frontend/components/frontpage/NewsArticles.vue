@@ -4,9 +4,15 @@
       v-for="article in reversedArticles"
       :key="article.title"
       class="article-card"
-      @click.prevent="navigateTo(article.link, { external: true })"
-      @keydown.enter.prevent="navigateTo(article.link, { external: true })"
-      @keydown.space.prevent="navigateTo(article.link, { external: true })"
+      @click.prevent="
+        navigateTo(article.link, { external: true, open: { target: '_blank' } })
+      "
+      @keydown.enter.prevent="
+        navigateTo(article.link, { external: true, open: { target: '_blank' } })
+      "
+      @keydown.space.prevent="
+        navigateTo(article.link, { external: true, open: { target: '_blank' } })
+      "
     >
       <img
         :src="article.image"
@@ -19,8 +25,8 @@
         <h3>{{ t(article.title) }}</h3>
         <p>{{ t(article.summary) }}</p>
         <ExternalLink :href="article.link" class="external-link">
-          {{ t('articles.readMore') }}</ExternalLink
-        >
+          {{ t('articles.readMore') }}
+        </ExternalLink>
       </div>
     </div>
   </div>
@@ -53,6 +59,7 @@ const { t } = useI18n()
     box-shadow: 0 0 10px rgb(147, 180, 205);
     cursor: pointer;
   }
+
   .article-card-text {
     padding: 1em;
     display: flex;
@@ -64,6 +71,7 @@ const { t } = useI18n()
       margin-top: 0em;
       font-size: 1em;
     }
+
     .external-link {
       margin-top: auto;
       width: 11.3em;

@@ -282,7 +282,6 @@ def get_filtered(
             q_parents = []
 
     response = schemas.gg.GgQueryResult(
-        results=parents,
-        total_count=num_results,
+        results=parents, total_count_koepel=num_results, total_count_underlying=len(child_parent_cds)
     )
     return response

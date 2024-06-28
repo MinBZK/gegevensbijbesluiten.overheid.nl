@@ -13,20 +13,17 @@
         {{ t('footer.paths.toegankelijkheidPage.p3') }}
       </p>
       <p>{{ t('footer.paths.toegankelijkheidPage.p4') }}</p>
-      <p>
-        {{ t('footer.paths.toegankelijkheidPage.p5') }}
-      </p>
       <ul class="bullet ml-4 p-margin-bottom-footer">
         <li>
           <ExternalLink :href="t('footer.paths.toegankelijkheidPage.li1_link')">
-            {{ t('footer.paths.toegankelijkheidPage.li1') }}</ExternalLink
-          >
+            {{ t('footer.paths.toegankelijkheidPage.li1') }}
+          </ExternalLink>
         </li>
-        <li>
+        <!-- <li>
           <ExternalLink :href="t('footer.paths.toegankelijkheidPage.li2_link')">
             {{ t('footer.paths.toegankelijkheidPage.li2') }}</ExternalLink
           >
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>

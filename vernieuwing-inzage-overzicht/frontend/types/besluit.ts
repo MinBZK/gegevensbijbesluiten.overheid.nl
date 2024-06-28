@@ -2,6 +2,7 @@ import type { SelectedFilter, BesluitFilterData } from './filter'
 
 export interface Oe {
   oe_cd: number
+  oe_upc: number
   afko: string
   e_contact: string
   huisnummer: string

@@ -43,8 +43,9 @@ class OeQuery(BaseModel):
 
 
 class OeQueryResult(BaseModel):
-    results: list[ParentOe]
-    total_count: int
+    results: list[OeKoepel]
+    total_count_koepel: int
+    total_count_underlying: int
 
 
 class OeRelations(BaseModel):
@@ -80,29 +81,34 @@ class OeByEvtpTotal(BaseModel):
 class OeBase(BaseModel):
     oe_upc: int
     naam_officieel: str | None
-
-
-class ChildOeStructuur(BaseModel):
-    # parent_gg_entity: ChildGg | None
-
     model_config = ConfigDict(from_attributes=True)
 
 
-class ChildOe(OeBase):
-    parent_oe_struct: ChildOeStructuur | None
+# class ChildOe(OeBase):
+#     parent_oe_struct: OeKoepelOe | None
+#     model_config = ConfigDict(from_attributes=True)
 
+
+# class OeKoepelOe(BaseModel):
+#     oe_koepel_oe_cd: int
+#     oe_koepel_cd: int
+#     oe_cd: int
+#     notitie: str | None
+#     ts_mut: datetime
+#     user_nm: str
+#     model_config = ConfigDict(from_attributes=True)
+
+
+class OeKoepelOe(BaseModel):
+    child_entity: OeBase
+    # parent_entity: OeKoepel
     model_config = ConfigDict(from_attributes=True)
 
 
-class ParentOeStructuur(BaseModel):
-    child_entity: ChildOe | None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class ParentOe(OeBase):
-    child_oe_struct: list[ParentOeStructuur] | None
-
+class OeKoepel(BaseModel):
+    titel: str
+    omschrijving: str | None
+    child_oe_struct: list[OeKoepelOe] | None
     model_config = ConfigDict(from_attributes=True)
 
 

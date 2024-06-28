@@ -7,9 +7,9 @@
         <h3>{{ props.title }}</h3>
       </div>
     </div>
-    <!-- <p v-if="!props.loading">
+    <p v-if="!props.loading">
       {{ props.description }}
-    </p> -->
+    </p>
 
     <div v-if="!props.loading" class="white-box">
       <div
@@ -19,7 +19,7 @@
         @click.stop
       >
         <NuxtLink :to="item.link" class="linked-content">
-          {{ item.description }}
+          {{ capitaliseFirstLetter(item.description) }}
         </NuxtLink>
       </div>
       <div v-if="props.content.length > 3" class="card-sub-content">
@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import OrganisatiesModal from './OrganisatiesModal.vue'
+import { capitaliseFirstLetter } from '@/common/common-functions'
 
 // const { t } = useI18n()
 const isMobile = useMobileBreakpoint().medium

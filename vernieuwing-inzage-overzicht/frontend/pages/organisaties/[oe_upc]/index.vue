@@ -8,7 +8,9 @@
     <div class="container row container--centered">
       <div class="md-padding">
         <div class="next-to-each-other">
-          <h1 class="no-margin">{{ oeDetail.naam_spraakgbr }}</h1>
+          <h1 class="no-margin capitalise-first">
+            {{ oeDetail.naam_spraakgbr }}
+          </h1>
         </div>
         <p>
           <ParseUrl>
@@ -52,82 +54,24 @@
           :id="GgHeader.h1"
           class="accordion-body"
         >
-          <p>{{ p('organisaties.p1') }}</p>
-          <AccordionModalEvtp :evtp="evtpManaged" :title="p('organisaties.p1')">
-          </AccordionModalEvtp>
-        </div>
-      </div>
-
-      <!-- <div class="accordion">
-        <div
-          ref="accordionHeader2"
-          class="accordion-header"
-          role="button"
-          tabindex="0"
-          :aria-expanded="isAccordionActive(GgHeader.h2)"
-          @click="() => openCloseAccordion(GgHeader.h2, accordionHeader2)"
-          @keydown.enter="
-            () => openCloseAccordion(GgHeader.h2, accordionHeader2)
-          "
-          @keydown.space.prevent="
-            () => openCloseAccordion(GgHeader.h2, accordionHeader2)
-          "
-        >
-          <h3 class="h3-sentence">{{ p('organisaties.h2') }}</h3>
-          <NuxtIcon :name="getIconAccordion(GgHeader.h2)" />
-        </div>
-        <div
-          v-show="isAccordionActive(GgHeader.h2)"
-          :id="GgHeader.h2"
-          class="accordion-body"
-        >
-          <div>
-            <div v-if="ggManaged.length != 0">
-              <p>{{ p('organisaties.p2') }}</p>
-              <AccordionModalGg :gg="ggManaged" :title="p('organisaties.h2')">
-              </AccordionModalGg>
-            </div>
-            <div v-else>
-              <p>{{ p('organisaties.p2-empty') }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="accordion">
-        <div
-          ref="accordionHeader3"
-          class="accordion-header"
-          role="button"
-          tabindex="0"
-          :aria-expanded="isAccordionActive(GgHeader.h3)"
-          @click="() => openCloseAccordion(GgHeader.h3, accordionHeader3)"
-          @keydown.enter="
-            () => openCloseAccordion(GgHeader.h3, accordionHeader3)
-          "
-          @keydown.space.prevent="
-            () => openCloseAccordion(GgHeader.h3, accordionHeader3)
-          "
-        >
-          <h3 class="h3-sentence">{{ p('organisaties.h3') }}</h3>
-          <NuxtIcon :name="getIconAccordion(GgHeader.h3)" />
-        </div>
-        <div
-          v-show="isAccordionActive(GgHeader.h3)"
-          :id="GgHeader.h3"
-          class="accordion-body"
-        >
-          <div v-if="ggReceive.length != 0">
-            <p>{{ p('organisaties.p3') }}</p>
-            <AccordionModalGg :gg="ggReceive" :title="p('organisaties.h3')">
-            </AccordionModalGg>
+          <div v-if="evtpManaged.length > 0">
+            <p>{{ p('organisaties.p1') }}</p>
+            <AccordionModalEvtp
+              :evtp="evtpManaged"
+              :title="p('organisaties.p1')"
+            >
+            </AccordionModalEvtp>
           </div>
           <div v-else>
-            <p>{{ p('organisaties.p3-empty') }}</p>
+            <p>{{ p('organisaties.p1-empty') }}</p>
           </div>
+          <NuxtLink :to="{ name: 'organisaties' }">
+            <span class="underline">
+              {{ p('organisaties.goBack') }}
+            </span>
+          </NuxtLink>
         </div>
-      </div> -->
-
+      </div>
       <div class="formoverheid-padding">
         <FormOverheidButton
           class="button--align-to-search-field"

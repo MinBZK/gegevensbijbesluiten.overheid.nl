@@ -36,13 +36,14 @@ import type { UrlQuery, FilterData } from '@/types/filter'
 const props = withDefaults(
   defineProps<{
     options: FilterData[]
-    queryKey: keyof UrlQuery
+    queryKey?: keyof UrlQuery | 'organisation'
     enableReadMore?: boolean
     enableReadLess?: boolean
     maxSize?: number
   }>(),
   {
     maxSize: 7,
+    queryKey: 'organisation',
   }
 )
 
@@ -50,7 +51,6 @@ const { t } = useI18n()
 
 const query = computed(() => useRoute().query as UrlQuery)
 const filterListItems = ref<HTMLElement[]>([])
-
 const addNewQueryToRoute = (option: FilterData): void => {
   const newQuery = { ...query.value, page: '1' }
   newQuery[props.queryKey] = option.key
@@ -95,6 +95,7 @@ watch(
 .no-padding-left {
   padding-left: 0;
 }
+
 .filter-options {
   width: 100%;
   display: inline-flex;

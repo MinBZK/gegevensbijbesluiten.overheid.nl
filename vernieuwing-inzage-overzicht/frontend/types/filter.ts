@@ -18,6 +18,5 @@ export interface FilterData {
 
 export interface BesluitFilterData {
   organisation: FilterData[]
-  // Should be english: subject, theme?
   onderwerp: FilterData[]
 }

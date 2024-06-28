@@ -20,6 +20,7 @@ else:
 class Pages(Enum):
     BESLUIT = "besluit"
     GEGEVENS = "gegevens"
+    ORGANISATIES = "organisaties"
 
 
 class Settings(BaseSettings):

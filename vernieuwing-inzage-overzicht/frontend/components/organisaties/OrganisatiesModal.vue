@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-header">
-      <h1 class="h1--small no-margin">{{ props.title }}</h1>
+      <h1 class="h1--small no-margin modal-title-padding">{{ props.title }}</h1>
     </div>
     <p>
       <ModalSearchBar
@@ -16,7 +16,9 @@
       <div>
         <ul v-for="(item, index) in contentList" :key="index">
           <li>
-            <NuxtLink :to="item.link">{{ item.description }}</NuxtLink>
+            <NuxtLink :to="item.link">{{
+              capitaliseFirstLetter(item.description)
+            }}</NuxtLink>
           </li>
         </ul>
       </div>
@@ -29,6 +31,8 @@
 
 <script setup lang="ts">
 import type { OeContent } from '@/components/organisaties/OrganisatiesCard.vue'
+import { capitaliseFirstLetter } from '@/common/common-functions'
+
 const { p } = usePreditor()
 const { t } = useI18n()
 

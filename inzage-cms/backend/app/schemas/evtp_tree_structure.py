@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 
 from app.schemas.evtp_ond import OndMinimalList
 from app.schemas.oe_com_type import OeComTypeMinimalList
+from app.schemas.oe_koepel_oe import OeKoepelOe, OeKoepelOeWithRelations
 
 
 # Base classes, have no relations
@@ -45,37 +46,16 @@ class IbronWithRelations(IbronBase):
     model_config = ConfigDict(from_attributes=True)
 
 
-class OeStruct(BaseModel):
-    oe_struct_cd: int
-    oe_cd_sub: int
-    oe_cd_sup: int
-    notitie: str | None
-    ts_mut: datetime
-    user_nm: str
-
-    model_config = ConfigDict(from_attributes=True)
-
-
 class OeWithRelations(OeBase):
     entity_ibron: IbronWithRelations | None
-    parent_entities: list[OeStruct]
-    child_entities: list[OeStruct]
+    parent_entities: list[OeKoepelOe]
     count_parents: int
-    count_children: int
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class OeStructWithRelations(OeStruct):
-    parent_entity: OeWithRelations
-    child_entity: OeWithRelations
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class OeWithNestedRelations(OeWithRelations):
-    parent_entities: list[OeStructWithRelations]
-    child_entities: list[OeStructWithRelations]
+    parent_entities: list[OeKoepelOeWithRelations]
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -218,6 +198,7 @@ class EvtpTreeStructure(BaseModel):
     huidige_versie: bool
     omschrijving: str
 
+    verantwoordelijke_oe: OeWithNestedRelations
     parent_evtp: EvtpStructure | None
     entities_evtp_gst: list[EvtpGstTreeStructure] | None
     entities_evtp_oe_com_type: list[EvtpOeComType] | None

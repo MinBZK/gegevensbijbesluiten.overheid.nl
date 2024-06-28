@@ -247,18 +247,29 @@ export default defineComponent({
           this.adjustedRecord['versie_nr'] = this.versieNr
         } else if (this.structCd) {
           const inputField = {
-            OE: { parent: 'oe_cd_sup', child: 'oe_cd_sub' },
+            OE: { parent: 'oe_koepel_cd', child: 'oe_cd' },
             GG: { parent: 'gg_cd_sup', child: 'gg_cd_sub' },
           }
           const inputObject =
-            this.tableModelUpdated.resource == 'oe-struct' ? 'OE' : 'GG'
+            this.tableModelUpdated.resource == 'gg-struct' ? 'GG' : 'OE'
           this.inputValue = {}
+          const childField = inputField[inputObject]['child']
           if (this.structRelation == 'parents') {
-            const childField = inputField[inputObject]['child']
             this.inputValue[childField] = this.structCd
             this.tableModelUpdated.fields[childField]['readonly'] = true
             this.tableModelUpdated.foreign_key_mapping[childField] = ''
             this.adjustedRecord[childField] = this.structCd
+          } else if (this.structRelation == 'oe-koepel') {
+            this.inputValue[childField] = this.structCd
+            this.tableModelUpdated.fields[childField]['readonly'] = true
+            this.tableModelUpdated.foreign_key_mapping[childField] = ''
+            this.adjustedRecord[childField] = this.structCd
+          } else if (this.structRelation == 'oe-koepel-oe') {
+            const parentField = inputField[inputObject]['parent']
+            this.inputValue[parentField] = this.structCd
+            this.tableModelUpdated.fields[parentField]['readonly'] = true
+            this.tableModelUpdated.foreign_key_mapping[parentField] = ''
+            this.adjustedRecord[parentField] = this.structCd
           } else {
             const parentField = inputField[inputObject]['parent']
             this.inputValue[parentField] = this.structCd
@@ -366,7 +377,7 @@ export default defineComponent({
         if (foreignKey && v) {
           const foreignId = v ? v[foreignKey.foreign_table.primary_key] : null
           this.adjustedRecord[originalKey] = foreignId
-          if ((foreignKey.foreign_resource == 'evtp-version') || ((foreignKey.foreign_resource == 'gst') && this.tableModel.resource != 'evtp-gst')){
+          if ((foreignKey.foreign_resource == 'evtp-version') || ((foreignKey.foreign_resource == 'gst') && this.tableModel.resource != 'evtp-gst')) {
             this.adjustedRecord['versie_nr'] = v.versie_nr
           }
         }

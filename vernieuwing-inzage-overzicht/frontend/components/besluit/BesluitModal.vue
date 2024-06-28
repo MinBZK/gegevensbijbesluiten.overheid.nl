@@ -22,8 +22,8 @@
             >{{ evtp.evtp_nm }}
             <span v-if="channelIfConcept">
               {{ `${t(`versionNumber`)} ${evtp.versie_nr}` }}</span
-            ></NuxtLink
-          >
+            >
+          </NuxtLink>
         </li>
       </ul>
     </template>
@@ -87,9 +87,11 @@ onMounted(() => {
 li {
   padding-bottom: 1em;
 }
+
 ul {
   padding-left: 0;
 }
+
 .card-header {
   display: inline-flex;
   align-items: center;

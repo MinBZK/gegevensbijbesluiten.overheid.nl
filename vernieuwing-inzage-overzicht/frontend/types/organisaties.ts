@@ -1,27 +1,27 @@
 import type { SelectedFilter } from './filter'
 
-interface OeStruct {
-  child_entity: {
-    naam_officieel: string
-    naam_spraakgbr: string
-    oe_cd: number
-    oe_upc: number
-  }
-}
-
 export interface Oe {
   oe_cd: number
   oe_upc: number
   naam_officieel: string
   naam_spraakgbr: string
-  child_oe_struct: OeStruct[]
+}
+
+interface OeKoepelOe {
+  child_entity: Oe
+}
+
+export interface OeKoepel {
+  titel: string
+  omschrijving: string
+  child_oe_struct: OeKoepelOe[]
 }
 
 export interface OeQueryResult {
-  results: Oe[]
-  total_count: number
+  results: OeKoepel[]
+  total_count_koepel: number
+  total_count_underlying: number
   selected_filters: SelectedFilter[]
-  // filter_data: BesluitFilterData
 }
 
 export interface OeQuery {

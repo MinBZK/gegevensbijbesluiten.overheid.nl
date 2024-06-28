@@ -34,7 +34,7 @@ volumes:
     name: inzage_dbgate
   postgres:
     name: ${POSTGRES_DB}
-    
+
 networks:
   database:
     external: true

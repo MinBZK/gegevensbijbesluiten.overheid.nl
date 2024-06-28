@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-from app.schemas.oe_struct import OeStructWithRelations
+from app.schemas.oe_koepel import OeKoepelMinimalList
 
 
 # oe
@@ -34,13 +34,18 @@ class OeMinimalList(BaseModel):
     oe_cd: int
     naam_officieel: str
 
+    model_config = ConfigDict(from_attributes=True)
+
+
+class _OeKoepelOeWithRelations(BaseModel):
+    parent_entity: OeKoepelMinimalList
+    child_entity: OeMinimalList
+
 
 class OeWithRelations(Oe):
     entity_ibron: Ibron | None
-    parent_entities: list[OeStructWithRelations]
-    child_entities: list[OeStructWithRelations]
     count_parents: int
-    count_children: int
+    parent_entities: list[_OeKoepelOeWithRelations]
 
 
 class OeIn(BaseModel):
@@ -69,4 +74,3 @@ class Ibron(BaseModel):
 
 
 OeWithRelations.model_rebuild()
-OeStructWithRelations.model_rebuild()

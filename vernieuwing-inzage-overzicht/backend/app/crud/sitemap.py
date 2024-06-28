@@ -29,7 +29,9 @@ def get_urls(db: Session):
     """Fetch all possible urls"""
     endpoints_evtp_gst = []
     endpoints_gg = []
+    endpoints_oe = []
     sitemap_dict = []
+
     for evtp in get_evtps(db):
         sitemap_dict.append(
             {
@@ -47,15 +49,27 @@ def get_urls(db: Session):
                     "changefreq": "daily",
                 }
             )
+
             for gg in gst.entities_gst_gg:
-                endpoints_gg.append(f"api/gg/{gg.entity_gg_child.gg_upc}")
+                gg_upc = gg.entity_gg_child.gg_upc
+                endpoints_gg.append(f"api/gg/{gg_upc}")
                 sitemap_dict.append(
                     {
-                        "loc": f"/{Pages.GEGEVENS.value}/{gg.entity_gg_child.gg_upc}",
+                        "loc": f"/{Pages.GEGEVENS.value}/{gg_upc}",
                         "lastmod": gg.entity_gg_child.ts_mut,
                         "changefreq": "daily",
                     }
                 )
+
+            oe_upc = gst.entity_gst.entity_oe_best.oe_upc
+            endpoints_oe.append(f"api/oe/{oe_upc}")
+            sitemap_dict.append(
+                {
+                    "loc": f"/{Pages.ORGANISATIES.value}/{oe_upc}",
+                    "lastmod": gst.entity_gst.entity_oe_best.ts_mut,
+                    "changefreq": "daily",
+                }
+            )
 
     return (
         sitemap_dict,

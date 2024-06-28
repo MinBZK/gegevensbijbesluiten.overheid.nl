@@ -18,9 +18,9 @@ export interface Gg {
 
 export interface GgQueryResult {
   results: Gg[]
-  total_count: number
+  total_count_koepel: number
+  total_count_underlying: number
   selected_filters: SelectedFilter[]
-  // filter_data: BesluitFilterData
 }
 
 export interface GgQuery {

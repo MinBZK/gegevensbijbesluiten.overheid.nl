@@ -20,6 +20,7 @@
               :resource="getForeignTable(relation.relationKey).resource"
               :record-id="record[primaryKey]"
               :endpoint="getEndpoint(relation.relationKey)"
+              :is-koepel="isKoepel"
               @relation-updated="$emit('relationUpdated')"
             />
           </v-card-text>
@@ -57,7 +58,7 @@ export default defineComponent({
   props: {
     record: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     primaryKey: {
       type: String,
@@ -86,17 +87,17 @@ export default defineComponent({
     children() {
       return this.record.child_entities
         ? this.record.child_entities.map((entity) => {
-            entity.relatedEntity = entity.child_entity
-            return entity
-          })
+          entity.relatedEntity = entity.child_entity
+          return entity
+        })
         : []
     },
     parents() {
       return this.record.parent_entities
         ? this.record.parent_entities.map((entity) => {
-            entity.relatedEntity = entity.parent_entity
-            return entity
-          })
+          entity.relatedEntity = entity.parent_entity
+          return entity
+        })
         : []
     },
     relations() {
@@ -105,24 +106,22 @@ export default defineComponent({
         label: string
         color: string
         relationKey: string
+
       }
 
       const relations: Array<Entity> = [
         {
-          values: this.parents,
-          label: 'Bovenliggende entiteiten',
+          values: this.resource.endsWith('koepel') ? this.children : this.parents,
+          label: this.resource.endsWith('koepel') ? 'Onderliggende entiteiten' : 'Bovenliggende entiteit',
           color: 'secondary',
-          relationKey: 'parents',
-        },
-        {
-          values: this.children,
-          label: 'Onderliggende entiteiten',
-          color: 'secondary',
-          relationKey: 'children',
+          relationKey: this.resource.endsWith('koepel') ? 'children' : 'parents',
         },
       ]
       return relations
     },
+    isKoepel() {
+      return this.resource.endsWith('koepel')
+    }
   },
   methods: {
     getForeignKey(relationKey) {

@@ -182,8 +182,28 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: 'record/:recordResource/:id/:tab/:versieNr',
+        path: 'record/:recordResource/:id/:tab',
         name: 'entityRecordRelations',
+        component: DialogRouter,
+        props: (route) => {
+          const table = tables.find(
+            (t) => t.resource == route.params.recordResource
+          )
+          return {
+            component: EntityRecord,
+            title: table ? table.label : 'Record',
+            maxWidthDialog: table?.maxWidthDialog,
+            childProps: {
+              resource: route.params.recordResource,
+              id: route.params.id,
+              tab: route.params.tab,
+            },
+          }
+        },
+      },
+      {
+        path: 'record/:recordResource/:id/:tab/:versieNr',
+        name: 'entityEvtpStructure',
         component: DialogRouter,
         props: (route) => {
           const table = tables.find(
@@ -333,6 +353,48 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'new-gg-struct-with-relation/:recordResource/:structRelation/:structCd/',
         name: 'newEntityGGStruct',
+        component: DialogRouter,
+        props: (route) => {
+          const table = tables.find(
+            (t) => t.resource == route.params.recordResource
+          )
+          return {
+            component: EntityRecord,
+            title: table ? table.label : 'Record',
+            maxWidthDialog: table?.maxWidthDialog,
+            childProps: {
+              structCd: route.params.structCd,
+              structRelation: route.params.structRelation,
+              resource: route.params.recordResource,
+              tab: 'data',
+            },
+          }
+        },
+      },
+      {
+        path: 'new-oe-koepel-with-relation/:recordResource/:structRelation/:structCd/',
+        name: 'newEntityOeKoepel',
+        component: DialogRouter,
+        props: (route) => {
+          const table = tables.find(
+            (t) => t.resource == route.params.recordResource
+          )
+          return {
+            component: EntityRecord,
+            title: table ? table.label : 'Record',
+            maxWidthDialog: table?.maxWidthDialog,
+            childProps: {
+              structCd: route.params.structCd,
+              structRelation: route.params.structRelation,
+              resource: route.params.recordResource,
+              tab: 'data',
+            },
+          }
+        },
+      },
+      {
+        path: 'new-oe-koepel-oe-with-relation/:recordResource/:structRelation/:structCd/',
+        name: 'newEntityOeKoepelOe',
         component: DialogRouter,
         props: (route) => {
           const table = tables.find(

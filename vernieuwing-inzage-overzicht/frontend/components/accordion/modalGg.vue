@@ -2,15 +2,17 @@
   <div>
     <ul class="white-card-list">
       <li
-        v-for="item in ggList.slice(0, 3)"
+        v-for="item in ggListSorted.slice(0, 3)"
         :key="item.gg_cd"
         class="white-card-list"
       >
         <NuxtLink
-          :to="getLink(`/gegevens/${item.gg_upc}`, 0).value"
+          :to="getLink(`/gegevens/${item.gg_upc}`).value"
           class="linked-content"
         >
-          <span class="underline"> {{ item.omschrijving }} </span>
+          <span class="underline">
+            {{ capitaliseFirstLetter(item.omschrijving) }}
+          </span>
         </NuxtLink>
       </li>
       <div
@@ -53,13 +55,15 @@
         <li
           v-for="item in ggListSorted"
           :key="item.gg_cd"
-          class="card-sub-content capitalise-first"
+          class="card-sub-content"
         >
           <NuxtLink
-            :to="getLink(`/gegevens/${item.gg_upc}`, 0).value"
+            :to="getLink(`/gegevens/${item.gg_upc}`).value"
             class="linked-content"
           >
-            <span class="underline"> {{ item.omschrijving }} </span>
+            <span class="underline">
+              {{ capitaliseFirstLetter(item.omschrijving) }}
+            </span>
           </NuxtLink>
         </li>
       </ul>
@@ -69,7 +73,7 @@
 
 <script setup lang="ts">
 import type { Gg } from '@/types/gegevens'
-import { getLink } from '~/common/common-functions'
+import { getLink, capitaliseFirstLetter } from '~/common/common-functions'
 
 const isMobile = useMobileBreakpoint().medium
 const { t } = useI18n()

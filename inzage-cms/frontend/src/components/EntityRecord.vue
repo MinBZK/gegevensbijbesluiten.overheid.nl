@@ -210,7 +210,7 @@ export default defineComponent({
         {
           key: 'relations',
           label: `Relaties (${countRelations})`,
-          show: !!this.record['child_entities'],
+          show: !!this.record['parent_entities'] || !!this.record['child_entities'],
         },
       ]
       return this.isNewRow ? tabs.slice(0, 1) : tabs
