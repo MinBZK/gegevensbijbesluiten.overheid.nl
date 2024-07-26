@@ -70,6 +70,11 @@
               </span>
             </NuxtLink>
           </div>
+          <NuxtLink :to="{ name: 'organisaties' }">
+            <span class="underline">
+              {{ p('organisaties.goBack') }}
+            </span>
+          </NuxtLink>
         </div>
       </div>
       <div class="formoverheid-padding">
