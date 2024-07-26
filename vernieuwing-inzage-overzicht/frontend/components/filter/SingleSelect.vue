@@ -12,7 +12,7 @@
         <a
           ref="filterListItems"
           :tabindex="0"
-          class="filter-options"
+          class="filter-options capitalize"
           :aria-label="$t('filter.aria/add', { what: option.label })"
           @click="addNewQueryToRoute(option)"
           @keydown.enter="addNewQueryToRoute(option)"

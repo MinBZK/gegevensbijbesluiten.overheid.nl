@@ -1,7 +1,10 @@
 <template>
   <tr class="width-height-table">
     <td>
-      <a :href="getEntityRecordHref(relation, primaryKey)">
+      <a
+        :href="getEntityRecordHref(relation, primaryKey)"
+        class="cursor-hover"
+      >
         {{ relation.values[0][nameKey] }}
       </a>
     </td>
@@ -36,6 +39,9 @@ export default defineComponent({
           resource: relation.resource,
           recordResource: relation.resource,
           tab: 'data',
+        },
+        query: {
+          redirect: this.$route.fullPath
         },
       }).href
     },

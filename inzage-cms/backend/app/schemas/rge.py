@@ -22,6 +22,6 @@ class RgeMinimalList(BaseModel):
 
 class RgeIn(BaseModel):
     notitie: str | None = None
-    re_link: str | None = None
+    re_link: str
     tekst: str | None = None
     titel: str

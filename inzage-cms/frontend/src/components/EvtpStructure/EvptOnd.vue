@@ -5,7 +5,14 @@
     class="width-height-table"
   >
     <td class="left-align">
-      <a :href="getEntityRecordHref(relation, resource, primaryKey)">
+      <a
+        v-if="getEntityRecordHref(relation, resource)"
+        class="cursor-hover"
+        :href="getEntityRecordHref(relation, resource)"
+      >
+        {{ resource[relation.nameKey] }}
+      </a>
+      <a v-else>
         {{ resource[relation.nameKey] }}
       </a>
     </td>
@@ -159,14 +166,20 @@ export default defineComponent({
           this.$emit('recordUpdated')
         })
     },
-    getEntityRecordHref(relation, resource, primaryKey) {
+    getEntityRecordHref(relation, resource) {
+      if (!relation.linkedRelation){
+        return ''
+      }
       return this.$router.resolve({
         name: 'entityRecord',
         params: {
-          id: resource[primaryKey],
-          resource: relation.resource,
-          recordResource: relation.resource,
+          id: resource[relation.linkedRelationKey],
+          resource: relation.linkedRelation,
+          recordResource: relation.linkedRelation,
           tab: 'data',
+        },
+        query: {
+          redirect: this.$route.fullPath
         },
       }).href
     },

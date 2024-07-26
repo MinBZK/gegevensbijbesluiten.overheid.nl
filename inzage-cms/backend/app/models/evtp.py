@@ -71,7 +71,7 @@ class EvtpVersion(Base, DefaultColumns):
     evtp_upc = association_proxy("entity_evtp_version", "evtp_upc")
 
     # Relationships
-    verantwoordelijke_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_best])  # type: ignore # type: ignore # noqa: F821
+    verantwoordelijke_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_best], lazy="selectin")  # type: ignore # type: ignore # noqa: F821
     parent_evtp: Mapped["EvtpVersion"] = relationship(
         "EvtpVersion",
         primaryjoin="and_(EvtpVersion.evtp_cd_sup == remote(EvtpVersion.evtp_cd), remote(EvtpVersion.ts_start) < func.now(), remote(EvtpVersion.ts_end) > func.now())",

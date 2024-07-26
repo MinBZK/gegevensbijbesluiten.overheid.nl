@@ -25,7 +25,7 @@
         variant="outlined"
       />
       <v-textarea
-        v-else-if="fieldKey === 'versie_nr'"
+        v-else-if="(fieldKey == 'versie_nr')"
         :model-value="getModelValue()"
         :label="(label || fieldKey) + (required ? '' : '')"
         density="compact"

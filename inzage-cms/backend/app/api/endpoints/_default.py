@@ -4,7 +4,7 @@ import re
 from types import ModuleType
 from typing import Dict, Literal, Sequence, Type, Union
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sqlalchemy import ScalarResult, exc, inspect
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -160,7 +160,6 @@ def generate_router(
         *,
         search_query: str = "",
         db: AsyncSession = Depends(get_async_session),
-        limit: int = Query(default=100, ge=1),
     ) -> Sequence[Base]:
         """
         Retrieve a list of filtered items.

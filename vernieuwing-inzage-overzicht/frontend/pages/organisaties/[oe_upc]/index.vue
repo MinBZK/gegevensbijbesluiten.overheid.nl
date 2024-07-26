@@ -64,6 +64,11 @@
           </div>
           <div v-else>
             <p>{{ p('organisaties.p1-empty') }}</p>
+            <NuxtLink :to="{ name: 'organisaties' }">
+              <span class="underline">
+                {{ p('organisaties.goBack') }}
+              </span>
+            </NuxtLink>
           </div>
           <NuxtLink :to="{ name: 'organisaties' }">
             <span class="underline">

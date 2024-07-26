@@ -253,6 +253,9 @@ async def get_filenames(db: AsyncSession, evtp_acc_cd: int) -> list[str]:
     )
     bestand_verwijzing = result.scalar_one()
 
+    if not os.path.exists(PATH_MNT):
+        os.makedirs(PATH_MNT)
+
     files_list = [
         file
         for file in listdir(PATH_MNT)

@@ -54,6 +54,7 @@ class EvtpVersionMinimalList(BaseModel):
     evtp_cd: int
     evtp_nm: str
     versie_nr: int
+    verantwoordelijke_oe: OeMinimalList | None
 
 
 class EvtpMinimalListIncludingVersions(BaseModel):

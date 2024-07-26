@@ -15,15 +15,15 @@
         />
       </div>
     </div>
-    <div class="section faq-section">
-      <h2>{{ t('faq.title') }}</h2>
-      <FrontpageFrequentlyAskedQuestions />
-    </div>
-    <div class="container">
-      <div class="section news-section mobile-section">
+    <div class="section actueel-section news-section">
+      <div class="section">
         <h2>{{ t('articles.title') }}</h2>
         <FrontpageNewsArticles />
       </div>
+    </div>
+    <div class="section mobile-section faq-section">
+      <h2>{{ t('faq.title') }}</h2>
+      <FrontpageFrequentlyAskedQuestions />
     </div>
   </div>
 </template>
@@ -48,8 +48,8 @@ providePageTitle({
   row-gap: 0.25em;
 }
 .news-section {
-  padding-top: 4em;
-  margin-bottom: 4em;
+  padding-top: 2em;
+  padding-bottom: 2.5em;
 
   @media (max-width: 50em) {
     padding-top: 0em;
@@ -60,9 +60,14 @@ providePageTitle({
 .faq-section {
   padding-top: 2em;
   padding-bottom: 2.5em;
-  background-color: $tertiary;
   row-gap: 0em;
 }
+.actueel-section {
+  background-color: $tertiary;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
 .meer-onderwerpen-button {
   width: 17em !important;
 }

@@ -124,7 +124,7 @@ export default defineComponent({
   },
   computed: {
     sortedTables() {
-      const groupedTables = tables
+      const groupedTables = tables.filter((item) => item.visible)
         .reduce((acc, table) => {
           const group = table.group || 'Overig'
           if (!acc[group]) {

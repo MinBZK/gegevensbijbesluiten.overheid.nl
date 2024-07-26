@@ -126,7 +126,7 @@ def get_filtered(
         )
         .filter(where_clause)
         .group_by(models.oe.Oe.naam_spraakgbr)
-        .order_by(models.oe.Oe.naam_spraakgbr)
+        .order_by(func.lower(models.oe.Oe.naam_spraakgbr))
         .all()
     )
 
