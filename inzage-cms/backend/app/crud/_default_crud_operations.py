@@ -5,6 +5,7 @@ from typing import Dict, List, Literal, Sequence, Type, Union
 from pydantic import BaseModel
 from pytz import timezone
 from sqlalchemy import Boolean, DateTime, Float, Integer, Numeric, ScalarResult, String, and_, func, or_, select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Load, aliased, joinedload, selectinload
 from sqlalchemy.sql.elements import BooleanClauseList
@@ -20,8 +21,6 @@ from app.util.misc import create_upc
 logger = logging.getLogger(__name__)
 
 entities_not_required_to_load = [
-    "entities_gst_gstt",
-    "entities_evtp_gst",
     "entities_evtp_ond",
     "entities_evtp_oe_com_type",
 ]
@@ -269,6 +268,13 @@ async def update_one(
                 .returning(base_model)
                 .options(*eager_loads)
             )
+
+        except IntegrityError as err:
+            if "value violates unique constraint" in str(err):
+                raise exceptions.UniqueViolation()
+            else:
+                raise exceptions.UnprocessableEntity()
+
         except Exception:
             raise exceptions.UnprocessableEntity()
 
@@ -295,25 +301,29 @@ async def create_one(db: AsyncSession, base_model: Type[Base], body: BaseModel, 
 
     # Check if model has a column named '_upc'
     column_upc = f"{base_model.__name__.lower()}_upc"
-    async with db.begin():
-        if hasattr(base_model, column_upc):
-            list_gst_upc_object = await db.execute(select(getattr(base_model, column_upc)))
-            gst_upc_object = list_gst_upc_object.scalars().all()
+    try:
+        async with db.begin():
+            if hasattr(base_model, column_upc):
+                list_gst_upc_object = await db.execute(select(getattr(base_model, column_upc)))
+                gst_upc_object = list_gst_upc_object.scalars().all()
 
-            while True:
-                gst_upc = create_upc()
-                if not gst_upc_object.__contains__(gst_upc):
-                    payload[column_upc] = create_upc()
-                    instance = base_model(**payload)
-                    db.add(instance)
-                    break
-        else:
-            db.add(instance)
+                while True:
+                    gst_upc = create_upc()
+                    if not gst_upc_object.__contains__(gst_upc):
+                        payload[column_upc] = create_upc()
+                        instance = base_model(**payload)
+                        db.add(instance)
+                        break
+            else:
+                db.add(instance)
 
-    # Refresh the instance to get the generated primary key value
-    await db.refresh(instance)
+        # Refresh the instance to get the generated primary key value
+        await db.refresh(instance)
+        return instance
 
-    return instance
+    except IntegrityError as err:
+        if "value violates unique constraint" in str(err):
+            raise exceptions.UniqueViolation()
 
 
 async def delete_one(db: AsyncSession, base_model: Type[Base], primary_key: int) -> str:

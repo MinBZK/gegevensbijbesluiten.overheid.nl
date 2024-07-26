@@ -126,6 +126,8 @@ export default defineComponent({
     relations() {
       interface Entity {
         resource: string
+        linkedRelation: string
+        linkedRelationKey: string
         values: Array<object>
         label: string
         icon: string
@@ -138,6 +140,8 @@ export default defineComponent({
       const relations: Array<Entity> = [
         {
           resource: 'evtp-version',
+          linkedRelation: '',
+          linkedRelationKey: '',
           values: [this.recordRelation],
           label: 'Geselecteerde besluit',
           icon: 'mdi-star',
@@ -148,26 +152,32 @@ export default defineComponent({
         },
         {
           resource: 'ond',
+          linkedRelation: 'evtp-ond',
+          linkedRelationKey: 'evtp_ond_cd',
+          primaryKey: '',
           values: ond(this.recordRelation),
           label: 'onderwerp',
           icon: 'mdi-waves-arrow-right',
           color: 'secondary',
           nameKey: '',
-          primaryKey: '',
           width: '25vh'
         },
         {
           resource: 'oe-com-type',
+          linkedRelation: 'evtp-oe-com-type',
+          linkedRelationKey: 'evtp_oe_com_type_cd',
+          primaryKey: '',
           values: oeComType(this.recordRelation),
           label: 'communicatiekanaal',
           icon: 'mdi-waves-arrow-right',
           color: 'secondary',
           nameKey: '',
-          primaryKey: '',
           width: '60vh'
         },
         {
           resource: 'gst',
+          linkedRelation: 'evtp-gst',
+          linkedRelationKey: 'evtp_gst_cd',
           values: gst(this.recordRelation),
           label: 'gegevensstromen',
           icon: 'mdi-waves-arrow-right',
@@ -178,6 +188,8 @@ export default defineComponent({
         },
         {
           resource: 'gst-gstt',
+          linkedRelation: 'gst-gstt',
+          linkedRelationKey: 'gst_gstt_cd',
           values: gstGsttype(this.recordRelation),
           label: 'gegevensstroom type',
           icon: 'mdi-home-group',
@@ -188,6 +200,8 @@ export default defineComponent({
         },
         {
           resource: 'oe',
+          linkedRelation: '',
+          linkedRelationKey: '',
           values: orgEenheidBron(this.recordRelation),
           label: 'bron organisaties',
           icon: 'mdi-home-group',
@@ -198,6 +212,8 @@ export default defineComponent({
         },
         {
           resource: 'oe',
+          linkedRelation: '',
+          linkedRelationKey: '',
           values: orgEenheidBest(this.recordRelation),
           label: 'afnemende organisaties',
           icon: 'mdi-home-group',
@@ -208,6 +224,8 @@ export default defineComponent({
         },
         {
           resource: 'rge',
+          linkedRelation: 'gst-rge',
+          linkedRelationKey: 'gst_rge_cd',
           values: rge(this.recordRelation),
           label: 'regelingen',
           icon: 'mdi-clipboard-check-multiple-outline',
@@ -218,6 +236,8 @@ export default defineComponent({
         },
         {
           resource: 'gg',
+          linkedRelation: 'gst-gg',
+          linkedRelationKey: 'gst_gg_cd',
           values: gg(this.recordRelation),
           label: 'gegevensgroepen',
           icon: 'mdi-group',
@@ -228,6 +248,8 @@ export default defineComponent({
         },
         {
           resource: 'gg',
+          linkedRelation: '',
+          linkedRelationKey: '',
           values: ggParent(this.recordRelation),
           label: 'hogere gegevensgroepen',
           icon: 'mdi-group',

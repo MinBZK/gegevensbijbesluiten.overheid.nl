@@ -514,8 +514,22 @@ export default defineComponent({
             })
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         this.$emit('error', error)
+        if (error.response.status == 409) {
+          store.commit('activateSnackbar', {
+            show: true,
+            text: store.state.snackbar.duplication,
+            color: store.state.snackbar.error_color,
+          })
+        }
+        else {
+          store.commit('activateSnackbar', {
+            show: true,
+            text: store.state.snackbar.unknown,
+            color: store.state.snackbar.error_color,
+          })
+        }
       }
     },
   },

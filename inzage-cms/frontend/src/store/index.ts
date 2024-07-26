@@ -26,6 +26,7 @@ const store = createStore({
       malwareDetected:
         'Let op, bestand is niet geupload vanwege een potentiele virus in het bestand',
       unknown: 'Er is iets mis gegaan',
+      duplication: 'Error: deze koppeling bestaat al in de tabel',
       show: false,
     },
   },

@@ -24,7 +24,7 @@ class EvtpAcc(BaseModel):
     oe_cd: int
     ts_acc: datetime
     notitie: str | None
-    volg_nr: int
+    volg_nr: int | None
     bestand_acc_cd: int
     user_nm: str
 
@@ -35,9 +35,9 @@ class EvtpAccMinimalList(BaseModel):
 
 class EvtpAccIn(BaseModel):
     evtp_cd: int
-    oe_cd: int
+    oe_cd: int | None = None  # automatically filled
     notitie: str
-    volg_nr: int
+    volg_nr: int | None = None
 
 
 class EvtpAccWithRelations(EvtpAcc):

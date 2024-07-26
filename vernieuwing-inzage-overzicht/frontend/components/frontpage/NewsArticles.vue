@@ -46,12 +46,14 @@ const { t } = useI18n()
 .article-cards {
   display: flex;
   column-gap: 1em;
+  max-width: 72em;
 }
 
 .article-card {
-  background-color: $tertiary;
+  background-color: white;
   width: 33%;
   border-radius: 4px;
+  box-shadow: 0 0 3px rgb(147, 180, 205);
 
   transition: box-shadow 0.3s ease-out;
 

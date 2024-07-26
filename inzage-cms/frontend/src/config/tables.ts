@@ -3,6 +3,7 @@ import { Table } from '@/types/Tables'
 const tables: Array<Table> = [
   {
     label: 'Besluiten',
+    visible: true,
     group: 'Besluiten',
     resource: 'evtp-version',
     nameKey: 'evtp_nm',
@@ -61,6 +62,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Accorderingen',
+    visible: true,
     group: 'Besluiten',
     resource: 'evtp-acc',
     nameKey: 'evtp_cd',
@@ -90,6 +92,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Koppeling communicatiekanaal',
+    visible: true,
     group: 'Besluiten',
     resource: 'evtp-oe-com-type',
     nameKey: '',
@@ -117,6 +120,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Koppeling gegevensstroom',
+    visible: true,
     group: 'Besluiten',
     resource: 'evtp-gst',
     nameKey: 'Omschrijving',
@@ -149,6 +153,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Koppeling onderwerp',
+    visible: true,
     group: 'Besluiten',
     resource: 'evtp-ond',
     nameKey: '',
@@ -175,6 +180,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Gegevensstromen',
+    visible: true,
     group: 'Gegevensstromen',
     resource: 'gst',
     nameKey: 'omschrijving',
@@ -208,6 +214,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Gegevensstroomtype',
+    visible: true,
     group: 'Gegevensstromen',
     resource: 'gst-type',
     nameKey: 'gstt_naam',
@@ -235,6 +242,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Koppeling gegevensgroep',
+    visible: true,
     group: 'Gegevensstromen',
     resource: 'gst-gg',
     nameKey: 'gg_cd',
@@ -264,6 +272,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Koppeling gegevensstroomtype',
+    visible: true,
     group: 'Gegevensstromen',
     resource: 'gst-gstt',
     nameKey: 'gstt_naam',
@@ -292,6 +301,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Koppeling wettelijke regelingen',
+    visible: true,
     group: 'Gegevensstromen',
     resource: 'gst-rge',
     nameKey: 'gst_cd',
@@ -321,6 +331,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Gegevensgroepen',
+    visible: true,
     group: 'Gegevensgroepen',
     resource: 'gg',
     nameKey: 'omschrijving',
@@ -352,6 +363,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Gegevensgroepen koepel',
+    visible: true,
     group: 'Gegevensgroepen',
     resource: 'gg-koepel',
     nameKey: 'omschrijving',
@@ -383,6 +395,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Gegevensgroepenstructuur',
+    visible: false,
     group: 'Gegevensgroepen',
     resource: 'gg-struct',
     nameKey: 'ID',
@@ -408,6 +421,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Gegevensgroep sortering per besluit',
+    visible: true,
     group: 'Gegevensgroepen',
     resource: 'gg-evtp-sort',
     nameKey: 'evtp_cd',
@@ -433,6 +447,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Organisaties',
+    visible: true,
     group: 'Organisaties',
     resource: 'oe',
     nameKey: 'naam_officieel',
@@ -499,6 +514,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Organisatie koepel',
+    visible: true,
     group: 'Organisaties',
     resource: 'oe-koepel',
     nameKey: 'titel',
@@ -524,6 +540,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Koppeling organisatie koepel',
+    visible: true,
     group: 'Organisaties',
     resource: 'oe-koepel-oe',
     nameKey: '',
@@ -550,6 +567,7 @@ const tables: Array<Table> = [
   // placeholder for the group overig
   {
     label: '',
+    visible: true,
     group: 'Overig',
     resource: '',
     nameKey: '',
@@ -561,6 +579,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Communicatiekanalen',
+    visible: true,
     group: 'Overig',
     resource: 'oe-com-type',
     nameKey: 'omschrijving',
@@ -584,6 +603,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Infobronnen',
+    visible: true,
     group: 'Overig',
     resource: 'ibron',
     nameKey: 'omschrijving',
@@ -609,6 +629,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Onderwerpen',
+    visible: true,
     group: 'Overig',
     resource: 'ond',
     nameKey: 'titel',
@@ -636,6 +657,7 @@ const tables: Array<Table> = [
   },
   {
     label: 'Wettelijke regelingen',
+    visible: true,
     group: 'Overig',
     resource: 'rge',
     nameKey: 'titel',

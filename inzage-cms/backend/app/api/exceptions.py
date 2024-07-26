@@ -97,9 +97,22 @@ class UnprocessableEntity(HTTPException):
     was given for processing.
     """
 
-    def __init__(self, detail: str = "Het object kan niet verwerkt worden."):
+    def __init__(self, detail: str = "Deze waarde bestaat al."):
         super().__init__(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=detail,
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+class UniqueViolation(HTTPException):
+    """
+    HTTP Exception with status code 409 to be thrown when a unique key is being duplicated
+    """
+
+    def __init__(self, detail: str = "Het object kan niet verwerkt worden."):
+        super().__init__(
+            status_code=status.HTTP_409_CONFLICT,
             detail=detail,
             headers={"WWW-Authenticate": "Bearer"},
         )

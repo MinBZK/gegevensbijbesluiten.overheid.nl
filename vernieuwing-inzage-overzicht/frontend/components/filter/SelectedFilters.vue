@@ -6,7 +6,7 @@
     <div v-for="filter in selectedFilters" :key="filter.key">
       <strong>{{ t('filter.selectedFilter.' + filter.key) }}:</strong> <br />
       <RouterLink
-        class="chosen-filter"
+        class="chosen-filter capitalize"
         :aria-label="$t('filter.aria/remove', { what: filter.value }) || ''"
         :to="filterRemoved(filter)"
       >

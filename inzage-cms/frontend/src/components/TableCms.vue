@@ -286,6 +286,7 @@ export default defineComponent({
   },
   methods: {
     onSearchClick() {
+      this.searchFieldText = this.searchFieldText.toString().trim().replace(/[@#$%^&*_+\=\[\]{};':"\\|,.<>\/]/g, '')
       this.searchQuery = this.searchFieldText
     },
     resetSearchFieldText() {

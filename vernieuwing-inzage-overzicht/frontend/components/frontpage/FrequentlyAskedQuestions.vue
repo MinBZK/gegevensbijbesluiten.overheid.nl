@@ -1,5 +1,5 @@
 <template>
-  <ul class="no-padding">
+  <ul class="no-padding faq-box">
     <li
       v-for="(question, index) in questions"
       :key="index"
@@ -114,9 +114,13 @@ watch(isModalVisible, (newValue) => {
   column-gap: 0.85em;
   display: flex;
   justify-content: center;
-  padding: 0 0.8em;
+  padding: 0 0em;
 }
 
+.faq-box {
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgb(128, 157, 179);
+}
 .faq-card {
   display: flex;
   width: 50%;

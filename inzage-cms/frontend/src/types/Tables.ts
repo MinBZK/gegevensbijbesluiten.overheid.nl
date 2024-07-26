@@ -8,6 +8,7 @@ export type Table = {
   columns: { [key: string]: string }
   hiddenColumns: Array<string>
   fieldOrder: Array<string>
+  visible: boolean
 }
 
 export type TableRow = {

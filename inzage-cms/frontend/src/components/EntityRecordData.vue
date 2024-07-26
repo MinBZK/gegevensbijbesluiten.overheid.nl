@@ -221,6 +221,7 @@ export default defineComponent({
         this.inputValue = this.record
         // prefill evtp in evtp-ond
 
+
         if ((this.evtpCd) && (this.table.resource == 'evtp-ond' || this.table.resource == 'evtp-oe-com-type')) {
           this.inputValue = {}
           this.inputValue['evtp_cd'] = this.evtpCd
@@ -282,6 +283,10 @@ export default defineComponent({
           this.inputFields.forEach((f) => {
             this.adjustedRecord[f] = this.inputValue[f] || null
           })
+          if (this.table.resource == 'evtp-acc') {
+            this.tableModelUpdated.fields['oe_cd']['readonly'] = true
+            this.tableModelUpdated.foreign_key_mapping['oe_cd'] = ''
+          }
         }
       },
       immediate: true,
@@ -380,6 +385,9 @@ export default defineComponent({
           if ((foreignKey.foreign_resource == 'evtp-version') || ((foreignKey.foreign_resource == 'gst') && this.tableModel.resource != 'evtp-gst')) {
             this.adjustedRecord['versie_nr'] = v.versie_nr
           }
+          if ((foreignKey.foreign_resource == 'evtp-version') && (this.tableModel.resource == 'evtp-acc')) {
+            this.adjustedRecord['oe_cd'] = v.verantwoordelijke_oe.oe_cd
+          }
         }
       } else {
         this.adjustedRecord[fieldKey] = v
@@ -401,6 +409,6 @@ export default defineComponent({
 <style lang="scss">
 tr {
   border: 1px solid blue;
-  cursor: pointer;
+  // cursor: pointer;
 }
 </style>

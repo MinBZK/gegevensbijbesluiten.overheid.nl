@@ -13,9 +13,14 @@
       >
         <td>
           <a
-            :href="
-              getEntityRecordHref(relation, gstGg, primaryKey)
-            "
+            v-if="getEntityRecordHref(relation, gstGg)"
+            class="cursor-hover"
+            :href="getEntityRecordHref(relation, gstGg)"
+          >
+            {{ gstGg[relation.nameKey] }}
+          </a>
+          <a
+            v-else
           >
             {{ gstGg[relation.nameKey] }}
           </a>
@@ -164,7 +169,8 @@ export default defineComponent({
   },
   methods: {
     sortedResource(resource){
-      return resource.slice().sort((a: { sort_key: number }, b: { sort_key: number }) => a.sort_key - b.sort_key)
+      let res = resource.slice().sort((a: { sort_key: number }, b: { sort_key: number }) => a.sort_key - b.sort_key)
+      return res
     },
     async deleteGstGg(gst_gg_cd: string) {
       await axios.delete(`${store.state.APIurl}/gst-gg/${gst_gg_cd}`)
@@ -193,14 +199,20 @@ export default defineComponent({
         color: store.state.snackbar.succes_color,
       })
     },
-    getEntityRecordHref(relation, resourceItem, primaryKey) {
+    getEntityRecordHref(relation, resource) {
+      if (!relation.linkedRelation){
+        return ''
+      }
       return this.$router.resolve({
         name: 'entityRecord',
         params: {
-          id: resourceItem[primaryKey],
-          resource: relation.resource,
-          recordResource: relation.resource,
+          id: resource[relation.linkedRelationKey],
+          resource: relation.linkedRelation,
+          recordResource: relation.linkedRelation,
           tab: 'data',
+        },
+        query: {
+          redirect: this.$route.fullPath
         },
       }).href
     },
@@ -210,4 +222,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '/src/styles/styles.scss';
+.no-hover {
+  cursor: default;
+
+}
 </style>

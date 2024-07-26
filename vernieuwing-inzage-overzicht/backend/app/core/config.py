@@ -10,7 +10,7 @@ from pydantic_settings import (
 load_dotenv()
 
 if os.environ.get("CHANNEL") == "concept":
-    PUBLICATION_RANGE = [2, 3]
+    PUBLICATION_RANGE = [2]
     CURRENT_VERSION = [True, False]
 else:
     PUBLICATION_RANGE = [3]
