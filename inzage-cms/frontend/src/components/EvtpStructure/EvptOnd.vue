@@ -9,6 +9,14 @@
         {{ resource[relation.nameKey] }}
       </a>
       <a v-else>
+      <a
+        v-if="getEntityRecordHref(relation, resource)"
+        class="cursor-hover"
+        :href="getEntityRecordHref(relation, resource)"
+      >
+        {{ resource[relation.nameKey] }}
+      </a>
+      <a v-else>
         {{ resource[relation.nameKey] }}
       </a>
     </td>

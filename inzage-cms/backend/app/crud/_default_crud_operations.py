@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from pytz import timezone
 from sqlalchemy import Boolean, DateTime, Float, Integer, Numeric, ScalarResult, String, and_, func, or_, select, update
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Load, aliased, joinedload, selectinload
 from sqlalchemy.sql.elements import BooleanClauseList
@@ -308,7 +309,21 @@ async def create_one(db: AsyncSession, base_model: Type[Base], body: BaseModel, 
             if hasattr(base_model, column_upc):
                 list_gst_upc_object = await db.execute(select(getattr(base_model, column_upc)))
                 gst_upc_object = list_gst_upc_object.scalars().all()
+    try:
+        async with db.begin():
+            if hasattr(base_model, column_upc):
+                list_gst_upc_object = await db.execute(select(getattr(base_model, column_upc)))
+                gst_upc_object = list_gst_upc_object.scalars().all()
 
+                while True:
+                    gst_upc = create_upc()
+                    if not gst_upc_object.__contains__(gst_upc):
+                        payload[column_upc] = create_upc()
+                        instance = base_model(**payload)
+                        db.add(instance)
+                        break
+            else:
+                db.add(instance)
                 while True:
                     gst_upc = create_upc()
                     if not gst_upc_object.__contains__(gst_upc):
@@ -322,6 +337,13 @@ async def create_one(db: AsyncSession, base_model: Type[Base], body: BaseModel, 
         # Refresh the instance to get the generated primary key value
         await db.refresh(instance)
         return instance
+        # Refresh the instance to get the generated primary key value
+        await db.refresh(instance)
+        return instance
+
+    except IntegrityError as err:
+        if "value violates unique constraint" in str(err):
+            raise exceptions.UniqueViolation()
 
     except IntegrityError as err:
         if "value violates unique constraint" in str(err):

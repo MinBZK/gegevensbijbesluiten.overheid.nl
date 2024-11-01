@@ -489,6 +489,7 @@ export default defineComponent({
           }
         }
       } catch (error: any) {
+      } catch (error: any) {
         this.$emit('error', error)
         if (error.response.status == 409) {
           store.commit('activateSnackbar', {

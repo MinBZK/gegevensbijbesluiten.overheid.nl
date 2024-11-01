@@ -236,4 +236,5 @@ export default defineComponent({
   font-style: italic;
   color: black;
 }
+
 </style>

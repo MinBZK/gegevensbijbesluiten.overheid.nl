@@ -267,6 +267,10 @@ export default defineComponent({
             this.tableModelUpdated.fields['oe_cd']['readonly'] = true
             this.tableModelUpdated.foreign_key_mapping['oe_cd'] = ''
           }
+          if (this.table.resource == 'evtp-acc') {
+            this.tableModelUpdated.fields['oe_cd']['readonly'] = true
+            this.tableModelUpdated.foreign_key_mapping['oe_cd'] = ''
+          }
         }
       },
       immediate: true

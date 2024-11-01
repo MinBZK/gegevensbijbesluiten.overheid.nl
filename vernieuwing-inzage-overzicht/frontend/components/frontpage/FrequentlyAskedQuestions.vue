@@ -127,6 +127,10 @@ onMounted(() => {
   box-shadow: 0 0 6px rgb(128, 157, 179);
 }
 
+.faq-box {
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgb(128, 157, 179);
+}
 .faq-card {
   display: flex;
   width: 50%;
