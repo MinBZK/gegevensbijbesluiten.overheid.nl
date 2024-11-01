@@ -1,6 +1,6 @@
 services:
   db-inzage:
-    image: harbor-gn2.cicd.s15m.nl/ictu-devops-pub/cloudnative-pg/inzage/postgresql:15.2.18
+    image: ankane/pgvector
     container_name: ${POSTGRES_DB}_postgres_db
     restart: always
     env_file:
