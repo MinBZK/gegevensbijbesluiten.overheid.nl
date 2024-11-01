@@ -1,3 +1,0 @@
-Contact: mailto:test@test.nl
-Expires: 2024-11-24T08:00:00.000Z
-Preferred-Languages: nl

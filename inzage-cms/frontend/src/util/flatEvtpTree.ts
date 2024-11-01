@@ -9,16 +9,14 @@ const versieNr = (record) => {
 const gst = (record) => {
   try {
     const gst = record.entities_evtp_gst.map((evtp_gst) => evtp_gst.entity_gst)
+    gst.map((gst, index) => (gst['evtp_gst_cd'] = record.entities_evtp_gst[index].evtp_gst_cd))
+    gst.map((gst, index) => (gst['conditie'] = record.entities_evtp_gst[index].conditie))
     gst.map(
-      (gst, index) =>
-        (gst['evtp_gst_cd'] = record.entities_evtp_gst[index].evtp_gst_cd)
+      (gst, index) => (gst['entities_gst_gstt'] = record.entities_evtp_gst[index].entities_gst_gstt)
     )
     gst.map(
-      (gst, index) =>
-        (gst['conditie'] = record.entities_evtp_gst[index].conditie)
+      (gst, index) => (gst['entities_gst_rge'] = record.entities_evtp_gst[index].entities_gst_rge)
     )
-    gst.map((gst, index) => (gst['entities_gst_gstt'] = record.entities_evtp_gst[index].entities_gst_gstt))
-    gst.map((gst, index) => (gst['entities_gst_rge'] = record.entities_evtp_gst[index].entities_gst_rge))
     return gst
   } catch {
     return null
@@ -28,10 +26,7 @@ const gst = (record) => {
 const ond = (record) => {
   try {
     const ond = record.entities_evtp_ond.map((item) => item.entity_ond)
-    ond.map(
-      (ond, index) =>
-        (ond['evtp_ond_cd'] = record.entities_evtp_ond[index].evtp_ond_cd)
-    )
+    ond.map((ond, index) => (ond['evtp_ond_cd'] = record.entities_evtp_ond[index].evtp_ond_cd))
     return ond
   } catch {
     return null
@@ -43,7 +38,8 @@ const oeComType = (record) => {
     const oeComType = record.entities_evtp_oe_com_type.map((item) => item.entity_oe_com_type)
     oeComType.map(
       (oeComType, index) =>
-        (oeComType['evtp_oe_com_type_cd'] = record.entities_evtp_oe_com_type[index].evtp_oe_com_type_cd)
+        (oeComType['evtp_oe_com_type_cd'] =
+          record.entities_evtp_oe_com_type[index].evtp_oe_com_type_cd)
     )
     return oeComType
   } catch {
@@ -53,9 +49,7 @@ const oeComType = (record) => {
 
 const gstCd = (record) => {
   try {
-    const gstCd = record.entities_evtp_gst.map(
-      (evtp_gst) => evtp_gst.entity_gst.gst_cd
-    )
+    const gstCd = record.entities_evtp_gst.map((evtp_gst) => evtp_gst.entity_gst.gst_cd)
     return gstCd
   } catch {
     return null
@@ -84,8 +78,7 @@ const gstGsttype = (record) => {
     )
     evtpGst.forEach((object, index) =>
       object.map(
-        (evtpGst, subIndex) =>
-          (evtpGst['gst_gstt_cd'] = gst_gstt_cd_list[index][subIndex])
+        (evtpGst, subIndex) => (evtpGst['gst_gstt_cd'] = gst_gstt_cd_list[index][subIndex])
       )
     )
     return evtpGst
@@ -153,9 +146,7 @@ const ibronGstGgOrgEenheid = (record) => {
   try {
     const ibronGstGgOrgEenheid = record.entities_evtp_gst
       .filter((evtp_gst) => evtp_gst.entity_gst.ibron)
-      .map((evtp_gst) =>
-        evtp_gst.entity_gst.entities_gst_gg.map((gst_gg) => gst_gg.ibron.Oe)
-      )
+      .map((evtp_gst) => evtp_gst.entity_gst.entities_gst_gg.map((gst_gg) => gst_gg.ibron.Oe))
     return ibronGstGgOrgEenheid
   } catch {
     return null
@@ -177,9 +168,7 @@ const ibronGgHogerOrgEenheid = (record) => {
   try {
     const ibronGgHogerOrgEenheid = record.entities_evtp_gst.map((evtp_gst) =>
       evtp_gst.NTITIES_gst_gg.entity_gg.parent_entities.map((parent_entities) =>
-        parent_entities.parent_entity.ibron
-          ? parent_entities.parent_entity.ibron.Oe
-          : null
+        parent_entities.parent_entity.ibron ? parent_entities.parent_entity.ibron.Oe : null
       )
     )
     return ibronGgHogerOrgEenheid
@@ -191,9 +180,7 @@ const ibronGgHogerOrgEenheid = (record) => {
 const ibronGgOrgEenheid = (record) => {
   try {
     const ibronGgOrgEenheid = record.entities_evtp_gst.map((evtp_gst) =>
-      evtp_gst.entities_gst_gg.entity_gg.ibron
-        ? evtp_gst.entities_gst_gg.entity_gg.ibron.Oe
-        : null
+      evtp_gst.entities_gst_gg.entity_gg.ibron ? evtp_gst.entities_gst_gg.entity_gg.ibron.Oe : null
     )
     return ibronGgOrgEenheid
   } catch {
@@ -279,5 +266,5 @@ export {
   ibronGgHogerOrgEenheid,
   ibronGgOrgEenheid,
   gstCd,
-  gstGgCd,
+  gstGgCd
 }

@@ -51,6 +51,6 @@ const pageTitle = computed(() => t('footer.paths.privacyverklaring'))
 useHead({ title: pageTitle })
 providePageTitle({
   title: 'footer.paths.privacyverklaring',
-  labelType: 'locale-index',
+  labelType: 'locale-index'
 })
 </script>

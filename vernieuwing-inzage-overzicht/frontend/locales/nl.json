@@ -2,12 +2,18 @@
   "lorem": "Lorem ipsum dolor",
   "loremIpsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   "showMore": "Toon meer",
+  "suggestionsList": "Suggesties",
+  "SearchAllEntities": "Zoek in alle besluiten, gegevens en organisaties",
+  "noResultsSuggestionsList": "Geen resultaten gevonden",
+  "noResultsSuggestionsListAll": "Geen resultaten gevonden, probeer een andere zoekterm.",
   "evtpIndex": {
+    "showMore": "Toon meer besluiten",
     "pageTitle": "Zoek naar besluiten",
     "noResults": {
       "p1": "Probeer het opnieuw. U kan zoeken op de volgende woorden:",
       "l1": "Woorden in de naam (titel) van het besluit",
-      "l2": "Woorden in de omschrijving van het besluit"
+      "l2": "Woorden in de omschrijving van het besluit",
+      "l3": "Woorden in de aanleiding en het gebruiksdoel van het besluit"
     }
   },
   "ggIndex": {
@@ -16,8 +22,7 @@
     "noResults": {
       "p1": "Probeer het opnieuw. U kan zoeken op de volgende woorden:",
       "l1": "Woorden in de naam (titel) van het gegeven",
-      "l2": "Woorden in de omschrijving van het gegeven",
-      "l3": "De naam van de organisatie die verantwoordelijk is voor het gegeven."
+      "l2": "Woorden in de naam(titel) van de categorie van het gegeven"
     }
   },
   "oeIndex": {
@@ -26,7 +31,7 @@
     "noResults": {
       "p1": "Probeer het opnieuw. U kan zoeken op de volgende woorden:",
       "l1": "Woorden in de naam (titel) van de organisaties",
-      "l2": "Woorden in de omschrijving van de organisaties"
+      "l2": "Woorden in de omschrijving van de categorie van organisaties"
     }
   },
   "english?": "false",
@@ -44,7 +49,7 @@
     "empty": "Er bestaan geen besluiten voor dit onderwerp."
   },
   "gegevens": {
-    "foundResults": "Er zijn geen gegevens gevonden | 1 gegevens gevonden | {n} gegevens gevonden",
+    "foundResults": "Er zijn geen gegevens gevonden | 1 gegeven gevonden | {n} gegevens gevonden",
     "noResults": "Geen gegevens gevonden voor de huidige zoekopdracht.",
     "empty": "Er bestaan geen gegevens voor dit onderwerp.",
     "select": "Selecteer een gegeven"
@@ -72,6 +77,7 @@
     "evtpCommunication": "Hoe wordt het besluit aan u meegedeeld?",
     "youReceiveMessage": "U ontvangt bericht:",
     "additionalInfoTitle": "Overige informatie",
+    "additionalItemsHeader": "Aanvullende informatie voor dit besluit",
     "additionalInfoLink": "Bezoek deze website voor verdere informatie",
     "wantToKnowMore": "Meer weten?"
 
@@ -81,7 +87,8 @@
     "registrationSourceOrganisation": "Deze registratie wordt beheerd door {article} {source_organisation}.",
     "dataExchangeBySourceOrganisation": "{article} {source_organisation} stelt de gegevens beschikbaar:",
     "wantToKnowMore": "Meer weten?",
-    "checkYourDataInRegister": "Bekijk uw gegevens in {article} {register}",
+    "checkYourDataInRegister1": "Ga naar de website van {article} {register}",
+    "checkYourDataInRegister2": "en bekijk, indien beschikbaar, uw gegevens",
     "contactSourceOrganisation": "Neem contact op met {article} {source_organisation}",
     "checkAutorisation": "Bekijk de autorisatie",
     "receivesTheFollowingData": "{article} {destination_organisation} ontvangt de volgende gegevens: ",
@@ -90,7 +97,9 @@
     "goal": "Doel",
     "legalBasis": "Wettelijke grondslag(en)",
     "multipleTypeMessages": "Via de post, de Berichtenbox op mijnoverheid.nl of een ander kanaal",
-    "pleaseContact": "Neem contact op met {destination_organisation}"
+    "pleaseContact": "Neem contact op met {destination_organisation}",
+    "portalLogin": "Bekijk de status van uw besluit en/of uw gegevens in {article} {destination_portal}"
+
   },
   "footer": {
     "text_1": "Let op: deze website is in ontwikkeling. De inhoud wordt aangevuld.",
@@ -100,7 +109,8 @@
       "over": "Over deze website",
       "overPage": {
         "title": "Over deze website",
-        "p0": "Het doel is informatie over het gebruik van gegevens en de daarbij behorende gegevensuitwisseling tussen organisaties voor iedereen op één plek vindbaar te maken. Op die manier kan iedereen zien bij welke overheidsbesluiten welke gegevens meestal gebruikt worden. Door dit inzichtelijk te maken kunnen fouten sneller ontdekt en verbeterd worden. Zodat de gegevens die bij de overheid bekend zijn, betrouwbaar zijn. Deze transparantie is belangrijk voor het vertrouwen in de overheid.",
+        "p0_1": "Het doel van deze website is informatie over het gebruik van gegevens en de uitwisseling ervan tussen organisaties voor iedereen op één plek vindbaar te maken. Zo kan iedereen zien bij welke overheidsbesluiten welke gegevens worden gebruikt én kunnen eventuele fouten sneller ontdekt en verbeterd worden. Met als doel: betrouwbare overheidsgegevens en meer vertrouwen in de overheid.",
+        "p0_2": "Treft u op deze website informatie aan die onjuist of mogelijk verouderd is? Neemt u dan contact op via ",
         "h1": "Doorontwikkeling",
         "p1_1": "Deze website is in ontwikkeling. Er wordt aan gewerkt om van 600 besluiten de gegevensstromen inzichtelijk te maken. Dit doet het team samen met de betrokken organisaties. De website wordt stapsgewijs verder ontwikkeld.",
         "p1_2": "Doorontwikkeling betekent dat de inhoud door de tijd heen zal wijzigen, bijvoorbeeld:",
@@ -156,7 +166,26 @@
         "p1_2": "Of wilt u als (overheids)professional ook een besluit publiceren?",
         "p1_3": "Neem contact op met: "
       },
-      "meedoen": "Meedoen",
+      "archief": "Archief",
+      "archiefPage": {
+        "h1": "Archief",
+        "p1": "Websites zijn een belangrijke informatiebron voor burgers, bedrijven en overheden. Dit geldt ook voor vorige versies van websites. Hier kan informatie op staan die nog steeds relevant is en waar rechten aan kunnen worden ontleend. Door websites te archiveren, kunnen ze duurzaam toegankelijk blijven: ze blijven dus beschikbaar voor het terugkijken van openbare informatie. Dit is verplicht voor alle overheidswebsites.",
+        "p2_1": "Deze versies komen te staan in het", 
+        "li1": "archief",
+        "li1_link": "https://minbzk.sitearchief.nl/?subsite=gegevensbijbesluiten#archive",
+        "p2_2": "In het overzicht vind u de webarchieven van alle verplichte deelnemers. Klik op een archief, kies een datum uit het verleden via de kalender en de site past haar inhoud aan op wat er toen actueel was. U kunt teruggaan tot 5 maart 2024.",
+        "p3": "Meer weten?",
+        "li2": "Bekijk de Richtlijn archiveren overheidswebsites hier",
+        "li2_link": "https://www.nationaalarchief.nl/archiveren/kennisbank/Richtlijn-Archiveren-Overheidswebsites"
+      },
+      "kwetsbaarheid": "Kwetsbaarheid melden",
+      "kwetsbaarheidPage": {
+        "h1": "Kwetsbaarheid melden",
+        "p1": "Ontdekt u een zwakke plek of kwetsbaarheid op deze website, meld dit dan aan het Nationaal Cyber Security Centrum (NCSC). Het maken van zo’n melding heet Coordinated Vulnerability Disclosure (CVD). Wij bekijken samen met het NCSC het probleem en lossen dit zo snel mogelijk op.",
+        "p2": "Klik hier om een kwetsbaarheid te melden",
+        "li1": "https://www.ncsc.nl/contact/kwetsbaarheid-melden"
+        
+      },
       "ext_overheid_nl": "Overheid.nl",
       "ext_rijksoverheid_nl": "Rijksoverheid.nl",
       "ext_digitaleoverheid_nl": "Digitaleoverheid.nl",
@@ -175,7 +204,7 @@
   "no": "Nee",
   "hello": "Hallo, {name}!",
   "language": "Taal",
-  "homepageTitle": "Wie gebruikt mijn gegevens bij de overheid?",
+  "homepageTitle": "Wat gebeurt er met uw gegevens bij de overheid?",
   "onderwerpenTitle": "Onderwerpen",
   "searchExplanation": "Zoek besluiten op naam",
   "logoCaption": "Gegevens bij besluiten",
@@ -189,7 +218,6 @@
       "searchtext": "Zoekterm"
     },
     "filters": {
-      "pickOrgType": "Kies een organisatietype",
       "pickOrg": "Kies een organisatie"
     },
     "aria/remove": "Verwijder {what} uit de filters",
@@ -222,8 +250,9 @@
     "goToPreviousPage": "Ga naar vorige pagina"
   },
   "homePageText": {
-    "description_1": "De Nederlandse overheid houdt gegevens bij van alle inwoners in Nederland. Die gegevens zijn nodig om besluiten te nemen. Bijvoorbeeld over de uitgifte van een paspoort of de toekenning van huurtoeslag of pensioen. Om te voorkomen dat u deze gegevens steeds opnieuw moet aanleveren wisselen de overheden deze gegevens onderling uit.",
-    "description_2": "Vraagt u zich af hoe dat precies zit? Wilt u weten wie welke gegevens over u heeft? Op deze website leest u daar meer over. Gebruik de zoekbalk, scroll verder of klik op"
+    "description_1": "De overheid houdt gegevens bij van alle inwoners van Nederland. Deze gegevens worden gebruikt om besluiten te nemen. Een besluit is elke beslissing die invloed kan hebben op uw rechten of plichten, zoals het verlenen van een vergunning, het toekennen van een uitkering, het verlengen van een paspoort of het opleggen van een belastingaanslag. Waar nodig wisselen overheidsinstanties uw gegevens onderling uit, zodat u deze niet steeds opnieuw hoeft aan te leveren.",
+    "description_2_1": "Bent u benieuwd welke gegevens worden gebruikt wanneer de overheid een besluit neemt, en wilt u weten tussen welke organisaties deze gegevens worden uitgewisseld? Op deze website vindt u meer informatie. Gebruik de zoekbalk, scroll verder, klik op 'Onderwerpen', of zoek naar een specifiek besluit om meer te weten te komen over de besluiten die de overheid voor u neemt.",
+    "description_2_2": "of zoek naar een specifiek besluit om meer te weten te komen over de besluiten die de overheid voor u neemt."
   },
   "dashboard": {
     "informationType": "Type informatie",
@@ -292,6 +321,8 @@
       "link_5_url": "https://www.rvig.nl/mfo"
     }
   },
+  "getHeroExplanation": "illustratie van iemand online op zoek is naar informatie",
+  "getMoreInfo": "illustratie van iemand online op zoek is naar informatie en die deze verkrijgt via een overheidsorganisatie",
   "getGgPropertyExplanation": "Uitgebreide uitleg van het gegevensgroep '{field}'",
   "getEvtpPropertyExplanation": "Uitleg over het besluit-eigenschap '{field}'",
   "evtpProperties": {
@@ -375,8 +406,8 @@
       "title": "Webinar Algemene Inzage Persoonsgegevens",
       "date": "6 juni 2024",
       "summary": "Ons team verzorgde donderdag 23 mei een webinar om overheidsorganisaties inzicht te geven in hoe ze kunnen samenwerken met ons, hoe ze hun besluiten kunnen nomineren en hoe het resultaat er op de website uitziet.",
-      "alt": "Website banner van gegevensbijbesluiten"
-    }, 
+      "alt": "Welkomst plaatje voor gegevensbijbesluiten"
+    },
     "9": {
       "title": "Onderzoek digitale tools",
       "date": "12 juni 2024",
@@ -391,8 +422,8 @@
   "pages": {
     "onderwerpen": {
       "title": "Onderwerpen",
-      "description_1": "Kies een onderwerp waar u meer over wilt weten. ",
-      "description_2": "Per onderwerp vindt u de besluiten die de overheid over dat onderwerp neemt en de gegevens die daarbij nodig zijn.",
+      "description_1": "Wij hebben de besluiten ondergebracht in verschillende onderwerpen. Zo vindt u snel uw weg naar het thema dat u interesseert. Vervolgens ziet u de besluiten die de overheid neemt, met de gegevens die organisaties gebruiken en delen.",
+      "description_2": "Kies een onderwerp waar u meer over wilt weten.",
       "referenceToEvtp": "Bekijk de besluiten bij {evtpName}",
       "searchText": "Zoek naar een besluit"
     },
@@ -402,18 +433,22 @@
       "description_2": "Gebruik de zoekbalk. Of selecteer een organisatie als u al weet dat u daar moet zijn.",
       "description_3": "Klik op een besluit om er meer over te weten te komen. U ziet welke organisatie het besluit neemt, welke gegevens nodig zijn, wie ze aanlevert en volgens welke wet dat mag.",
       "readMore": "Lees meer",
-      "searchText": "Zoek naar een besluit"
+      "searchText": "Zoek naar een besluit",
+      "suggestionsHidden": "Toon de overige {n} besluiten"
+      
     },
     "gegevens": {
       "title": "Gegevens",
       "description": "Wie beheert nu precies mijn inkomensgegevens? Met wie worden mijn medische gegevens gedeeld? Op deze pagina ziet u welke gegevens de overheid gebruikt om besluiten te nemen. Deze gegevens zijn verdeeld over een aantal categorieën. Van alle gegevens kunt u zien voor welk besluit ze worden gebruikt, welke organisatie ze beheert  en met welke andere organisaties ze worden gedeeld.",
-      "searchText": "Zoek naar gegevens"
+      "searchText": "Zoek naar gegevens",
+      "suggestionsHidden": "Toon de overige {n} gegevens"
     },
     "organisaties": {
       "title": "Organisaties",
       "searchText": "Zoek naar organisaties",
       "description_1": "Op deze pagina ziet u welke overheidsinstanties de besluiten die op deze website staan, nemen. Ook andere organisaties die een wettelijke taak uitvoeren en besluiten mogen nemen, worden hier vermeld.",
-      "description_italics": "Het overzicht is nog niet compleet en zal verder worden uitgebreid. Hier worden alleen organisaties weergegeven waarvan op dit moment een besluit op de website staat."
+      "description_italics": "Het overzicht is nog niet compleet en zal verder worden uitgebreid. Hier worden alleen organisaties weergegeven waarvan op dit moment een besluit op de website staat.",
+      "suggestionsHidden": "Toon de overige {n} organisaties"
     }
   },
   "uitleg": {

@@ -1,5 +1,6 @@
 <template>
   <FilterBlock
+    v-if="props.options.length > 0"
     v-model:readMore="readMore"
     :title="t('filter.filters.pickOrg')"
     disable-dropdown
@@ -43,7 +44,7 @@ const props = withDefaults(
   }>(),
   {
     maxSize: 7,
-    queryKey: 'organisation',
+    queryKey: 'organisation'
   }
 )
 
@@ -60,11 +61,7 @@ const addNewQueryToRoute = (option: FilterData): void => {
 const readMore = ref<boolean>(true)
 
 const shownOptions = computed(() => {
-  if (
-    (props.options.length || 0) > props.maxSize &&
-    props.enableReadMore &&
-    readMore.value
-  ) {
+  if ((props.options.length || 0) > props.maxSize && props.enableReadMore && readMore.value) {
     return props.options.slice(0, props.maxSize)
   } else {
     return props.options
@@ -74,17 +71,11 @@ const shownOptions = computed(() => {
 watch(
   () => shownOptions.value.length,
   (newLength) => {
-    if (
-      newLength === props.options.length &&
-      props.options.length > props.maxSize
-    ) {
+    if (newLength === props.options.length && props.options.length > props.maxSize) {
       nextTick(() => {
         filterListItems.value[props.maxSize].focus()
       })
-    } else if (
-      filterListItems.value.length > 0 &&
-      props.options.length > props.maxSize
-    ) {
+    } else if (filterListItems.value.length > 0 && props.options.length > props.maxSize) {
       filterListItems.value[0].focus()
     }
   }
@@ -92,10 +83,6 @@ watch(
 </script>
 
 <style scoped lang="scss">
-.no-padding-left {
-  padding-left: 0;
-}
-
 .filter-options {
   width: 100%;
   display: inline-flex;

@@ -17,6 +17,7 @@ from . import (
     ibron,  # noqa: F401
     oe,  # noqa: F401
     oe_com_type,
+    omg,
     oe_koepel_oe,  # noqa: F401
     oe_koepel,  # noqa: F401
     ond,  # noqa: F401

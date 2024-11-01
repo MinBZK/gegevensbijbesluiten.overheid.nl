@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, HttpUrl
 
 from app.schemas.filters import (
     EvtpFilterData,
@@ -11,6 +11,7 @@ from app.schemas.filters import (
 from app.schemas.oe import (
     OeName,
 )
+from app.schemas.omg import Omg
 
 
 class Ond(BaseModel):
@@ -36,6 +37,14 @@ class EvtpVersion(BaseModel):
 
     entity_oe_best: OeName
     entities_evtp_ond: list[EvtpOnd]
+    model_config = ConfigDict(from_attributes=True)
+
+
+class EvtpCompact(BaseModel):
+    evtp_cd: int
+    evtp_upc: int
+    evtp_nm: str
+    versie_nr: int
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -49,7 +58,7 @@ class EvtpVersionForOnd(BaseModel):
 
 
 class EvtpQueryResult(BaseModel):
-    results: list[EvtpVersion]
+    result_evtp: list[EvtpVersion]
     total_count: int
     filter_data: EvtpFilterData
     selected_filters: list[SelectedFilters]
@@ -58,13 +67,13 @@ class EvtpQueryResult(BaseModel):
 class EvtpQuery(BaseModel):
     page: int = 1
     limit: int = 10
-    searchtext: str | None = None
+    searchtext: str = ""
     organisation: str | None = None
 
 
 class EvtpOeComType(BaseModel):
     omschrijving: str | None
-    link: str | None
+    link: HttpUrl | None
 
 
 class Gegevensgroep(BaseModel):
@@ -89,15 +98,15 @@ class Besluit(BaseModel):
     oe_naam_spraakgbr: str
     oe_naam_officieel: str
     ond: list[str]
+    entity_omg: Omg | None
 
 
 class EvtpCommunication(BaseModel):
-    oe_best_econtact: str | None
     evtp_oe_com_type: List[EvtpOeComType] | None
-    oe_best_internetdomein: str | None
+    oe_best_internetdomein: HttpUrl | None
     evtp_oebest: str
     overige_informatie: str | None
-    overige_informatie_link: str | None
+    overige_informatie_link: HttpUrl | None
 
 
 class EvtpGg(BaseModel):

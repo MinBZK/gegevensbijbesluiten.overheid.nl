@@ -4,7 +4,7 @@
     <span>{{ t('filter.showFilters') }}</span>
   </button>
 
-  <ModalShell v-model="modal" width="400px" height="80%">
+  <ModalShell v-model="modal" width="400px" height="80%" modal-title="Filters">
     <slot />
   </ModalShell>
 </template>

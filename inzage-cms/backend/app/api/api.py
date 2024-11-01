@@ -129,6 +129,12 @@ router.include_router(
 )
 
 router.include_router(
+    _generic_tables.omg_router,
+    prefix="/omg",
+    tags=["Organisatie omgevingen"],
+)
+
+router.include_router(
     _generic_tables.evtp_oe_com_type_router,
     prefix="/evtp-oe-com-type",
     tags=["Besluit organisatie communicatie kanalen"],

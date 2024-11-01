@@ -36,8 +36,12 @@
           <v-toolbar><v-toolbar-title>Acties</v-toolbar-title></v-toolbar>
           <v-list>
             <v-list-subheader>
-              <b v-if="evtpUpgradeButton.text == getStatusPubliceren">Promoveer het besluit óók in publiek</b>
-              <b v-else-if="evtpUpgradeButton.text == getStatusGereedVoorControle">Promoveer het besluit alleen in concept</b>
+              <b v-if="evtpUpgradeButton.text == getStatusPubliceren"
+                >Promoveer het besluit óók in publiek</b
+              >
+              <b v-else-if="evtpUpgradeButton.text == getStatusGereedVoorControle"
+                >Promoveer het besluit alleen in concept</b
+              >
               <b v-else>Gepubliceerd in publiek</b>
             </v-list-subheader>
             <v-list-item dense>
@@ -48,9 +52,8 @@
                 color="green-lighten-2"
                 @click="upgradeEvtp"
               >
-                <v-icon v-if="!evtpUpgradeButton.hideIcons">
-                  mdi-arrow-right-thin
-                </v-icon>{{ evtpUpgradeButton.text }}
+                <v-icon v-if="!evtpUpgradeButton.hideIcons"> mdi-arrow-right-thin </v-icon
+                >{{ evtpUpgradeButton.text }}
                 <v-icon v-if="!evtpUpgradeButton.hideIcons">
                   {{ evtpUpgradeButton.icon }}
                 </v-icon>
@@ -62,22 +65,14 @@
               <b>Degradeer het besluit naar nieuw</b>
             </v-list-subheader>
             <v-list-item>
-              <v-btn
-                class="action-buttons"
-                color="warning"
-                @click="resetEvtpStatus"
-              >
+              <v-btn class="action-buttons" color="warning" @click="resetEvtpStatus">
                 Reset Besluit Status
               </v-btn>
             </v-list-item>
             <v-divider />
             <v-list-subheader><b>Archiveer het besluit</b></v-list-subheader>
             <v-list-item>
-              <v-btn
-                class="action-buttons"
-                color="error"
-                @click="archiveEvtpStatus"
-              >
+              <v-btn class="action-buttons" color="error" @click="archiveEvtpStatus">
                 Archiveer besluit
               </v-btn>
             </v-list-item>
@@ -85,10 +80,7 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card
-          rounded="true"
-          elevation="1"
-        >
+        <v-card rounded="true" elevation="1">
           <v-toolbar>
             <v-toolbar-title>
               {{ searchQuery?.title || defaultText }}
@@ -97,10 +89,7 @@
           </v-toolbar>
           <v-card-item v-if="loading">
             <div class="centered">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-              />
+              <v-progress-circular indeterminate color="primary" />
             </div>
           </v-card-item>
           <v-card-item>
@@ -108,10 +97,7 @@
               <v-list-item>
                 <b>Validatie regels</b>
               </v-list-item>
-              <v-list-group
-                v-for="(table, indexTable) in flattenedDataRules"
-                :key="indexTable"
-              >
+              <v-list-group v-for="(table, indexTable) in flattenedDataRules" :key="indexTable">
                 <template #activator="{ props }">
                   <v-list-item
                     :disabled="table.result == false"
@@ -149,10 +135,7 @@
                     </v-col>
                     <v-col cols="7">
                       <ol>
-                        <li
-                          v-for="(row, indexRow) in table.content"
-                          :key="indexRow"
-                        >
+                        <li v-for="(row, indexRow) in table.content" :key="indexRow">
                           {{ row['feedback_message'] }}
                         </li>
                       </ol>
@@ -167,29 +150,17 @@
     </v-row>
   </v-container>
 
-  <v-snackbar
-    v-model="snackbarSuccess"
-    color="success"
-    timeout="1500"
-  >
+  <v-snackbar v-model="snackbarSuccess" color="success" timeout="1500">
     Publicatie is gelukt!
     <template #actions>
-      <v-btn @click="snackbarSuccess = false">
-        Sluiten
-      </v-btn>
+      <v-btn @click="snackbarSuccess = false"> Sluiten </v-btn>
     </template>
   </v-snackbar>
-  <v-snackbar
-    v-model="snackbarError"
-    color="red"
-    timeout="1500"
-  >
+  <v-snackbar v-model="snackbarError" color="red" timeout="1500">
     Publicatie is mislukt...
     {{ snackbarMessage }}
     <template #actions>
-      <v-btn @click="snackbarError = false">
-        Sluiten
-      </v-btn>
+      <v-btn @click="snackbarError = false"> Sluiten </v-btn>
     </template>
   </v-snackbar>
 </template>
@@ -209,7 +180,7 @@ export default defineComponent({
       evtpData: {} as EvtpVersion,
       evtpDataRules: {
         type: Object,
-        default: () => {},
+        default: () => {}
       },
       flattenedDataRules: [] as Array<{
         rule: string
@@ -234,7 +205,7 @@ export default defineComponent({
       urlConcept: '' as string,
       url: '' as string,
       passedRules: false as boolean,
-      defaultText: 'Selecteer een besluit' as string,
+      defaultText: 'Selecteer een besluit' as string
     }
   },
   computed: {
@@ -246,9 +217,11 @@ export default defineComponent({
     },
     evtpsForAutocomplete() {
       return this.evtpList?.map((obj) => ({
-        title: `${obj['evtp_nm']} (${obj['evtp_cd']}) versie: ${obj['versie_nr']} - ${getPublicatieStatus(obj['id_publicatiestatus'])}`,
+        title: `${obj['evtp_nm']} (${obj['evtp_cd']}) versie: ${
+          obj['versie_nr']
+        } - ${getPublicatieStatus(obj['id_publicatiestatus'])}`,
         value: obj['evtp_cd'],
-        versie: obj['versie_nr'],
+        versie: obj['versie_nr']
       }))
     },
     statusData() {
@@ -261,7 +234,7 @@ export default defineComponent({
         {
           number: 1,
           icon: 'mdi-magnify',
-          label: PublicatieStatus.NIEUW,
+          label: PublicatieStatus.NIEUW
         },
         {
           number: 2,
@@ -271,13 +244,13 @@ export default defineComponent({
         {
           number: 3,
           icon: 'mdi-eye',
-          label: PublicatieStatus.GEPUBLICEERD,
+          label: PublicatieStatus.GEPUBLICEERD
         },
         {
           number: 4,
           icon: 'mdi-check',
-          label: PublicatieStatus.GEARCHIVEERD,
-        },
+          label: PublicatieStatus.GEARCHIVEERD
+        }
       ]
       return statusData
     },
@@ -288,67 +261,61 @@ export default defineComponent({
           hideIcons: true,
           icon: 'mdi-folder',
           text: 'Al gepubliceerd!',
-          disabled: true,
+          disabled: true
         }
       } else if (this.passedRules === false && evtpStatus) {
         return {
           hideIcons: true,
           icon: 'mdi-folder',
           text: 'Niet alle regels zijn voldaan!',
-          disabled: true,
+          disabled: true
         }
       } else if (!evtpStatus) {
         return {
           hideIcons: true,
           icon: 'mdi-folder',
           text: this.defaultText,
-          disabled: true,
+          disabled: true
         }
       }
 
-      const statusInfo = this.statusData.filter(
-        (status) => status.number == evtpStatus + 1
-      )[0]
+      const statusInfo = this.statusData.filter((status) => status.number == evtpStatus + 1)[0]
       if (statusInfo == undefined) {
         return {
           hideIcons: true,
           icon: 'mdi-folder',
           text: PublicatieStatus.GEARCHIVEERD,
-          disabled: true,
+          disabled: true
         }
       } else {
         // test if the button should be disabled
-        let disabled = false
+        const disabled = false
         return {
           hideIcons: false,
           icon: statusInfo.icon,
           text: statusInfo.label,
-          disabled: disabled,
+          disabled
         }
       }
     },
     evtpStatus() {
       return (
-        this.statusData.filter(
-          (status) => status.number == this.evtpData.id_publicatiestatus
-        )[0]?.label || PublicatieStatus.GEARCHIVEERD
+        this.statusData.filter((status) => status.number == this.evtpData.id_publicatiestatus)[0]
+          ?.label || PublicatieStatus.GEARCHIVEERD
       )
     },
     evtpCurrentVersion() {
       return this.evtpData?.huidige_versie
-    },
+    }
   },
   watch: {
     searchQuery() {
-      this.getEvtpDataAndValidate(
-        this.searchQuery?.value,
-        this.searchQuery?.versie
-      )
+      this.getEvtpDataAndValidate(this.searchQuery?.value, this.searchQuery?.versie)
       this.selected = []
-    },
+    }
   },
   async created() {
-    this.init()
+    await this.init()
   },
   methods: {
     getStatusColorClass(status) {
@@ -374,7 +341,7 @@ export default defineComponent({
         result: boolean
         content: object
       }>
-      let lengthRules = Object.keys(this.evtpDataRules).length
+      const lengthRules = Object.keys(this.evtpDataRules).length
       for (let i = 0; i < lengthRules; i++) {
         this.flattenedDataRules.push({
           rule: this.evtpDataRules[i]?.['ruleId'],
@@ -382,7 +349,7 @@ export default defineComponent({
           explanation: this.evtpDataRules[i]?.['explanation'],
           importance: this.evtpDataRules[i]?.['importance'],
           result: this.evtpDataRules[i]?.['result'],
-          content: this.evtpDataRules[i]?.['content'],
+          content: this.evtpDataRules[i]?.['content']
         })
       }
       this.passedAllRules()
@@ -402,9 +369,7 @@ export default defineComponent({
     },
     async getEvtpList() {
       this.loadingInit = true
-      const { data } = await axios.get(
-        `${store.state.APIurl}/evtp-version-list-versions/`
-      )
+      const { data } = await axios.get(`${store.state.APIurl}/evtp-version-list-versions/`)
       this.evtpList = data
       this.loadingInit = false
     },
@@ -416,11 +381,11 @@ export default defineComponent({
         await Promise.all(
           [
             `${store.state.APIurl}/evtp-version/partial/${evtp_cd}/${versie_nr}`,
-            `${store.state.APIurl}/evtp-version/relations-validate/${evtp_cd}/${versie_nr}`,
+            `${store.state.APIurl}/evtp-version/relations-validate/${evtp_cd}/${versie_nr}`
           ].map((endpoint) => axios.get(endpoint))
         )
           .then(function (results) {
-            for (let result of results) {
+            for (const result of results) {
               // @ts-ignore
               objectEVTPTree.push(result.data)
             }
@@ -446,10 +411,8 @@ export default defineComponent({
       const stat = { total: 0, statusSum: [0] }
       if (values != null && values.length != 0) {
         stat.total = values.length
-        for (let status of [0, 1, 2, 3, 4, 5]) {
-          stat.statusSum[status] = values.filter(
-            (row) => row.id_publicatiestatus == status
-          ).length
+        for (const status of [0, 1, 2, 3, 4, 5]) {
+          stat.statusSum[status] = values.filter((row) => row.id_publicatiestatus == status).length
         }
       }
       return stat
@@ -462,7 +425,7 @@ export default defineComponent({
           this.selected.splice(index, 1)
         }
       } else {
-        this.selected.push({ table: table, row: row })
+        this.selected.push({ table, row })
       }
     },
     activeStatus(table: any, row: any) {
@@ -473,7 +436,7 @@ export default defineComponent({
       )!
       return {
         isActive: entityInSelected != undefined,
-        entityInSelected: entityInSelected,
+        entityInSelected
       }
     },
     async upgradeEvtp() {
@@ -483,12 +446,9 @@ export default defineComponent({
         await axios({
           method: 'PUT',
           url: `${store.state.APIurl}/evtp-version/change_id_pub/${this.evtpData.evtp_cd}/${this.evtpData.versie_nr}`,
-          data: this.evtpData,
+          data: this.evtpData
         })
-        await this.getEvtpDataAndValidate(
-          this.evtpData.evtp_cd,
-          this.evtpData.versie_nr
-        )
+        await this.getEvtpDataAndValidate(this.evtpData.evtp_cd, this.evtpData.versie_nr)
       }
     },
     async resetEvtpStatus() {
@@ -496,26 +456,20 @@ export default defineComponent({
       await axios({
         method: 'PUT',
         url: `${store.state.APIurl}/evtp-version/change_id_pub/${this.evtpData.evtp_cd}/${this.evtpData.versie_nr}`,
-        data: this.evtpData,
+        data: this.evtpData
       })
-      await this.getEvtpDataAndValidate(
-        this.evtpData.evtp_cd,
-        this.evtpData.versie_nr
-      )
+      await this.getEvtpDataAndValidate(this.evtpData.evtp_cd, this.evtpData.versie_nr)
     },
     async archiveEvtpStatus() {
       this.evtpData.id_publicatiestatus = 4
       await axios({
         method: 'PUT',
         url: `${store.state.APIurl}/evtp-version/change_id_pub/${this.evtpData.evtp_cd}/${this.evtpData.versie_nr}`,
-        data: this.evtpData,
+        data: this.evtpData
       })
-      await this.getEvtpDataAndValidate(
-        this.evtpData.evtp_cd,
-        this.evtpData.versie_nr
-      )
-    },
-  },
+      await this.getEvtpDataAndValidate(this.evtpData.evtp_cd, this.evtpData.versie_nr)
+    }
+  }
 })
 </script>
 

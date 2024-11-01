@@ -28,7 +28,9 @@
     @record-updated="() => $emit('recordUpdated')"
   />
   <GgRge
-    v-else-if="relation.resource == 'gg' || relation.resource == 'rge' || relation.resource == 'gst-gstt'"
+    v-else-if="
+      relation.resource == 'gg' || relation.resource == 'rge' || relation.resource == 'gst-gstt'
+    "
     :relation="relation"
     :primary-key="primaryKey"
     :name-key="nameKey"
@@ -52,52 +54,51 @@ export default defineComponent({
     EvptOnd,
     EvtpName,
     GstOe,
-    GgRge,
+    GgRge
   },
   props: {
     relation: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     nameKey: {
       type: String,
-      required: true,
+      required: true
     },
     primaryKey: {
       type: String,
-      required: true,
+      required: true
     },
     evtpCd: {
       type: [String, Number],
-      required: true,
+      required: true
     },
     gstCd: {
       type: Array<number>,
-      required: true,
+      required: true
     },
     versieNr: {
       type: Number,
-      required: true,
+      required: true
     },
     gstGgCd: {
       type: Array<number>,
-      required: true,
+      required: true
     },
     disableEvtp: {
       type: Boolean,
       default: false,
-      required: false,
-    },
+      required: false
+    }
   },
   emits: ['recordUpdated'],
   data() {
     return {
-      messsageEmpty:
-        'Leeg (nog geen bestaande relatie aan gekoppeld)' as string,
+      messsageEmpty: 'Leeg (nog geen bestaande relatie aan gekoppeld)' as string,
       addTab: false as boolean,
-      gstObject: {} as Object,
+      gstObject: {} as Object
     }
-  },
+  }
 })
 </script>
 

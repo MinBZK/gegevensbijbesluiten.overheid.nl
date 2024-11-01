@@ -116,8 +116,8 @@ class TestAPI:
             assert response.status_code == 200, "Get request has failed"
             response_object = json.loads(response.content)
             # Assert that the response content is not empty
-            assert len(response_object["results"]) > 0, f"Response content for {filter_option} is empty"
-            results.append(len(response_object["results"]))
+            assert len(response_object["result_evtp"]) > 0, f"Response content for {filter_option} is empty"
+            results.append(len(response_object["result_evtp"]))
         assert results[0] != results[1] != results[2]
 
 

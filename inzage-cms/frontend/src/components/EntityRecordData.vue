@@ -40,16 +40,10 @@
           </v-form>
         </v-col>
       </v-row>
-      <v-row
-        v-for="(file, index) in list_files"
-        :key="index"
-      >
+      <v-row v-for="(file, index) in list_files" :key="index">
         <v-col>
           <table>
-            <tr
-              style="color: #01689b; text-decoration: underline"
-              @click="() => getFiles(file)"
-            >
+            <tr style="color: #01689b; text-decoration: underline" @click="() => getFiles(file)">
               {{
                 file
               }}
@@ -80,35 +74,24 @@
   <v-divider />
   <v-card-actions>
     <v-spacer />
-    <v-btn
-      color="primary"
-      @click="() => $emit('close')"
-    >
-      Annuleren
-    </v-btn>
+    <v-btn color="primary" @click="() => $emit('close')"> Annuleren </v-btn>
     <v-btn
       color="primary"
       :disabled="invalidFields.length > 0"
       @click="() => $emit('confirm', adjustedRecord, files)"
     >
-      {{
-        evtpTree
-          ? 'Toevoegen nieuwe relatie'
-          : isNewRow
-            ? 'Toevoegen'
-            : 'Opslaan'
-      }}
+      {{ evtpTree ? 'Toevoegen nieuwe relatie' : isNewRow ? 'Toevoegen' : 'Opslaan' }}
     </v-btn>
   </v-card-actions>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import EntityRecordDataField from '@/components/EntityRecordDataField.vue'
 import type { PropType } from 'vue'
+import axios from 'axios'
+import EntityRecordDataField from '@/components/EntityRecordDataField.vue'
 import { Table, TableModel } from '@/types/Tables'
 import { mapFieldKeys } from '@/util/misc'
-import axios from 'axios'
 import store from '@/store/index'
 
 export default defineComponent({
@@ -117,11 +100,11 @@ export default defineComponent({
   props: {
     table: {
       type: Object as PropType<Table>,
-      required: true,
+      required: true
     },
     record: {
       type: Object,
-      default: () => { },
+      default: () => {}
     },
     tableModel: {
       type: Object as PropType<TableModel>,
@@ -130,48 +113,48 @@ export default defineComponent({
         return {
           foreign_keys: [],
           primary_key: undefined,
-          columns: [],
+          columns: []
         }
-      },
+      }
     },
     primaryKey: {
       type: String,
-      required: true,
+      required: true
     },
     isNewRow: {
       type: Boolean,
-      required: true,
+      required: true
     },
     evtpCd: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     gstCd: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     structCd: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     structRelation: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     versieNr: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     disableEvtp: {
       type: Boolean,
       default: false,
-      required: false,
-    },
+      required: false
+    }
   },
   emits: ['close', 'confirm'],
   data() {
@@ -184,10 +167,10 @@ export default defineComponent({
       list_files: [],
       fileInputRules: [
         (files: any) =>
-          files.reduce((sum: number, current: any) => sum + current.size, 0) <
-          20000000 || 'Upload maximaal 20 MB aan bestanden per keer.',
+          files.reduce((sum: number, current: any) => sum + current.size, 0) < 20000000 ||
+          'Upload maximaal 20 MB aan bestanden per keer.'
       ],
-      tableModelUpdated: this.tableModel,
+      tableModelUpdated: this.tableModel
     }
   },
   computed: {
@@ -198,9 +181,7 @@ export default defineComponent({
       return Object.keys(this.tableModelUpdated.fields)
     },
     inputFields() {
-      return this.allFields.filter(
-        (h) => !this.tableModelUpdated.fields[h]['readonly']
-      )
+      return this.allFields.filter((h) => !this.tableModelUpdated.fields[h]['readonly'])
     },
     originalFieldKeys() {
       return mapFieldKeys(this.tableModelUpdated, 'original')
@@ -209,11 +190,11 @@ export default defineComponent({
       return this.includedFields.filter((f) => {
         const originalFieldKey = this.originalFieldKeys[f]
         const fieldValue = this.adjustedRecord[originalFieldKey]
-        const hasValue = fieldValue !== undefined && fieldValue !== null
+        const hasValue = fieldValue !== undefined && fieldValue !== null && fieldValue !== ''
         const validValue = this.isRequired(originalFieldKey) ? hasValue : true
         return !validValue
       })
-    },
+    }
   },
   watch: {
     record: {
@@ -221,8 +202,10 @@ export default defineComponent({
         this.inputValue = this.record
         // prefill evtp in evtp-ond
 
-
-        if ((this.evtpCd) && (this.table.resource == 'evtp-ond' || this.table.resource == 'evtp-oe-com-type')) {
+        if (
+          this.evtpCd &&
+          (this.table.resource == 'evtp-ond' || this.table.resource == 'evtp-oe-com-type')
+        ) {
           this.inputValue = {}
           this.inputValue['evtp_cd'] = this.evtpCd
           this.inputValue['versie_nr'] = this.versieNr
@@ -231,12 +214,10 @@ export default defineComponent({
           this.tableModelUpdated.foreign_key_mapping['versie_nr'] = ''
           this.adjustedRecord['evtp_cd'] = this.evtpCd
           this.adjustedRecord['versie_nr'] = this.versieNr
-        }
-        else if (this.evtpCd) {
+        } else if (this.evtpCd) {
           this.inputValue = ''
           this.evtpTree = true
-        }
-        else if (this.gstCd) {
+        } else if (this.gstCd) {
           this.evtpTree = true
           this.inputValue = {}
           this.inputValue['gst_cd'] = this.gstCd
@@ -249,10 +230,9 @@ export default defineComponent({
         } else if (this.structCd) {
           const inputField = {
             OE: { parent: 'oe_koepel_cd', child: 'oe_cd' },
-            GG: { parent: 'gg_cd_sup', child: 'gg_cd_sub' },
+            GG: { parent: 'gg_cd_sup', child: 'gg_cd_sub' }
           }
-          const inputObject =
-            this.tableModelUpdated.resource == 'gg-struct' ? 'GG' : 'OE'
+          const inputObject = this.tableModelUpdated.resource == 'gg-struct' ? 'GG' : 'OE'
           this.inputValue = {}
           const childField = inputField[inputObject]['child']
           if (this.structRelation == 'parents') {
@@ -289,23 +269,19 @@ export default defineComponent({
           }
         }
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   created() {
-    if (
-      this.table.resource === 'evtp-acc' &&
-      Object.values(this.record).length > 0
-    ) {
+    if (this.table.resource === 'evtp-acc' && Object.values(this.record).length > 0) {
       this.getFileNames()
     }
   },
   methods: {
     async getFileNames() {
       await axios({
-        url: `${store.state.APIurl}/evtp-acc/get-filenames/${this.record[this.primaryKey]
-          }`,
-        method: 'GET',
+        url: `${store.state.APIurl}/evtp-acc/get-filenames/${this.record[this.primaryKey]}`,
+        method: 'GET'
       })
         .then((response) => {
           this.list_files = response.data
@@ -318,11 +294,11 @@ export default defineComponent({
       await axios({
         url: `${store.state.APIurl}/evtp-acc/get-files/${file}`,
         method: 'GET',
-        responseType: 'blob',
+        responseType: 'blob'
       })
         .then((response) => {
-          let fileURL = window.URL.createObjectURL(new Blob([response.data]))
-          let fURL = document.createElement('a')
+          const fileURL = window.URL.createObjectURL(new Blob([response.data]))
+          const fURL = document.createElement('a')
 
           fURL.href = fileURL
           fURL.setAttribute('download', `${file}.pdf`)
@@ -337,7 +313,7 @@ export default defineComponent({
     async removeFiles(file: string) {
       await axios({
         url: `${store.state.APIurl}/evtp-acc/delete-files/${file}`,
-        method: 'DELETE',
+        method: 'DELETE'
       }).catch((error) => {
         console.log(error)
       })
@@ -349,43 +325,44 @@ export default defineComponent({
         orderedHeaders = Object.keys(this.originalFieldKeys)
       } else {
         orderedHeaders = this.table.fieldOrder.map(
-          (originalKey) =>
-            this.tableModelUpdated.foreign_key_mapping[originalKey] ||
-            originalKey
+          (originalKey) => this.tableModelUpdated.foreign_key_mapping[originalKey] || originalKey
         )
       }
       return orderedHeaders
     },
-    getForeignKey(fieldKey) {
-      return this.tableModelUpdated.foreign_keys.find(
-        (fK) => fK.foreign_key == fieldKey
-      )
+    getForeignKey(fieldKey: string) {
+      return this.tableModelUpdated.foreign_keys.find((fK) => fK.foreign_key == fieldKey)
     },
-    mapForeignKeyToOriginalKey(foreignKey) {
-      const mappedFields = Object.keys(
-        this.tableModelUpdated.foreign_key_mapping
-      ).filter(
-        (mappedKey) =>
-          this.tableModelUpdated.foreign_key_mapping[mappedKey] == foreignKey
+    mapForeignKeyToOriginalKey(foreignKey: string) {
+      const mappedFields = Object.keys(this.tableModelUpdated.foreign_key_mapping).filter(
+        (mappedKey) => this.tableModelUpdated.foreign_key_mapping[mappedKey] == foreignKey
       )
       return mappedFields[0]
     },
-    updateRecord(fieldKey, v) {
+    updateRecord(fieldKey: string, v: any) {
       // update foreign key column if the key is a related column
-      const mappedFields = Object.values(
-        this.tableModelUpdated.foreign_key_mapping
-      )
+      const mappedFields = Object.values(this.tableModelUpdated.foreign_key_mapping)
       const isMappedField = mappedFields.includes(fieldKey)
       if (isMappedField) {
         const originalKey = this.mapForeignKeyToOriginalKey(fieldKey)
         const foreignKey = this.getForeignKey(fieldKey)
+        if (foreignKey?.foreign_resource == 'omg' && !v) {
+          // field omg may have null values
+          this.adjustedRecord[originalKey] = null
+        }
         if (foreignKey && v) {
           const foreignId = v ? v[foreignKey.foreign_table.primary_key] : null
           this.adjustedRecord[originalKey] = foreignId
-          if ((foreignKey.foreign_resource == 'evtp-version') || ((foreignKey.foreign_resource == 'gst') && this.tableModel.resource != 'evtp-gst')) {
+          if (
+            foreignKey.foreign_resource == 'evtp-version' ||
+            (foreignKey.foreign_resource == 'gst' && this.tableModel.resource != 'evtp-gst')
+          ) {
             this.adjustedRecord['versie_nr'] = v.versie_nr
           }
-          if ((foreignKey.foreign_resource == 'evtp-version') && (this.tableModel.resource == 'evtp-acc')) {
+          if (
+            foreignKey.foreign_resource == 'evtp-version' &&
+            this.tableModel.resource == 'evtp-acc'
+          ) {
             this.adjustedRecord['oe_cd'] = v.verantwoordelijke_oe.oe_cd
           }
         }
@@ -393,22 +370,21 @@ export default defineComponent({
         this.adjustedRecord[fieldKey] = v
       }
     },
-    getDataType(fieldKey) {
+    getDataType(fieldKey: string) {
       return this.tableModelUpdated.fields[fieldKey]['data_type']
     },
-    isRequired(fieldKey) {
+    isRequired(fieldKey: string) {
       return this.tableModelUpdated.fields[fieldKey]['required']
     },
-    isReadonly(fieldKey) {
+    isReadonly(fieldKey: string) {
       return this.tableModelUpdated.fields[fieldKey]['readonly']
-    },
-  },
+    }
+  }
 })
 </script>
 
 <style lang="scss">
 tr {
   border: 1px solid blue;
-  // cursor: pointer;
 }
 </style>

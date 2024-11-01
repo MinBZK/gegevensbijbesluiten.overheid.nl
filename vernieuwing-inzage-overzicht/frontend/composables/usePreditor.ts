@@ -14,10 +14,7 @@ export const usePreditor = () => {
    */
   const { currentLocale } = useLocale()
 
-  const supportingText = useState<SupportingText | null>(
-    'supportingText',
-    () => null
-  )
+  const supportingText = useState<SupportingText | null>('supportingText', () => null)
 
   const localPrefix = `/${currentLocale.value}`
   // Looks up key in the supporting text. language is based on currentLocale
@@ -40,6 +37,6 @@ export const usePreditor = () => {
   }
 
   return {
-    p,
+    p
   }
 }

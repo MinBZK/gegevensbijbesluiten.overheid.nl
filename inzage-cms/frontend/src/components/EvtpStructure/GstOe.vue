@@ -1,9 +1,5 @@
 <template>
-  <tr
-    v-for="(resource, index) in relation.values"
-    :key="index"
-    class="width-height-table"
-  >
+  <tr v-for="(resource, index) in relation.values" :key="index" class="width-height-table">
     <td class="left-align">
       <tr>
         <a
@@ -13,18 +9,12 @@
         >
           {{ resource[relation.nameKey] }}
         </a>
-        <a
-          v-else
-          class="clickable"
-        >
+        <a v-else class="clickable">
           {{ resource[relation.nameKey] }}
         </a>
       </tr>
       <tr>
-        <a
-          v-if="resource.conditie"
-          class="condition"
-        >
+        <a v-if="resource.conditie" class="subtext">
           {{ resource.conditie.substr(0, 70) + (resource.conditie.length > 70 ? '...' : '') }}
         </a>
       </tr>
@@ -42,8 +32,7 @@
       </tr>
       <tr>
         <v-btn
-          v-if="relation.resource == 'gst' && resource.conditie && !disableEvtp
-          "
+          v-if="relation.resource == 'gst' && resource.conditie && !disableEvtp"
           width="20"
           height="20"
           class="btn-relation"
@@ -54,8 +43,7 @@
         />
 
         <v-btn
-          v-if="relation.resource == 'gst' && !resource.conditie && !disableEvtp
-          "
+          v-if="relation.resource == 'gst' && !resource.conditie && !disableEvtp"
           color="primary"
           variant="plain"
           size="x-small"
@@ -66,7 +54,7 @@
       </tr>
     </td>
   </tr>
-  <br>
+  <br />
   <v-btn
     v-if="relation.resource == 'gst' && !disableEvtp"
     color="primary"
@@ -75,8 +63,8 @@
       name: 'newEntityGstWithRelation',
       params: { evtpCd: evtpCd, recordResource: relation.resource, versieNr: versieNr },
       query: {
-        redirect: $route.fullPath,
-      },
+        redirect: $route.fullPath
+      }
     }"
   >
     <v-icon> mdi-plus-box-outline </v-icon>
@@ -93,46 +81,48 @@ export default defineComponent({
   props: {
     relation: {
       type: Object,
-      default: () => { },
+      default: () => {}
     },
     nameKey: {
       type: String,
-      required: true,
+      required: true
     },
     primaryKey: {
       type: String,
-      required: true,
+      required: true
     },
     evtpCd: {
       type: [String, Number],
-      required: true,
+      required: true
     },
     versieNr: {
       type: [String, Number],
-      required: true,
+      required: true
     },
     gstGgCd: {
       type: Object,
-      required: true,
+      required: true
     },
     disableEvtp: {
       type: Boolean,
       default: false,
-      required: false,
-    },
+      required: false
+    }
   },
   emits: ['recordUpdated'],
   computed: {
     getgstGg() {
       return this.gstGgCd
-    },
+    }
   },
   methods: {
     async deleteGst(gstObject, index) {
       // 1. Delete gst_gg
-      const postPromisesGstGg = await this.getgstGg[index].map((gst_gg) => {
-        axios.delete(`${store.state.APIurl}/gst-gg/${gst_gg}`)
-      })
+      const postPromisesGstGg = await Promise.all(
+        this.getgstGg[index].map((gst_gg) => {
+          return axios.delete(`${store.state.APIurl}/gst-gg/${gst_gg}`)
+        })
+      )
 
       // 2. Delete evtp_gst
       const postPromisesEvtpGst = await axios.delete(
@@ -140,29 +130,24 @@ export default defineComponent({
       )
 
       // 3. Delete gst_gstt
-      const postPromisesGstGstt = await gstObject.entities_gst_gstt.map(
-        (gst_gstt) => {
-          axios.delete(
-            `${store.state.APIurl}/gst-gstt/${gst_gstt.gst_gstt_cd}`
-          )
-        }
+      const postPromisesGstGstt = await Promise.all(
+        gstObject.entities_gst_gstt.map((gst_gstt) => {
+          return axios.delete(`${store.state.APIurl}/gst-gstt/${gst_gstt.gst_gstt_cd}`)
+        })
       )
 
       // 4. Delete gst_rge
-      const postPromisesGstRge = await gstObject.entities_gst_rge.map(
-        (gst_rge) => {
-          axios.delete(
-            `${store.state.APIurl}/gst-rge/${gst_rge.gst_rge_cd}`
-          )
-        }
+      const postPromisesGstRge = await Promise.all(
+        gstObject.entities_gst_rge.map((gst_rge) => {
+          return axios.delete(`${store.state.APIurl}/gst-rge/${gst_rge.gst_rge_cd}`)
+        })
       )
-
 
       const postPromise = [
         postPromisesEvtpGst,
         postPromisesGstGg,
         postPromisesGstGstt,
-        postPromisesGstRge,
+        postPromisesGstRge
       ]
       Promise.all(postPromise)
         .then(() => {
@@ -170,14 +155,14 @@ export default defineComponent({
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.succesfullDeletion,
-            color: store.state.snackbar.succes_color,
+            color: store.state.snackbar.succes_color
           })
         })
         .catch(() => {
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.unknown,
-            color: store.state.snackbar.error_color,
+            color: store.state.snackbar.error_color
           })
         })
         .finally(() => {
@@ -185,25 +170,23 @@ export default defineComponent({
         })
     },
     async deleteCondition(gstObject) {
-      const postPromisesEvtpGstConditie = axios.delete(
+      const postPromisesEvtpGstConditie = await axios.delete(
         `${store.state.APIurl}/evtp-gst/attribute/conditie/${gstObject.evtp_gst_cd}`
       )
-      const postPromise = [
-        postPromisesEvtpGstConditie,
-      ]
+      const postPromise = [postPromisesEvtpGstConditie]
       Promise.all(postPromise)
         .then(() => {
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.succesfullDeletion,
-            color: store.state.snackbar.succes_color,
+            color: store.state.snackbar.succes_color
           })
         })
         .catch(() => {
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.unknown,
-            color: store.state.snackbar.error_color,
+            color: store.state.snackbar.error_color
           })
         })
         .finally(() => {
@@ -211,7 +194,7 @@ export default defineComponent({
         })
     },
     getEntityRecordHref(relation, resource) {
-      if (!relation.linkedRelation){
+      if (!relation.linkedRelation) {
         return ''
       }
       return this.$router.resolve({
@@ -220,8 +203,11 @@ export default defineComponent({
           id: resource[relation.linkedRelationKey],
           resource: relation.linkedRelation,
           recordResource: relation.linkedRelation,
-          tab: 'data',
+          tab: 'data'
         },
+        query: {
+          redirect: this.$route.fullPath
+        }
       }).href
     },
     getEvtpGstRecordHref(evtp_gst_cd, versie_nr) {
@@ -232,23 +218,22 @@ export default defineComponent({
           versieNr: versie_nr,
           resource: 'evtp-gst',
           recordResource: 'evtp-gst',
-          tab: 'data',
+          tab: 'data'
         },
         query: {
           redirect: this.$route.fullPath
-        },
+        }
       }).href
-    },
-  },
+    }
+  }
 })
 </script>
 
 <style scoped lang="scss">
 @import '/src/styles/styles.scss';
 
-.condition {
+.subtext {
   font-style: italic;
   color: black;
 }
-
 </style>

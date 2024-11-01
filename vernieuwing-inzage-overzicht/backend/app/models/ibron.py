@@ -1,3 +1,4 @@
+from pydantic import HttpUrl
 from sqlalchemy import VARCHAR, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -11,11 +12,20 @@ class Ibron(Base, DefaultColumns):
     """
 
     __tablename__ = "ibron"
-    __table_args__ = {"comment": "register waar de gegevens afkomstig van zijn"}
+    __table_args__ = {
+        "comment": "registers, administraties, systemen etc. waarin gegevens worden beheerd door een organisatie"
+    }
 
     ibron_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Informatiebron code")
-    oe_cd: Mapped[int | None] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Organisatie code")
-    omschrijving: Mapped[str] = mapped_column(VARCHAR(80), comment="Omschrijving van de bron")
+    titel: Mapped[str] = mapped_column(VARCHAR(200), comment="Titel van de informatiebron")
+    afko: Mapped[int | None] = mapped_column(VARCHAR(15), comment="Afkorting van de informatiebron")
+    lidw: Mapped[int | None] = mapped_column(VARCHAR(12), comment="Lidwoord code van de bron")
+    link: Mapped[HttpUrl | None] = mapped_column(VARCHAR(200), comment="Link naar de informatiebron")
+    oe_cd: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("oe.oe_cd"),
+        comment="Organisatie die de informatiebron beheert",
+    )
 
     entity_oe: Mapped["Oe"] = relationship(  # type: ignore # noqa: F821
         foreign_keys=[oe_cd],

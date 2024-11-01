@@ -273,9 +273,11 @@ async def update_one(
             if "value violates unique constraint" in str(err):
                 raise exceptions.UniqueViolation()
             else:
+                logging.info(err)
                 raise exceptions.UnprocessableEntity()
 
-        except Exception:
+        except Exception as exc:
+            logging.info(exc)
             raise exceptions.UnprocessableEntity()
 
 

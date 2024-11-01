@@ -4,7 +4,7 @@
       {{ t(`uitleg.h1`) }}
     </h1>
     <h2>{{ t(`uitleg.h2`) }}</h2>
-    <img src="@/assets/images/explanation-2.svg" alt="" />
+    <img src="@/assets/images/explanation-2.svg" :alt="t('getMoreInfo')" />
     <ol class="columns">
       <li class="cols">
         <div class="list-item">1</div>

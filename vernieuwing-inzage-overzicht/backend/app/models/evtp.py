@@ -1,6 +1,9 @@
 from datetime import datetime
+from typing import Optional
 
+from pydantic import HttpUrl
 from sqlalchemy import VARCHAR, Boolean, DateTime, ForeignKey, Integer, text
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.associationproxy import (
     association_proxy,
 )
@@ -54,12 +57,17 @@ class EvtpVersion(Base, DefaultColumns):
         index=True,
         comment="Verantwoordelijke(=bestemming) organisatie die behoort tot dit besluit",
     )
+    omg_cd: Mapped[int | None] = mapped_column(
+        Integer,
+        ForeignKey("omg.omg_cd"),
+        comment="Omgeving om gerelateerde informatie optie op te kunnen halen",
+    )
     lidw_soort_besluit: Mapped[str | None] = mapped_column(VARCHAR(12), comment="Lidwoord van het soort besluit")
     soort_besluit: Mapped[str | None] = mapped_column(
         VARCHAR(50),
         comment="Verschillende soorten officiële besluiten, mededelingen en documenten.",
     )
-    uri: Mapped[str | None] = mapped_column(VARCHAR(200), comment="Uniform resource identifier voor een besluit")
+    uri: Mapped[HttpUrl | None] = mapped_column(VARCHAR(200), comment="Uniform resource identifier voor een besluit")
     huidige_versie: Mapped[bool] = mapped_column(
         Boolean,
         server_default=text("false"),
@@ -69,9 +77,11 @@ class EvtpVersion(Base, DefaultColumns):
     ts_publ: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), comment="Tijdstip publicatie")
 
     overige_informatie: Mapped[str | None] = mapped_column(VARCHAR(4000), comment="Extra informatie over het besluit")
-    overige_informatie_link: Mapped[str | None] = mapped_column(
+    overige_informatie_link: Mapped[HttpUrl | None] = mapped_column(
         VARCHAR(2000), comment="Link naar extra informatie over het besluit"
     )
+    vector: Mapped[str] = mapped_column(TSVECTOR)
+    vector_suggestion: Mapped[str] = mapped_column(TSVECTOR)
 
     # Association proxy
     evtp_upc = association_proxy("entity_evtp", "evtp_upc")
@@ -94,6 +104,7 @@ class EvtpVersion(Base, DefaultColumns):
         primaryjoin="and_(EvtpOnd.evtp_cd == EvtpVersion.evtp_cd, EvtpVersion.ts_start < EvtpOnd.ts_end, EvtpVersion.ts_end > EvtpOnd.ts_start)",
         uselist=True,
     )
+    entity_omg: Mapped[Optional["Omg"]] = relationship("Omg", foreign_keys=[omg_cd])  # type: ignore # noqa: F821
 
 
 class EvtpGst(Base, DefaultColumns):
@@ -169,7 +180,7 @@ class EvtpOeComType(Base, DefaultColumns):
         ForeignKey("oe_com_type.oe_com_type_cd"),
         comment="Communicatiekanaal type code",
     )
-    link: Mapped[str | None] = mapped_column(
+    link: Mapped[HttpUrl | None] = mapped_column(
         VARCHAR(2000),
         comment="Hyperlink waar de burger de uitkomst van het besluit ontvangt",
     )
@@ -179,3 +190,19 @@ class EvtpOeComType(Base, DefaultColumns):
         "OeComType",
         foreign_keys=[oe_com_type_cd],
     )
+
+
+class Omg(Base, DefaultColumns):
+    """
+    Table description: Omgeving van de organisatie waar relevante informatie gevonden kan worden
+    """
+
+    __tablename__ = "omg"
+    __table_args__ = {"comment": "Omgeving van de organisatie waar informatie gevonden kan worden"}
+
+    omg_cd: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Omgeving code")
+    titel: Mapped[str] = mapped_column(VARCHAR(255), comment="Naam van de omgeving")
+    oe_cd: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Gerelateerde organisatie code")
+    lidw: Mapped[str | None] = mapped_column(VARCHAR(12), comment="Lidwoord")
+    link: Mapped[HttpUrl] = mapped_column(VARCHAR(2000), comment="Hyperlink naar omgeving")
+    entity_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_cd])  # type: ignore # noqa: F821

@@ -28,21 +28,21 @@ export default defineComponent({
   props: {
     component: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     childProps: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     maxWidthDialog: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
   emits: ['recordUpdated'],
   data() {
     return {
-      modelShow: true,
+      modelShow: true
     }
   },
   methods: {
@@ -55,8 +55,8 @@ export default defineComponent({
       } else {
         this.$router.push({ name: parentRoute.name, state: { params } })
       }
-    },
-  },
+    }
+  }
 })
 </script>
 

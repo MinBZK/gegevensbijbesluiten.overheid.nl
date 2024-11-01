@@ -1,8 +1,5 @@
 <template>
-  <FilterBlock
-    disable-dropdown
-    :title="t('filter.selectedFilter.selectedFilters')"
-  >
+  <FilterBlock disable-dropdown :title="t('filter.selectedFilter.selectedFilters')">
     <div v-for="filter in selectedFilters" :key="filter.key">
       <strong>{{ t('filter.selectedFilter.' + filter.key) }}:</strong> <br />
       <RouterLink

@@ -6,4 +6,5 @@ from . import (
     oe,  # noqa:F401
     ond,  # noqa:F401
     rge,  # noqa:F401
+    words,  # noqa:F401
 )

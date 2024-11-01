@@ -3,10 +3,12 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 from app.schemas.evtp_gst import EvtpGstWithRelations
 from app.schemas.oe import OeMinimalList
+from app.schemas.omg import Omg
+from app.util.misc import validate_url
 
 
 class Evtp(BaseModel):
@@ -24,15 +26,16 @@ class EvtpVersion(BaseModel):
     aanleiding: str | None
     gebr_dl: str | None
     oe_best: int | None
+    omg_cd: int | None
     lidw_soort_besluit: str | None
     soort_besluit: str | None
-    uri: str | None
+    uri: HttpUrl | None
     huidige_versie: bool | str
     id_publicatiestatus: int
     ts_publ: datetime | None
     notitie: str | None
     overige_informatie: str | None = None
-    overige_informatie_link: str | None = None
+    overige_informatie_link: HttpUrl | None = None
     user_nm: str
     ts_mut: datetime
 
@@ -67,6 +70,7 @@ class EvtpMinimalListIncludingVersions(BaseModel):
 class EvtpVersionWithRelations(EvtpVersion):
     verantwoordelijke_oe: OeMinimalList | None
     parent_evtp: ParentEvtp | None
+    entity_omg: Omg | None
 
 
 class EvtpVersionIn(BaseModel):
@@ -80,9 +84,12 @@ class EvtpVersionIn(BaseModel):
     aanleiding: str
     gebr_dl: str
     oe_best: int
+    omg_cd: int | None = None
     lidw_soort_besluit: str | None = None
     soort_besluit: str | None = None
     notitie: str | None = None
+
+    _validate_re_link = field_validator("overige_informatie_link", "uri")(validate_url)
 
 
 class EvtpNewVersionIn(BaseModel):
@@ -97,6 +104,9 @@ class EvtpNewVersionIn(BaseModel):
     lidw_soort_besluit: str | None = None
     soort_besluit: str | None = None
     notitie: str | None = None
+    overige_informatie: str | None = None
+    overige_informatie_link: str | None = None
+    omg_cd: int | None = None
 
 
 class EvtpVersionStatus(BaseModel):

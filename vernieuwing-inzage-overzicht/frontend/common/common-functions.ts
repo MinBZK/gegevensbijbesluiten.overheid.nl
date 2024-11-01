@@ -1,8 +1,11 @@
-export const getLink = (path: string, versieNr?: number): Ref<object> => {
-  const query = { versionNr: versieNr }
-  const condition = useRuntimeConfig().public.colorMode === 'concept'
-  const link = condition ? { path, query } : { path }
-  return computed(() => link)
+export const getLink = (path: string, versieNr?: number): Ref<string> => {
+  const runtimeConfig = useRuntimeConfig()
+  const link =
+    runtimeConfig.public.colorMode === 'concept' && path.split('/')[1] === 'besluit'
+      ? `${path}?versionNr=${versieNr}`
+      : path
+
+  return ref(link)
 }
 
 export const channelIfConcept = computed(() => {

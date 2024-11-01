@@ -11,3 +11,5 @@ type_fix:
 	poetry run ruff check app --fix
 	poetry run ruff check alembic --fix
 	poetry run ruff check tests --fix
+db:
+	docker compose --env-file .env up -d dbgate

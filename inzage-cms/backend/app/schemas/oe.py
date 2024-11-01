@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator
 
 from app.schemas.oe_koepel import OeKoepelMinimalList
+from app.util.misc import validate_url
 
 
 # oe
@@ -23,11 +24,9 @@ class Oe(BaseModel):
     plaats: str | None
     provincie: str | None
     telefoon: str | None
-    internet_domein: str | None
-    e_contact: str | None
+    internet_domein: HttpUrl | None
     user_nm: str
     ts_mut: datetime
-    ibron_cd: int | None
 
 
 class OeMinimalList(BaseModel):
@@ -43,17 +42,14 @@ class _OeKoepelOeWithRelations(BaseModel):
 
 
 class OeWithRelations(Oe):
-    entity_ibron: Ibron | None
     count_parents: int
     parent_entities: list[_OeKoepelOeWithRelations]
 
 
 class OeIn(BaseModel):
     afko: str | None = None
-    e_contact: str | None = None
     huisnummer: str | None = None
     huisnummer_toev: str | None = None
-    ibron_cd: int | None = None
     internet_domein: str | None = None
     lidw_sgebr: str | None = None
     naam_officieel: str
@@ -65,12 +61,7 @@ class OeIn(BaseModel):
     straat: str | None = None
     telefoon: str | None = None
 
-
-# import at bottom due to circular dependencies. See:
-# https://stackoverflow.com/questions/63420889/fastapi-pydantic-circular-references-in-separate-files
-class Ibron(BaseModel):
-    ibron_cd: int
-    omschrijving: str
+    _validate_re_link = field_validator("internet_domein")(validate_url)
 
 
 OeWithRelations.model_rebuild()

@@ -1,9 +1,5 @@
 <template>
-  <tr
-    v-for="(resource, index) in relation.values"
-    :key="index"
-    class="width-height-table"
-  >
+  <tr v-for="(resource, index) in relation.values" :key="index" class="width-height-table">
     <td class="left-align">
       <a
         v-if="getEntityRecordHref(relation, resource)"
@@ -35,7 +31,7 @@
       />
     </td>
   </tr>
-  <br>
+  <br />
   <v-btn
     v-if="relation.resource == 'ond' && !disableEvtp"
     color="primary"
@@ -48,8 +44,8 @@
         recordResource: 'evtp-ond'
       },
       query: {
-        redirect: $route.fullPath,
-      },
+        redirect: $route.fullPath
+      }
     }"
   >
     <v-icon> mdi-plus-box-outline </v-icon>
@@ -67,8 +63,8 @@
         recordResource: 'evtp-oe-com-type'
       },
       query: {
-        redirect: $route.fullPath,
-      },
+        redirect: $route.fullPath
+      }
     }"
   >
     <v-icon> mdi-plus-box-outline </v-icon>
@@ -85,52 +81,50 @@ export default defineComponent({
   props: {
     relation: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     nameKey: {
       type: String,
-      required: true,
+      required: true
     },
     primaryKey: {
       type: String,
-      required: true,
+      required: true
     },
     evtpCd: {
       type: [String, Number],
-      required: true,
+      required: true
     },
     versieNr: {
       type: [String, Number],
-      required: true,
+      required: true
     },
     disableEvtp: {
       type: Boolean,
       default: false,
-      required: false,
-    },
+      required: false
+    }
   },
   emits: ['recordUpdated'],
   methods: {
     async deleteOeComType(oeComTypeObject) {
-      const postPromisesoeoeComType = axios.delete(
+      const postPromisesoeoeComType = await axios.delete(
         `${store.state.APIurl}/evtp-oe-com-type/${oeComTypeObject.evtp_oe_com_type_cd}`
       )
-      const postPromise = [
-      postPromisesoeoeComType,
-      ]
+      const postPromise = [postPromisesoeoeComType]
       Promise.all(postPromise)
         .then(() => {
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.succesfullDeletion,
-            color: store.state.snackbar.succes_color,
+            color: store.state.snackbar.succes_color
           })
         })
         .catch(() => {
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.unknown,
-            color: store.state.snackbar.error_color,
+            color: store.state.snackbar.error_color
           })
         })
         .finally(() => {
@@ -139,12 +133,10 @@ export default defineComponent({
     },
     async deleteOnd(ondObject) {
       // 2. Delete evtp_ond
-      const postPromisesEvtpOnd = axios.delete(
+      const postPromisesEvtpOnd = await axios.delete(
         `${store.state.APIurl}/evtp-ond/${ondObject.evtp_ond_cd}`
       )
-      const postPromise = [
-        postPromisesEvtpOnd,
-      ]
+      const postPromise = [postPromisesEvtpOnd]
       Promise.all(postPromise)
         .then(() => {
           // 4. Delete ond
@@ -152,14 +144,14 @@ export default defineComponent({
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.succesfullDeletion,
-            color: store.state.snackbar.succes_color,
+            color: store.state.snackbar.succes_color
           })
         })
         .catch(() => {
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.unknown,
-            color: store.state.snackbar.error_color,
+            color: store.state.snackbar.error_color
           })
         })
         .finally(() => {
@@ -167,7 +159,7 @@ export default defineComponent({
         })
     },
     getEntityRecordHref(relation, resource) {
-      if (!relation.linkedRelation){
+      if (!relation.linkedRelation) {
         return ''
       }
       return this.$router.resolve({
@@ -176,14 +168,14 @@ export default defineComponent({
           id: resource[relation.linkedRelationKey],
           resource: relation.linkedRelation,
           recordResource: relation.linkedRelation,
-          tab: 'data',
+          tab: 'data'
         },
         query: {
           redirect: this.$route.fullPath
-        },
+        }
       }).href
-    },
-  },
+    }
+  }
 })
 </script>
 

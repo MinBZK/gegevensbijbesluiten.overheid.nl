@@ -8,6 +8,7 @@ from pydantic_settings import (
 )
 
 load_dotenv()
+SIMILARITY_THRESHOLD: float = 0.30
 
 if os.environ.get("CHANNEL") == "concept":
     PUBLICATION_RANGE = [2]

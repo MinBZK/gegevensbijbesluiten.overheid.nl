@@ -20,7 +20,14 @@ def get_connection_string(
     return f"{driver}://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_SERVER}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"  # noqa
 
 
-async_engine = create_async_engine(get_connection_string())
+async_engine = create_async_engine(
+    get_connection_string(),
+    pool_size=10,  # Increase the pool size
+    max_overflow=20,  # Increase the max overflow
+    pool_timeout=30,  # Timeout for getting a connection from the pool
+    pool_recycle=1800,  # Recycle connections after 30 minutes
+    pool_pre_ping=True,
+)
 async_session = async_sessionmaker(
     autocommit=False,
     autoflush=False,
@@ -28,7 +35,14 @@ async_session = async_sessionmaker(
     expire_on_commit=False,
 )
 
-synced_engine = create_engine(get_connection_string(use_async=False))
+synced_engine = create_engine(
+    get_connection_string(use_async=False),
+    pool_size=10,  # Increase the pool size
+    max_overflow=20,  # Increase the max overflow
+    pool_timeout=30,  # Timeout for getting a connection from the pool
+    pool_recycle=1800,  # Recycle connections after 30 minutes
+    pool_pre_ping=True,  # Enable connection health checks
+)
 synced_session = sessionmaker(
     autocommit=False,
     autoflush=False,

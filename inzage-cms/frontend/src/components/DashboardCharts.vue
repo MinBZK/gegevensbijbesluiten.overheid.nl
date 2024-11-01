@@ -1,26 +1,13 @@
 <template>
   <v-row>
-    <v-col
-      cols="10"
-      lg="6"
-    >
-      <BarChart
-        :chart-options="chartOptions"
-        :categories="categories"
-        :series="series"
-      />
+    <v-col cols="10" lg="6">
+      <BarChart :chart-options="chartOptions" :categories="categories" :series="series" />
     </v-col>
-    <v-col
-      cols="10"
-      lg="6"
-      style="padding: 0em"
-    >
+    <v-col cols="10" lg="6" style="padding: 0em">
       <v-table>
         <thead>
           <tr>
-            <th class="text-left">
-              Verantwoordelijke organisatie
-            </th>
+            <th class="text-left">Verantwoordelijke organisatie</th>
             <th
               v-for="(status, indexstatus) in statusOe.columns"
               :key="indexstatus"
@@ -31,15 +18,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(oe, indexOe) in statusOe.index"
-            :key="indexOe"
-          >
+          <tr v-for="(oe, indexOe) in statusOe.index" :key="indexOe">
             <td>{{ oe }}</td>
-            <td
-              v-for="(item, indexOeNested) in statusOe.data[indexOe]"
-              :key="indexOeNested"
-            >
+            <td v-for="(item, indexOeNested) in statusOe.data[indexOe]" :key="indexOeNested">
               {{ item }}
             </td>
           </tr>
@@ -52,52 +33,45 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import axios from 'axios'
+import type { PropType } from 'vue'
 import store from '@/store/index'
 import { Table } from '@/types/Tables'
 import { StatusOe } from '@/types/PublicatieStatus'
-import type { PropType } from 'vue'
 import BarChart from '@/components/ApexCharts/BarChart.vue'
 
 export default defineComponent({
   name: 'DashboardCharts',
   components: {
-    BarChart,
+    BarChart
   },
   props: {
     tables: {
       type: Array as PropType<Table[]>,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       chartOptions: {
         chart: {
-          id: 'chart-status',
+          id: 'chart-status'
         },
         xaxis: {
           categories: [] as string[],
           style: {
-            colors: [
-              '#800000',
-              '#FF0000',
-              '#FFFF00',
-              '#FFFF00',
-              '#FFFF00',
-              '#800000',
-            ],
-            fontSize: '17px',
-          },
+            colors: ['#800000', '#FF0000', '#FFFF00', '#FFFF00', '#FFFF00', '#800000'],
+            fontSize: '17px'
+          }
         },
         title: {
-          text: '',
-        },
+          text: ''
+        }
       },
       series: [
         {
           name: '',
-          data: [] as number[],
-        },
+          data: [] as number[]
+        }
       ],
       categories: [] as string[],
       statusEvtp: [] as number[],
@@ -105,7 +79,7 @@ export default defineComponent({
       valid: false,
       state: 'idle',
       error: undefined,
-      detail: [],
+      detail: []
     }
   },
   computed: {},
@@ -152,34 +126,27 @@ export default defineComponent({
     updateChart() {
       this.chartOptions = {
         chart: {
-          id: 'chart-status',
+          id: 'chart-status'
         },
         xaxis: {
           categories: Object.keys(this.statusEvtp),
           style: {
-            colors: [
-              '#800000',
-              '#FF0000',
-              '#FFFF00',
-              '#FFFF00',
-              '#FFFF00',
-              '#800000',
-            ],
-            fontSize: '19px',
-          },
+            colors: ['#800000', '#FF0000', '#FFFF00', '#FFFF00', '#FFFF00', '#800000'],
+            fontSize: '19px'
+          }
         },
         title: {
-          text: 'Aantallen per status',
-        },
+          text: 'Aantallen per status'
+        }
       }
       this.series = [
         {
           name: 'Besluiten',
-          data: Object.values(this.statusEvtp),
-        },
+          data: Object.values(this.statusEvtp)
+        }
       ]
-    },
-  },
+    }
+  }
 })
 </script>
 

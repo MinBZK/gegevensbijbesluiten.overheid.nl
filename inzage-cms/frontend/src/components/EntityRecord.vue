@@ -1,20 +1,15 @@
 <template>
   <v-row v-if="disableEvtp">
-    <v-alert
-      type="warning"
-      dismissible
-      elevation="2"
-      class="mt-2"
-    >
-      <strong>Let op!</strong> Dit besluit is inmiddels gepubliceerd of
-      verouderd en kan niet meer worden gewijzigd.
+    <v-alert type="warning" dismissible elevation="2" class="mt-2">
+      <strong>Let op!</strong> Dit besluit is inmiddels gepubliceerd of verouderd en kan niet meer
+      worden gewijzigd.
     </v-alert>
   </v-row>
   <v-row class="py-1">
     <v-col>
       <v-card-subtitle class="text-h7">
         <strong>{{ title }}</strong>
-        <br><br>
+        <br /><br />
         <v-select
           v-if="isEvtp"
           v-model="selectedVersion"
@@ -35,10 +30,7 @@
     v-if="recordLoaded"
     background-color="secondary"
   >
-    <v-tabs
-      v-model="activeTab"
-      color="primary"
-    >
+    <v-tabs v-model="activeTab" color="primary">
       <v-tab
         v-for="t in tabs"
         v-show="t.show"
@@ -46,7 +38,7 @@
         height="48px"
         :color="activeTab === t.key ? 'secondary' : undefined"
         :to="{
-          params: { tab: t.key },
+          params: { tab: t.key }
         }"
       >
         {{ t.label }}
@@ -98,12 +90,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import axios from 'axios'
 import { TableModel, Table } from '@/types/Tables'
 import EntityRecordRelations from '@/components/EntityRecordRelations.vue'
 import EvtpStructureOverview from '@/components/EvtpStructure/EvtpStructureOverview.vue'
 import EntityRecordData from '@/components/EntityRecordData.vue'
 import store from '@/store/index'
-import axios from 'axios'
 import { getPrimaryKey } from '@/util/misc'
 import { tables } from '@/config/tables'
 
@@ -112,48 +104,48 @@ export default defineComponent({
   components: {
     EntityRecordRelations,
     EvtpStructureOverview,
-    EntityRecordData,
+    EntityRecordData
   },
   props: {
     resource: {
       type: String,
-      required: true,
+      required: true
     },
     id: {
       type: [String, Number],
       required: false,
-      default: null,
+      default: null
     },
     tab: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     gstCd: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     evtpCd: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     structCd: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     structRelation: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     versieNr: {
       type: String,
       default: null,
-      required: false,
-    },
+      required: false
+    }
   },
   emits: ['close', 'confirm', 'error', 'recordUpdated'],
   data() {
@@ -167,12 +159,12 @@ export default defineComponent({
         fields: {},
         input_schema: null,
         description_key: '',
-        foreign_key_mapping: {},
+        foreign_key_mapping: {}
       } as TableModel,
       evtp_gst_model: {
         evtp_cd: null,
         versie_nr: null,
-        gst_cd: null as number | null,
+        gst_cd: null as number | null
       },
       recordLoaded: false as boolean,
       modelLoaded: false as boolean,
@@ -183,35 +175,33 @@ export default defineComponent({
       newId: null as number | null,
       dataPostPut: {} as object,
       activeTab: null,
-      succesUpload: true as boolean,
+      succesUpload: true as boolean
     }
   },
   computed: {
     disableEvtp() {
       return (
-        this.record['id_publicatiestatus'] == 3 && !this.isDuplicateEvtpVersion ||
-        this.record['versie_nr'] < this.versieNr && !this.isDuplicateEvtpVersion
+        (this.record['id_publicatiestatus'] == 3 && !this.isDuplicateEvtpVersion) ||
+        (this.record['versie_nr'] < this.versieNr && !this.isDuplicateEvtpVersion)
       )
     },
     table() {
-      const table: Table | undefined = tables.find(
-        (t) => t.resource == this.resource
-      )
+      const table: Table | undefined = tables.find((t) => t.resource == this.resource)
       return table
     },
     tabs() {
       const countRelations = this.record
         ? (this.record['child_entities'] || []).length +
-        (this.record['parent_entities'] || []).length +
-        (this.record['count_evtp_gst'] || [])
+          (this.record['parent_entities'] || []).length +
+          (this.record['count_evtp_gst'] || [])
         : 0
       const tabs: Array<{ key: string; label: string; show: boolean }> = [
         { key: 'data', label: 'Data', show: true },
         {
           key: 'relations',
           label: `Relaties (${countRelations})`,
-          show: !!this.record['parent_entities'] || !!this.record['child_entities'],
-        },
+          show: !!this.record['parent_entities'] || !!this.record['child_entities']
+        }
       ]
       return this.isNewRow ? tabs.slice(0, 1) : tabs
     },
@@ -256,7 +246,7 @@ export default defineComponent({
       return this.tab == 'duplicate-evtp-data'
     },
     isNewGSTRelation() {
-      if ((this.evtpCd) && this.resource == 'gst') {
+      if (this.evtpCd && this.resource == 'gst') {
         this.getRecord(this.evtpCd, 'evtp-version', true)
         return true
       } else {
@@ -284,7 +274,7 @@ export default defineComponent({
     },
     isEvtp() {
       return this.resource == 'evtp-version'
-    },
+    }
   },
   watch: {
     resource() {
@@ -300,8 +290,7 @@ export default defineComponent({
       if (this.tab === 'relations') {
         if (this.selectedVersion) {
           await this.fetchRelations(this.resource, this.id, this.selectedVersion)
-        }
-        else {
+        } else {
           await this.fetchRelations(this.resource, this.id, this.versieNr)
         }
       } else if (this.resource === 'evtp-version' && !this.isNewVersion) {
@@ -311,14 +300,14 @@ export default defineComponent({
         this.record = data
         this.recordLoaded = true
       }
-    },
+    }
   },
   async created() {
     // In case of adjusting existing record or evtp-structure
     if (this.isNewVersion) {
-      this.getRecordVersion(this.id, this.versieNr)
+      await this.getRecordVersion(this.id, this.versieNr)
     } else if (!this.isNewRow || this.tab == 'relations') {
-      this.getRecord(this.id, this.resource, true)
+      await this.getRecord(this.id, this.resource, true)
     } else {
       this.recordLoaded = true
     }
@@ -332,10 +321,9 @@ export default defineComponent({
       )
       this.evtpVersions = data
     },
-    //@ts-ignore
+    // @ts-ignore
     async getRecordVersion(primaryKey: any, versieNr: int) {
-      const endpoint = `${store.state.APIurl}/${this.resource}/${primaryKey}/${versieNr - 1
-        }`
+      const endpoint = `${store.state.APIurl}/${this.resource}/${primaryKey}/${versieNr - 1}`
       const { data } = await axios.get(endpoint)
       this.record = data
       this.record['id_publicatiestatus'] = 1
@@ -349,19 +337,11 @@ export default defineComponent({
       this.record = data
       this.recordLoaded = true
     },
-    async getRecord(
-      primaryKey: any,
-      inputResource: string,
-      relationRow = true as boolean
-    ) {
+    async getRecord(primaryKey: any, inputResource: string, relationRow = true as boolean) {
       if (this.resource == 'evtp-version' && relationRow && this.tab == 'relations') {
         await this.fetchRelations(inputResource, primaryKey, this.versieNr)
         await this.getVersions(Number(this.id))
-      } else if (
-        this.resource == 'evtp-version' &&
-        Number(this.versieNr) &&
-        !this.isNewVersion
-      ) {
+      } else if (this.resource == 'evtp-version' && Number(this.versieNr) && !this.isNewVersion) {
         const endpoint = `${store.state.APIurl}/${this.resource}/${primaryKey}/${this.versieNr}`
         const { data } = await axios.get(endpoint)
         this.record = data
@@ -374,11 +354,9 @@ export default defineComponent({
         this.recordLoaded = true
       }
     },
-    //@ts-ignore
+    // @ts-ignore
     async getTableModel(inputResource = this.resource) {
-      const { data } = await axios.get(
-        `${store.state.APIurl}/table/${inputResource}/model`
-      )
+      const { data } = await axios.get(`${store.state.APIurl}/table/${inputResource}/model`)
       this.tableModel = data
       this.modelLoaded = true
     },
@@ -389,14 +367,14 @@ export default defineComponent({
         formData.append('documents', file)
       })
       const headers = {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data'
       }
       await axios
         .post(
           `${store.state.APIurl}/evtp-acc/upload-files/${data['evtp_cd']}/${data['oe_cd']}/${data['volg_nr']}/${data['bestand_acc_cd']}`,
           formData,
           {
-            headers: headers,
+            headers
           }
         )
         .then((response) => {
@@ -407,13 +385,13 @@ export default defineComponent({
             store.commit('activateSnackbar', {
               show: true,
               text: store.state.snackbar.malwareDetected,
-              color: store.state.snackbar.error_color,
+              color: store.state.snackbar.error_color
             })
           } else if (error.response.status === 415) {
             store.commit('activateSnackbar', {
               show: true,
               text: store.state.snackbar.wrongFileExtension,
-              color: store.state.snackbar.error_color,
+              color: store.state.snackbar.error_color
             })
           } else {
             console.error(error)
@@ -436,8 +414,12 @@ export default defineComponent({
             payload
           )
           this.newId = data[this.primaryKey]
-        }
-        else if (this.isDuplicateEvtpVersion && this.resource == 'evtp-version') {
+        } else if (this.isDuplicateEvtpVersion && this.resource == 'evtp-version') {
+          Object.keys(payload).forEach((key) => {
+            if (payload[key] === '') {
+              payload[key] = null
+            }
+          })
           const { data } = await axios.post(
             `${store.state.APIurl}/${this.resource}-duplicate/${this.id}`,
             payload
@@ -448,7 +430,7 @@ export default defineComponent({
           const { data } = await axios({
             method,
             url: endpoint,
-            data: payload,
+            data: payload
           })
           this.newId = data[this.primaryKey]
           this.dataPostPut = data
@@ -462,30 +444,22 @@ export default defineComponent({
           this.uploadFiles(files, this.dataPostPut)
         }
         // For creating a new record
-        if (
-          id !== this.newId &&
-          !this.isNewGSTRelation &&
-          !this.isNewGGRelation
-        ) {
+        if (id !== this.newId && !this.isNewGSTRelation && !this.isNewGGRelation) {
           if (this.succesUpload) {
             store.commit('activateSnackbar', {
               show: true,
               text: store.state.snackbar.succesfullAdditions,
-              color: store.state.snackbar.succes_color,
+              color: store.state.snackbar.succes_color
             })
           }
           // For updating a record
-        } else if (
-          hasRedirect &&
-          !this.isNewGSTRelation &&
-          !this.isNewGGRelation
-        ) {
+        } else if (hasRedirect && !this.isNewGSTRelation && !this.isNewGGRelation) {
           this.$emit('confirm')
           if (this.succesUpload) {
             store.commit('activateSnackbar', {
               show: true,
               text: store.state.snackbar.succesfullMutations,
-              color: store.state.snackbar.succes_color,
+              color: store.state.snackbar.succes_color
             })
           }
           // For adding a new gst relation
@@ -500,7 +474,7 @@ export default defineComponent({
             store.commit('activateSnackbar', {
               show: true,
               text: store.state.snackbar.succesfullAdditions,
-              color: store.state.snackbar.succes_color,
+              color: store.state.snackbar.succes_color
             })
           }
         } else {
@@ -510,7 +484,7 @@ export default defineComponent({
             store.commit('activateSnackbar', {
               show: true,
               text: store.state.snackbar.succesfullMutations,
-              color: store.state.snackbar.succes_color,
+              color: store.state.snackbar.succes_color
             })
           }
         }
@@ -520,19 +494,18 @@ export default defineComponent({
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.duplication,
-            color: store.state.snackbar.error_color,
+            color: store.state.snackbar.error_color
           })
-        }
-        else {
+        } else {
           store.commit('activateSnackbar', {
             show: true,
             text: store.state.snackbar.unknown,
-            color: store.state.snackbar.error_color,
+            color: store.state.snackbar.error_color
           })
         }
       }
-    },
-  },
+    }
+  }
 })
 </script>
 

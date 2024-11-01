@@ -3,8 +3,11 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 8080",
     "build": "vue-cli-service build",
-    "lint": "eslint '**/*' --max-warnings 0",
-    "lint:fix": "eslint '**/*' --fix"
+    "lintcheck": "eslint '**/*' --max-warnings 0",
+    "lint:fix": "eslint '**/*' --fix",
+    "format": "prettier --write src/components",
+    "formatcheck": "prettier --check src/components",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@mdi/font": "^7.0.96",

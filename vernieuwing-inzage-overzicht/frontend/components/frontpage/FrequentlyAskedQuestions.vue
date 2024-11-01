@@ -1,10 +1,6 @@
 <template>
   <ul class="no-padding faq-box">
-    <li
-      v-for="(question, index) in questions"
-      :key="index"
-      class="faq-component"
-    >
+    <li v-for="(question, index) in questions" :key="index" class="faq-component">
       <div class="questions faq-card">
         <button
           ref="questionsItems"
@@ -13,23 +9,20 @@
           :data-selected="question.question === selectedQuestion?.question"
           :aria-expanded="isAccordionActive(question.question)"
           @click="
-            () => [
-              selectQuestion(index),
-              openCloseAccordionMutuallyExclusive(question.question),
-            ]
+            () => [selectQuestion(index), openCloseAccordionMutuallyExclusive(question.question)]
           "
         >
           <p class="column left">{{ t(question.question) }}</p>
           <NuxtIcon
             :name="
-              isMobile
+              isMobile && !allCollapsedForArchive
                 ? 'fa-chevron-right'
                 : getIconAccordion(question.question)
             "
             class="column right chevron"
           />
         </button>
-        <template v-if="!isMobile">
+        <template v-if="!isMobile || allCollapsedForArchive">
           <div v-if="isAccordionActive(question.question)">
             <FrequentlyAskedAnswers :question="questions[index]" />
           </div>
@@ -37,13 +30,13 @@
       </div>
     </li>
   </ul>
-  <template v-if="isMobile">
+  <template v-if="isMobile || allCollapsedForArchive">
     <ModalShell
       v-model="isModalVisible"
       :width="isSmallScreen ? '100%' : '800px'"
       max-height="90%"
       height="350px"
-      modal-title="faqQuestionTitle"
+      modal-title="Veelgestelde Vragen"
     >
       <FrequentlyAskedAnswers :question="selectedQuestion" />
     </ModalShell>
@@ -59,13 +52,14 @@ import {
   openCloseAccordionMutuallyExclusive,
   activeItem,
   resetAccordion,
-  getIconAccordion,
+  getIconAccordion
 } from '@/utils/index'
 
 const { t } = useI18n()
 const isModalVisible = ref<boolean>(false)
 const selectedQuestion = ref<Question | null>(null)
 const isMobile = useMobileBreakpoint().large
+const allCollapsedForArchive = ref(true as boolean)
 const isSmallScreen = useMobileBreakpoint().medium
 const questionIndex = ref<number>(0)
 const questionsItems = ref<HTMLElement[]>([])
@@ -90,14 +84,25 @@ Object.keys(questions).forEach((index: any) =>
     header: questions[index].question,
     active,
     iconAccordion,
-    index,
+    index
   })
 )
+
+activeItem.value.forEach((item) => {
+  item.active = true
+})
 
 watch(isModalVisible, (newValue) => {
   if (!newValue) {
     questionsItems.value[questionIndex.value as number].focus()
   }
+})
+
+onMounted(() => {
+  activeItem.value.forEach((item) => {
+    item.active = false
+  })
+  allCollapsedForArchive.value = false
 })
 </script>
 
@@ -121,6 +126,7 @@ watch(isModalVisible, (newValue) => {
   border-radius: 4px;
   box-shadow: 0 0 6px rgb(128, 157, 179);
 }
+
 .faq-card {
   display: flex;
   width: 50%;

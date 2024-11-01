@@ -11,6 +11,6 @@ export const useEvtp = () => {
 
   return {
     evtp,
-    setEvtp,
+    setEvtp
   }
 }

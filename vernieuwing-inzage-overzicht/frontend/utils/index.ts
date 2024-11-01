@@ -2,11 +2,11 @@ const changeHash = (hash: string | undefined) => {
   const router = useRouter()
   if (typeof hash === 'string') {
     router.replace({
-      hash: '#' + hash,
+      hash: '#' + hash
     })
   } else {
     router.replace({
-      hash: '',
+      hash: ''
     })
   }
 }
@@ -17,11 +17,9 @@ interface pageTitleInfo {
 }
 const pageTitleInfo = ref<pageTitleInfo>({
   title: '',
-  labelType: 'page-title',
+  labelType: 'page-title'
 })
-const providePageTitle = (
-  input: pageTitleInfo = { title: '', labelType: 'page-title' }
-) => {
+const providePageTitle = (input: pageTitleInfo = { title: '', labelType: 'page-title' }) => {
   pageTitleInfo.value = input
 }
 
@@ -34,19 +32,19 @@ interface mappingUpc {
 const evtpNm = ref<mappingUpc>({
   name: '',
   upc: '',
-  versionNr: null,
+  versionNr: null
 })
 
 const ggNm = ref<mappingUpc>({
   name: '',
   upc: '',
-  versionNr: null,
+  versionNr: null
 })
 
 const oeNm = ref<mappingUpc>({
   name: '',
   upc: '',
-  versionNr: null,
+  versionNr: null
 })
 
 // (un)collapse accordion
@@ -55,11 +53,11 @@ const activeItem = ref(
     header: string
     active: boolean
     iconAccordion: string
-    index: any
+    index: number
   }>
 )
-const hideUnhideAccordion = ref(true as boolean)
-const textCollapseAllAccordions = ref('Overzicht uitklappen' as string)
+const hideUnhideAccordion = ref<boolean>(true)
+const textCollapseAllAccordions = ref<string>('Overzicht uitklappen')
 
 const hideUnhideAccordionAllAccordions = (inputHidden: boolean) => {
   if (inputHidden) {
@@ -75,10 +73,7 @@ const hideUnhideAccordionAllAccordions = (inputHidden: boolean) => {
   }
 }
 
-const openCloseAccordion = (
-  header: string,
-  accordionHeader: HTMLElement | null
-) => {
+const openCloseAccordion = (header: string, accordionHeader: HTMLElement | null) => {
   hideUnhideAccordion.value = false
   textCollapseAllAccordions.value = 'Overzicht inklappen'
   const showSection = !activeItem.value
@@ -113,9 +108,7 @@ const openCloseAccordionMutuallyExclusive = (header: string) => {
 
 const isAccordionActive = (header: string) => {
   if (activeItem) {
-    return activeItem.value
-      .filter((item) => item.header === header)
-      .map((item) => item.active)[0]
+    return activeItem.value.filter((item) => item.header === header).map((item) => item.active)[0]
   } else return false
 }
 
@@ -149,5 +142,5 @@ export {
   hideUnhideAccordion,
   textCollapseAllAccordions,
   getIconAccordion,
-  resetAccordion,
+  resetAccordion
 }

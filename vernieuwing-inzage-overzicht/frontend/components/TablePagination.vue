@@ -3,7 +3,7 @@
     <nav
       role="navigation"
       aria-label="Paginering navigatie"
-      :class="isMobile && 'pagination-mobile'"
+      :class="isMobile && paginationForArchive && 'pagination-mobile'"
     >
       <div
         class="pagenumber noselect"
@@ -18,13 +18,14 @@
         <NuxtIcon name="mdi:chevron-left" />
       </div>
       <template v-for="(pageNumber, index) in range" :key="pageNumber">
-        <div
-          v-if="index == 1 && pageNumber != 2"
-          class="pagenumber-elipsis noselect"
-        >
-          ...
-        </div>
-        <div
+        <div v-if="index == 1 && pageNumber != 2" class="pagenumber-elipsis noselect">...</div>
+        <NuxtLink
+          :to="
+            localePath({
+              path: route.path?.toString(),
+              query: { page: pageNumber.toString() }
+            })
+          "
           :class="pageNumber == currentPage && 'current-page'"
           :aria-label="t('pagination.goTo', { n: pageNumber })"
           :tabindex="currentPage == pageNumber ? -1 : 0"
@@ -32,15 +33,11 @@
           role="button"
           class="pagenumber noselect"
           @click=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
-          @keydown.enter="
-            ;[$emit('setPage', pageNumber), announcePage(pageNumber)]
-          "
-          @keydown.space.prevent="
-            ;[$emit('setPage', pageNumber), announcePage(pageNumber)]
-          "
+          @keydown.enter=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
+          @keydown.space.prevent=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
         >
           {{ pageNumber }}
-        </div>
+        </NuxtLink>
         <div
           v-if="index == range.length - 2 && pageNumber != pageLength - 1"
           class="pagenumber-elipsis noselect"
@@ -51,11 +48,7 @@
       <div
         class="pagenumber noselect"
         :tabindex="props.currentPage == props.pageLength ? -1 : 0"
-        :aria-label="
-          props.currentPage !== props.pageLength
-            ? t('pagination.goToNextPage')
-            : ``
-        "
+        :aria-label="props.currentPage !== props.pageLength ? t('pagination.goToNextPage') : ``"
         role="button"
         :class="props.currentPage == props.pageLength && 'disabled'"
         @click="() => navigate(1)"
@@ -79,7 +72,11 @@ const props = defineProps<{
   pageLength: number
 }>()
 
-const isMobile = useMobileBreakpoint().medium
+const { t } = useI18n()
+const paginationForArchive = ref(false as boolean)
+const isMobile = useMobileBreakpoint().small
+const localePath = useLocalePath()
+const route = useRoute()
 
 const emit = defineEmits(['setPage'])
 
@@ -94,17 +91,12 @@ const range = computed(() => {
   } else if (_windowMin + maxPages >= props.pageLength) {
     windowMin = props.pageLength - maxPages
   }
-
-  // const windowMin = _windowMin >= min ? _windowMin : min
   const _windowMax = windowMin + maxPages - 1
-  const windowMax =
-    _windowMax > props.pageLength - 1 ? props.pageLength - 1 : _windowMax
+  const windowMax = _windowMax > props.pageLength - 1 ? props.pageLength - 1 : _windowMax
 
   const arrayLength = 1 + windowMax - windowMin
   const visiblePages: number[] =
-    arrayLength > 0
-      ? [...Array(arrayLength).keys()].map((v) => v + windowMin)
-      : []
+    arrayLength > 0 ? [...Array(arrayLength).keys()].map((v) => v + windowMin) : []
 
   return props.pageLength === 3
     ? [1, 2, 3]
@@ -125,7 +117,10 @@ const navigate = (delta: number) => {
 const announcePage = (pageNumber: number) => {
   pageAnnouncer.value = t('pagination.page') + ' ' + pageNumber.toString()
 }
-const { t } = useI18n()
+
+onMounted(() => {
+  paginationForArchive.value = true
+})
 </script>
 
 <style scoped lang="scss">
@@ -139,6 +134,8 @@ nav {
   background-color: $tertiary;
   cursor: pointer;
   display: inline-block;
+  text-decoration: none;
+  flex: none;
 }
 
 .pagenumber:hover:not(.current-page, .disabled) {

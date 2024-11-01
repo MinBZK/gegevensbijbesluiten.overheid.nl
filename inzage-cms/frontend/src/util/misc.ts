@@ -1,20 +1,17 @@
-import { TableModel, TableModelForeignKey } from '@/types/Tables'
 import { toRaw } from 'vue'
 import moment from 'moment'
+import { TableModel, TableModelForeignKey } from '@/types/Tables'
 
 const getPrimaryKey = (tableModel: TableModel) => {
   return tableModel.primary_key || ''
 }
 
 const getid_publicatiestatus = (tableModel: TableModel) => {
-  return tableModel.fields['id_publicatiestatus'] ? true : false
+  return !!tableModel.fields['id_publicatiestatus']
 }
 
-const getTableValue = (
-  foreignKey: TableModelForeignKey | undefined,
-  value: string
-) => {
-  if (typeof(value) == "function"){
+const getTableValue = (foreignKey: TableModelForeignKey | undefined, value: string) => {
+  if (typeof value === 'function') {
     return ''
   }
   if (foreignKey) {
@@ -35,8 +32,7 @@ const getTableKey = (foreignKey: TableModelForeignKey | undefined, value) => {
 const mapFieldKeys = (tableModel: TableModel, mapFrom: string) => {
   const allColumns = Object.keys(tableModel.fields)
   return allColumns.reduce((obj, originalHeader) => {
-    const mappedHeader =
-      tableModel.foreign_key_mapping[originalHeader] || originalHeader
+    const mappedHeader = tableModel.foreign_key_mapping[originalHeader] || originalHeader
     if (mapFrom == 'original') {
       obj[mappedHeader] = originalHeader
     } else if (mapFrom == 'foreign') {
@@ -49,9 +45,7 @@ const mapFieldKeys = (tableModel: TableModel, mapFrom: string) => {
 
 const getEnvironment = (envObj: Array<object>, variable: string) => {
   if (envObj.filter((record) => record[variable]).length > 0) {
-    return Object.values(
-      toRaw(envObj)?.filter((record) => record[variable])[0]
-    )[0]
+    return Object.values(toRaw(envObj)?.filter((record) => record[variable])[0])[0]
   } else return 'Lokaal'
 }
 
@@ -71,5 +65,5 @@ export {
   mapFieldKeys,
   getEnvironment,
   getid_publicatiestatus,
-  getTableKey,
+  getTableKey
 }

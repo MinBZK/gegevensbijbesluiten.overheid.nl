@@ -3,15 +3,10 @@ from __future__ import annotations
 from pydantic import BaseModel, ConfigDict
 
 
-class ChildGgStructuur(BaseModel):
-    # parent_gg_entity: ChildGg | None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
 class ChildGg(BaseModel):
     gg_upc: int
     omschrijving: str
+    omschrijving_uitgebreid: str
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -34,14 +29,18 @@ class ParentGg(BaseModel):
 class GgQuery(BaseModel):
     page: int = 1
     limit: int = 10
-    searchtext: str | None = None
+    searchtext: str = ""
 
 
 class GgQueryResult(BaseModel):
-    results: list[ParentGg]
+    result_gg: list[ParentGg]
     total_count_koepel: int
     total_count_underlying: int
 
 
-ChildGgStructuur.model_rebuild()
+class GgCompact(BaseModel):
+    gg_cd: int
+    gg_upc: int
+
+
 ParentGgStructuur.model_rebuild()

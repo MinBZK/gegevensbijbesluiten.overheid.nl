@@ -2,10 +2,7 @@
   <NuxtLayout>
     <div class="container">
       <h1 class="h1-error">{{ t('error.pageNotFound') }}</h1>
-      <FormOverheidButton
-        :label="t('error.goToHome')"
-        @click="reloadHomePage"
-      />
+      <FormOverheidButton :label="t('error.goToHome')" @click="reloadHomePage" />
     </div>
   </NuxtLayout>
 </template>
@@ -14,10 +11,7 @@
 // ensure preditor data is still applied
 import type { SupportingText } from './types/preditor'
 import { getAllContent } from './services/preditor'
-const supportingText = useState<SupportingText | null>(
-  'supportingText',
-  () => null
-)
+const supportingText = useState<SupportingText | null>('supportingText', () => null)
 const { data } = await getAllContent()
 supportingText.value = data.value
 

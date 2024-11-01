@@ -1,8 +1,5 @@
 <template>
-  <v-timeline
-    side="end"
-    direction="horizontal"
-  >
+  <v-timeline side="end" direction="horizontal">
     <v-timeline-item
       v-for="(relation, index) in relations"
       :key="index"
@@ -12,18 +9,13 @@
       :width="relation.width"
     >
       <template #opposite>
-        <br>
-        <router-link
-          :to="{ name: 'table', params: { resource: relation.resource } }"
-        >
+        <br />
+        <router-link :to="{ name: 'table', params: { resource: relation.resource } }">
           <th>{{ relation.label }}</th>
         </router-link>
       </template>
       <v-table class="row-height-50">
-        <tbody
-          v-if="recordLoaded"
-          class="table-responsive"
-        >
+        <tbody v-if="recordLoaded" class="table-responsive">
           <EvtpStructureTable
             :relation="relation"
             :primary-key="relation.primaryKey"
@@ -37,14 +29,8 @@
           />
         </tbody>
         <tbody v-else>
-          <td
-            class="centered"
-            style="overflow: hidden"
-          >
-            <v-progress-circular
-              indeterminate
-              color="primary"
-            />
+          <td class="centered" style="overflow: hidden">
+            <v-progress-circular indeterminate color="primary" />
           </td>
         </tbody>
       </v-table>
@@ -54,8 +40,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { tables } from '@/config/tables'
 import axios from 'axios'
+import { tables } from '@/config/tables'
 import store from '@/store/index'
 import {
   gstGsttype,
@@ -69,48 +55,48 @@ import {
   ggParent,
   gstCd,
   versieNr,
-  gstGgCd,
+  gstGgCd
 } from '@/util/flatEvtpTree'
 import EvtpStructureTable from '@/components/EvtpStructure/EvtpStructureTable.vue'
 
 export default defineComponent({
   name: 'EvtpStructureOverview',
   components: {
-    EvtpStructureTable,
+    EvtpStructureTable
   },
   props: {
     record: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     recordLoaded: {
       type: Boolean,
-      default: () => true,
+      default: () => true
     },
     resource: {
       type: String,
-      required: true,
+      required: true
     },
     evtpCd: {
       type: [String, Number],
-      required: true,
+      required: true
     },
     versieNr: {
       type: [Number, String],
       default: null,
-      required: false,
+      required: false
     },
     disableEvtp: {
       type: Boolean,
       default: false,
-      required: false,
-    },
+      required: false
+    }
   },
   data() {
     return {
       addTab: false as boolean,
       gstObject: {} as Object,
-      recordRelation: {} as Object,
+      recordRelation: {} as Object
     }
   },
   computed: {
@@ -257,10 +243,10 @@ export default defineComponent({
           nameKey: '',
           primaryKey: '',
           width: '45vh'
-        },
+        }
       ]
-      for (let relation of relations) {
-        for (let table of tables) {
+      for (const relation of relations) {
+        for (const table of tables) {
           if (relation.resource == table.resource) {
             relation.nameKey = table.nameKey
             relation.primaryKey = table.primaryKey
@@ -268,12 +254,12 @@ export default defineComponent({
         }
       }
       return relations
-    },
+    }
   },
   watch: {
     record() {
       this.recordRelation = this.record
-    },
+    }
   },
   methods: {
     async getEvtpStructure() {
@@ -281,8 +267,8 @@ export default defineComponent({
         `${store.state.APIurl}/${this.resource}/relations/${this.evtpCd}/${this.versieNr}`
       )
       this.recordRelation = data
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -303,5 +289,4 @@ ol {
 :deep(.v-timeline-item__body) {
   align-self: flex-start !important;
 }
-
 </style>

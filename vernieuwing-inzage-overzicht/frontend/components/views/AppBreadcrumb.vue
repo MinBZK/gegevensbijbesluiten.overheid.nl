@@ -3,40 +3,33 @@
     v-if="breadcrumbs.length != 0 && !error"
     :class="{
       'row row--page-opener': breadcrumbs.length < 3,
-      'row row--page-opener margin': breadcrumbs.length >= 3,
+      'row row--page-opener margin': breadcrumbs.length >= 3
     }"
   >
     <div class="container">
       <div class="breadcrumb">
         <p>{{ t('you-are-here') }}:</p>
-        <ClientOnly>
-          <ol>
-            <li v-for="crumb in breadcrumbsWithLinks" :key="crumb.routeName">
-              <NuxtLink
-                v-if="
-                  crumb.routeName == 'besluit' ||
-                  crumb.routeName == 'index' ||
-                  crumb.routeName == 'gegevens' ||
-                  crumb.routeName == 'organisaties'
-                "
-                :to="{ name: `${crumb.routeName}` }"
-                >{{ crumb.label }}</NuxtLink
-              >
-              <NuxtLink
-                v-else
-                :to="
-                  getLink(
-                    `/besluit/${crumb.routeName}`,
-                    crumb.versionNr as number
-                  ).value
-                "
-                >{{ crumb.label }}</NuxtLink
-              >
-              <span v-if="crumb.routeName == null">{{ crumb.label }}</span>
-            </li>
-            <li>{{ capitaliseFirstLetter(pathTail.label) }}</li>
-          </ol>
-        </ClientOnly>
+        <ol>
+          <li v-for="crumb in breadcrumbsWithLinks" :key="crumb.routeName">
+            <NuxtLink
+              v-if="
+                crumb.routeName == 'besluit' ||
+                crumb.routeName == 'index' ||
+                crumb.routeName == 'gegeven' ||
+                crumb.routeName == 'organisatie'
+              "
+              :to="{ name: `${crumb.routeName}` }"
+              >{{ crumb.label }}</NuxtLink
+            >
+            <NuxtLink
+              v-else
+              :to="getLink(`/besluit/${crumb.routeName}`, crumb.versionNr as number).value"
+              >{{ crumb.label }}</NuxtLink
+            >
+            <span v-if="crumb.routeName == null">{{ crumb.label }}</span>
+          </li>
+          <li>{{ capitaliseFirstLetter(pathTail.label) }}</li>
+        </ol>
       </div>
     </div>
   </div>
@@ -73,17 +66,14 @@ type Crumb = {
 const breadcrumbs = computed<Crumb[]>(() => {
   const path = currentRoute.path
   // the added '/ ' is interpreted in the mapping as the link to Home
-  const crumbStrings: string[] =
-    path !== '/' ? ('/' + path).split('/').slice(1) : []
+  const crumbStrings: string[] = path !== '/' ? ('/' + path).split('/').slice(1) : []
 
   const filteredCrumbStrings = crumbStrings.filter(
     (crumb) => crumb && !ignoredNavigationItems.includes(crumb)
   )
 
   const crumbs: Crumb[] = filteredCrumbStrings.map((crumb: any) => {
-    const item = navigationItemsTranslated.value.find(
-      (item) => item.routeName === crumb
-    )
+    const item = navigationItemsTranslated.value.find((item) => item.routeName === crumb)
 
     const label = item?.label
     let name = crumb === evtpNm.value.upc ? evtpNm.value.name : ggNm.value.name
@@ -92,7 +82,7 @@ const breadcrumbs = computed<Crumb[]>(() => {
     return {
       label: label ?? name,
       routeName: crumb,
-      versionNr: evtpNm.value.versionNr,
+      versionNr: evtpNm.value.versionNr
     }
   })
 
@@ -101,9 +91,9 @@ const breadcrumbs = computed<Crumb[]>(() => {
         {
           label: 'Home',
           routeName: 'index',
-          versionNr: null,
+          versionNr: null
         },
-        ...crumbs,
+        ...crumbs
       ]
     : []
 })

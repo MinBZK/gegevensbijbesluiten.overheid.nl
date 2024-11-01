@@ -16,10 +16,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="row in oeStatistics.oe_by_evtp_total"
-                :key="row.naam_officieel"
-              >
+              <tr v-for="row in oeStatistics.oe_by_evtp_total" :key="row.naam_officieel">
                 <td class="word-break">
                   {{ row.naam_officieel }}
                 </td>

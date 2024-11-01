@@ -7,10 +7,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="relatedValue in relationValues"
-        :key="getPrimaryKey(relatedValue)"
-      >
+      <tr v-for="relatedValue in relationValues" :key="getPrimaryKey(relatedValue)">
         <td>
           {{ getDescription(relatedValue) }}
         </td>
@@ -24,35 +21,31 @@
               () =>
                 relationKey == 'parents'
                   ? modifyRelation({
-                    childId: recordId,
-                    parentId: getPrimaryKey(relatedValue),
-                    method: 'delete',
-                  })
+                      childId: recordId,
+                      parentId: getPrimaryKey(relatedValue),
+                      method: 'delete'
+                    })
                   : modifyRelation({
-                    childId: getPrimaryKey(relatedValue),
-                    parentId: recordId,
-                    method: 'delete',
-                  })
+                      childId: getPrimaryKey(relatedValue),
+                      parentId: recordId,
+                      method: 'delete'
+                    })
             "
           />
         </td>
       </tr>
       <tr>
-        <td
-          v-if="relationValues.length == 0"
-          colspan="3"
-        >
+        <td v-if="relationValues.length == 0" colspan="3">
           Geen {{ relationLabel.toLowerCase() }}
         </td>
       </tr>
       <tr>
-        <td
-          v-if="['gg-struct'].includes(resource)"
-          colspan="3"
-          class="centered"
-        >
+        <td v-if="['gg-struct'].includes(resource)" colspan="3" class="centered">
           <v-btn
-            v-if="(relationLabel === 'Bovenliggende entiteit' && relationValues.length === 0) || (relationLabel === 'Onderliggende entiteiten')"
+            v-if="
+              (relationLabel === 'Bovenliggende entiteit' && relationValues.length === 0) ||
+              relationLabel === 'Onderliggende entiteiten'
+            "
             color="primary"
             variant="outlined"
             :to="{
@@ -60,23 +53,19 @@
               params: {
                 structCd: recordId,
                 recordResource: resource,
-                structRelation: relationKey,
+                structRelation: relationKey
               },
               query: {
-                redirect: $route.fullPath,
-              },
+                redirect: $route.fullPath
+              }
             }"
           >
             Toevoegen
           </v-btn>
         </td>
-        <td
-          v-else-if="['oe-koepel-oe'].includes(resource)"
-          colspan="3"
-          class="centered"
-        >
+        <td v-else-if="['oe-koepel-oe'].includes(resource)" colspan="3" class="centered">
           <v-btn
-            v-if="(relationLabel === 'Bovenliggende entiteit' && relationValues.length <= 1 )"
+            v-if="relationLabel === 'Bovenliggende entiteit' && relationValues.length <= 1"
             color="primary"
             variant="outlined"
             :to="{
@@ -84,17 +73,17 @@
               params: {
                 structCd: recordId,
                 recordResource: resource,
-                structRelation: 'oe-koepel',
+                structRelation: 'oe-koepel'
               },
               query: {
-                redirect: $route.fullPath,
-              },
+                redirect: $route.fullPath
+              }
             }"
           >
             Toevoegen
           </v-btn>
           <v-btn
-            v-else-if="(relationLabel === 'Onderliggende entiteiten')"
+            v-else-if="relationLabel === 'Onderliggende entiteiten'"
             color="primary"
             variant="outlined"
             :to="{
@@ -102,11 +91,11 @@
               params: {
                 structCd: recordId,
                 recordResource: resource,
-                structRelation: 'oe-koepel-oe',
+                structRelation: 'oe-koepel-oe'
               },
               query: {
-                redirect: $route.fullPath,
-              },
+                redirect: $route.fullPath
+              }
             }"
           >
             Toevoegen
@@ -119,52 +108,52 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import store from '@/store/index'
 import type { PropType } from 'vue'
 import axios from 'axios'
+import store from '@/store/index'
 
 export default defineComponent({
   name: 'EntityRecordRelationsTable',
   props: {
     relationValues: {
       type: Array as PropType<object[]>,
-      default: () => [],
+      default: () => []
     },
     relationLabel: {
       type: String,
-      required: true,
+      required: true
     },
     relationKey: {
       type: String,
-      required: true,
+      required: true
     },
     primaryKey: {
       type: String,
-      required: true,
+      required: true
     },
     descriptionKey: {
       type: String,
-      required: true,
+      required: true
     },
     endpoint: {
       type: String,
-      required: true,
+      required: true
     },
     resource: {
       type: String,
-      required: true,
+      required: true
     },
     recordId: {
       type: [String, Number],
-      required: true,
-    },
+      required: true
+    }
   },
   emits: ['relationUpdated'],
   data() {
     return {
       relationResource: {
-        gg: 'GgStruct',
-      },
+        gg: 'GgStruct'
+      }
     }
   },
   methods: {
@@ -172,12 +161,10 @@ export default defineComponent({
       if (this.resource == 'oe-koepel-oe') {
         if (relatedValue['relatedEntity']['oe_koepel_cd']) {
           return relatedValue['relatedEntity']['oe_koepel_cd']
-        }
-        else {
+        } else {
           return relatedValue['relatedEntity']['oe_cd']
         }
-      }
-      else {
+      } else {
         return relatedValue['relatedEntity'][this.primaryKey]
       }
     },
@@ -185,12 +172,10 @@ export default defineComponent({
       if (this.resource == 'oe-koepel-oe') {
         if (relatedValue['relatedEntity']['titel']) {
           return relatedValue['relatedEntity']['titel']
-        }
-        else {
+        } else {
           return relatedValue['relatedEntity']['naam_officieel']
         }
-      }
-      else {
+      } else {
         return relatedValue['relatedEntity'][this.descriptionKey]
       }
     },
@@ -198,10 +183,10 @@ export default defineComponent({
       const endpoint = `${store.state.APIurl}/${this.resource}/${childId}/parent/${parentId}`
       await axios({
         url: endpoint,
-        method,
+        method
       })
       this.$emit('relationUpdated')
-    },
+    }
   }
 })
 </script>

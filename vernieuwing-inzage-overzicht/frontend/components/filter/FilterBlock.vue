@@ -31,11 +31,7 @@
         @click="readMoreClicked"
       >
         <span>{{ t('filter.moreOptions') }}</span>
-        <img
-          src="@/assets/images/icons/icon-chevron-left-blue.svg"
-          class="rotate-down"
-          alt=""
-        />
+        <img src="@/assets/images/icons/icon-chevron-left-blue.svg" class="rotate-down" alt="" />
       </button>
       <button
         v-if="readLessActive"
@@ -76,7 +72,7 @@ const props = withDefaults(
     enableReadLess: false,
     readMore: undefined,
     modelValue: undefined,
-    moreOptionsButton: false,
+    moreOptionsButton: false
   }
 )
 
@@ -117,7 +113,7 @@ const filterItems = ref<HTMLElement | null>(null)
 const readMoreClicked = () => {
   if (props.readMore !== undefined) {
     filterItems.value?.scrollIntoView({
-      behavior: 'smooth',
+      behavior: 'smooth'
     })
     emit('update:readMore', !props.readMore)
   } else {
@@ -131,7 +127,7 @@ const readMoreClicked = () => {
 const readLessClicked = () => {
   readLessActive.value = false
   filterItems.value?.scrollIntoView({
-    behavior: 'smooth',
+    behavior: 'smooth'
   })
   if (props.readMore !== undefined) {
     emit('update:readMore', !props.readMore)

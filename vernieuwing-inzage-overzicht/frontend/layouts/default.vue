@@ -30,6 +30,6 @@ useHead({
   htmlAttrs: { lang: locale },
   titleTemplate: (pageTitle) => {
     return pageTitle ? `${pageTitle} - ${siteTitle.value}` : siteTitle.value
-  },
+  }
 })
 </script>

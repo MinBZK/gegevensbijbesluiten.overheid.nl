@@ -2,15 +2,8 @@
   <v-container>
     <h1>{{ table?.label }}</h1>
     <v-container fill-height>
-      <v-row
-        justify="space-around"
-        class="centered"
-        no-gutters
-      >
-        <v-col
-          cols="3"
-          justify="center"
-        >
+      <v-row justify="space-around" class="centered" no-gutters>
+        <v-col cols="3" justify="center">
           <v-text-field
             v-model="searchFieldText"
             label="Zoeken"
@@ -34,10 +27,7 @@
             class="table-pagination"
           />
         </v-col>
-        <v-col
-          cols="3"
-          justify="center"
-        >
+        <v-col cols="3" justify="center">
           <v-btn
             elevation="0"
             tile
@@ -46,8 +36,8 @@
               name: 'newEntityRecord',
               params: {
                 recordResource: table?.resource,
-                resource: $route.resource || table?.resource,
-              },
+                resource: $route.resource || table?.resource
+              }
             }"
             @click="addNewRow"
           >
@@ -74,14 +64,8 @@
       </thead>
       <tbody v-if="loading">
         <tr>
-          <td
-            :colspan="includedFields.length + 1"
-            class="centered"
-          >
-            <v-progress-circular
-              indeterminate
-              color="primary"
-            />
+          <td :colspan="includedFields.length + 1" class="centered">
+            <v-progress-circular indeterminate color="primary" />
           </td>
         </tr>
       </tbody>
@@ -99,25 +83,18 @@
           @relation-updated="getTableData"
         />
         <tr v-if="paginatedData.length == 0">
-          <td
-            :colspan="includedFields.length + 1"
-            class="centered"
-          >
+          <td :colspan="includedFields.length + 1" class="centered">
             Geen rijen gevonden voor de gekozen filters.
           </td>
         </tr>
       </tbody>
     </v-table>
 
-    <v-dialog
-      v-model="showErrorDialog"
-      max-width="500"
-    >
+    <v-dialog v-model="showErrorDialog" max-width="500">
       <v-card>
         <v-card-title>Foutmelding</v-card-title>
         <v-card-text>
-          Het object kan niet worden verwerkt omdat de invoer incorrect of
-          incompleet is.
+          Het object kan niet worden verwerkt omdat de invoer incorrect of incompleet is.
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -131,11 +108,7 @@ import { defineComponent } from 'vue'
 import store from '@/store/index'
 import { Table, TableModel } from '@/types/Tables'
 import { tables } from '@/config/tables'
-import {
-  getPrimaryKey,
-  getid_publicatiestatus,
-  mapFieldKeys,
-} from '@/util/misc'
+import { getPrimaryKey, getid_publicatiestatus, mapFieldKeys } from '@/util/misc'
 import TableRow from '@/components/TableRow.vue'
 import TableHeader from '@/components/TableHeader.vue'
 
@@ -143,13 +116,13 @@ export default defineComponent({
   name: 'TableCms',
   components: {
     TableRow,
-    TableHeader,
+    TableHeader
   },
   props: {
     resource: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     const data: Array<object> = []
@@ -170,7 +143,7 @@ export default defineComponent({
       fields: {},
       description_key: '',
       foreign_key_mapping: {},
-      resource: '',
+      resource: ''
     }
     return {
       data,
@@ -187,7 +160,7 @@ export default defineComponent({
       searchFieldText,
       initTableModel,
       tableModel: initTableModel,
-      tableModelLoaded: false,
+      tableModelLoaded: false
     }
   },
   computed: {
@@ -202,45 +175,23 @@ export default defineComponent({
         .filter((header) => !this.table?.hiddenColumns.includes(header))
         .map((f) => this.mappedFieldKeysOriginalToForeign[f])
     },
-    // checkIfFilterOnAttribute() {
-    //   if (this.table?.label = 'Gegevensgroepen koepel') {
-    //     return this.resource
-    //   }
-    //   else 'gg'
-    // },
-    // checkIfFilterAndReplaceResource() {
-    //   if (this.table?.filterAttribute) {
-    //     const filteredResource = this.resource.split('-').filter((part) => part !== 'filter')[0]
-    //     this.resource = filteredResource.replace(/_/g, ' ')
-    //   }
-    // },
     table() {
-      const table: Table | undefined = tables.find(
-        (t) => t.resource == this.resource
-      )
+      const table: Table | undefined = tables.find((t) => t.resource == this.resource)
       return table
     },
     selectedRow() {
-      const selectedRow = this.data.find(
-        (r) => r[this.primaryKey] == this.selectedRowId
-      )
+      const selectedRow = this.data.find((r) => r[this.primaryKey] == this.selectedRowId)
       return selectedRow
     },
     paginatedData() {
       if (this.searchFieldText) {
         if (this.nPages > 1) {
-          return this.data.slice(
-            this.pageLength * (this.page - 1),
-            this.pageLength * this.page
-          )
+          return this.data.slice(this.pageLength * (this.page - 1), this.pageLength * this.page)
         } else {
           return this.data.slice(0, this.pageLength)
         }
       } else {
-        return this.data.slice(
-          this.pageLength * (this.page - 1),
-          this.pageLength * this.page
-        )
+        return this.data.slice(this.pageLength * (this.page - 1), this.pageLength * this.page)
       }
     },
     paginatedEntityCodes() {
@@ -254,13 +205,11 @@ export default defineComponent({
     },
     id_publicatiestatusBool() {
       return getid_publicatiestatus(this.tableModel)
-    },
+    }
   },
   watch: {
     async searchQuery() {
-      if (
-        this.searchQuery
-      ) {
+      if (this.searchQuery) {
         this.loading = true
         this.page = 1
         const { data } = await axios.get(
@@ -269,9 +218,7 @@ export default defineComponent({
         this.loading = false
         this.data = data
       } else {
-        const { data } = await axios.get(
-          `${store.state.APIurl}/${this.resource}/`
-        )
+        const { data } = await axios.get(`${store.state.APIurl}/${this.resource}/`)
         this.data = data
       }
     },
@@ -281,12 +228,17 @@ export default defineComponent({
         this.resetSearchFieldText()
         this.resetPage()
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   methods: {
     onSearchClick() {
-      this.searchFieldText = this.searchFieldText.toString().trim().replace(/[@#$%^&*_+\=\[\]{};':"\\|,.<>\/]/g, '')
+      this.searchFieldText = this.searchFieldText
+        .toString()
+        .trim()
+        /* eslint-disable no-useless-escape */
+        .replace(/[@#$%^&*_+\=\[\]{};':"\\|,.<>\/]/g, '')
+
       this.searchQuery = this.searchFieldText
     },
     resetSearchFieldText() {
@@ -297,23 +249,17 @@ export default defineComponent({
       this.page = 1
     },
     getLabelKey(column) {
-      const foreignKey = this.tableModel.foreign_keys.find(
-        (fK) => fK.foreign_key == column
-      )
+      const foreignKey = this.tableModel.foreign_keys.find((fK) => fK.foreign_key == column)
       return foreignKey ? foreignKey.foreign_table.description_key : undefined
     },
     async getTableData() {
-      const { data } = await axios.get(
-        `${store.state.APIurl}/${this.resource}/`
-      )
+      const { data } = await axios.get(`${store.state.APIurl}/${this.resource}/`)
       this.data = data
     },
     async getTableModel() {
       try {
         this.tableModelLoaded = false
-        const { data } = await axios.get(
-          `${store.state.APIurl}/table/${this.resource}/model`
-        )
+        const { data } = await axios.get(`${store.state.APIurl}/table/${this.resource}/model`)
         this.tableModel = data
         this.tableModelLoaded = true
       } catch (e) {
@@ -337,15 +283,13 @@ export default defineComponent({
             const rowValue = row[h]
             return rowValue && labelKey ? rowValue[labelKey] : rowValue
           })
-        ),
+        )
       ]
 
       const uniqueValues = uniqueLabels.map((label) => {
         // retrieve original value based on the label
         if (labelKey) {
-          const originalRow = this.data.find(
-            (row) => (row[h] ? row[h][labelKey] : row[h]) == label
-          )
+          const originalRow = this.data.find((row) => (row[h] ? row[h][labelKey] : row[h]) == label)
           return originalRow ? originalRow[h] : label
         } else {
           return label
@@ -366,7 +310,7 @@ export default defineComponent({
       } else {
         this.filters.push({
           header,
-          values,
+          values
         })
       }
       this.page = 1
@@ -389,8 +333,8 @@ export default defineComponent({
       this.filters = []
       await Promise.all([this.getTableData(), this.getTableModel()])
       this.loading = false
-    },
-  },
+    }
+  }
 })
 </script>
 

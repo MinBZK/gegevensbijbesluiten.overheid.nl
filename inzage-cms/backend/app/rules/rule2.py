@@ -3,7 +3,9 @@ from app.schemas.rules import Importance
 
 
 class Rule2(SuperRule):
-    __feedback_message = "De volgende gegevensstroom '%s' met gg '%s' heeft meerdere hogere gegevensgroep entiteiten"
+    __feedback_message = (
+        "De volgende gegevensstroom '%s' met gegevensgroep '%s' heeft meerdere hogere gegevensgroep entiteiten"
+    )
     __explanation = (
         "Onder één gegevensgroep mag een gegevensgroep geen meerdere, hogere gegevensgroepen entiteiten vallen"
     )

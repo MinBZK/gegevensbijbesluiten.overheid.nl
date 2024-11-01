@@ -30,8 +30,8 @@
       "goBack": "Terug naar alle organisaties",
       "h1": "Voor welke besluiten is deze organisatie verantwoordelijk?",
       "p1": "Deze organisatie is verantwoordelijk voor de volgende besluiten:",
-      "p1-empty": "Deze organisatie is niet verantwoordelijk voor besluiten, of er zijn nog geen besluiten op de website opgenomen voor deze organisatie. Bezoek de volgende pagina om alle organisaties te zien waarvoor wel besluiten zijn opgenomen.",
-      "p1-empty-link": "Deze organisatie is niet verantwoordelijk voor besluiten, of er zijn nog geen besluiten op de website opgenomen voor deze organisatie. Bezoek de volgende pagina om alle organisaties te zien waarvoor wel besluiten zijn opgenomen.",
+      "p1-empty": "Deze organisatie is niet verantwoordelijk voor besluiten, of er zijn nog geen besluiten op de website opgenomen voor deze organisatie. Bezoek de vorige pagina om alle organisaties te zien waarvoor wel besluiten zijn opgenomen.",
+      "p1-empty-link": "Deze organisatie is niet verantwoordelijk voor besluiten, of er zijn nog geen besluiten op de website opgenomen voor deze organisatie. Bezoek de vorige pagina om alle organisaties te zien waarvoor wel besluiten zijn opgenomen.",
       "h2": "Welke gegevens beheert deze organisatie?",
       "p2": "Deze organisatie heeft de volgende gegevens:",
       "p2-empty": "Deze organisatie beheert zelf geen gegevens",
@@ -40,14 +40,15 @@
       "p3-empty": "Deze organisatie ontvangt geen gegevens van andere organisaties"
     },
     "pages: home": {
-      "title": "Wie gebruikt mijn gegevens bij de overheid?",
-      "description_1": "De Nederlandse overheid houdt gegevens bij van alle inwoners in Nederland. Die gegevens zijn nodig om besluiten te nemen. Bijvoorbeeld over de uitgifte van een paspoort of de toekenning van huurtoeslag of pensioen. Om te voorkomen dat u deze gegevens steeds opnieuw moet aanleveren wisselen de overheden deze gegevens onderling uit.",
-      "description_2": "Vraagt u zich af hoe dat precies zit? Wilt u weten wie welke gegevens over u heeft? Op deze website leest u daar meer over. Gebruik de zoekbalk, scroll verder of klik op"
+      "title": "Wat gebeurt er met uw gegevens bij de overheid?",
+      "description_1": "De overheid houdt gegevens bij van alle inwoners van Nederland. Deze gegevens worden gebruikt om besluiten te nemen. Een besluit is elke beslissing die invloed kan hebben op uw rechten of plichten, zoals het verlenen van een vergunning, het toekennen van een uitkering, het verlengen van een paspoort of het opleggen van een belastingaanslag. Waar nodig wisselen overheidsinstanties uw gegevens onderling uit, zodat u deze niet steeds opnieuw hoeft aan te leveren.",
+      "description_2_1": "Bent u benieuwd welke gegevens worden gebruikt wanneer de overheid een besluit neemt, en wilt u weten tussen welke organisaties deze gegevens worden uitgewisseld? Op deze website vindt u meer informatie. Gebruik de zoekbalk, scroll verder, klik op",
+      "description_2_2" : "of zoek naar een specifiek besluit om meer te weten te komen over de besluiten die de overheid voor u neemt."
     },
     "pages: onderwerpen": {
       "title": "Onderwerpen",
-      "description_1": "Kies een onderwerp waar u meer over wilt weten.",
-      "description_2": "Per onderwerp vindt u de besluiten die de overheid over dat onderwerp neemt en de gegevens die daarbij nodig zijn.",
+      "description_1": "Wij hebben de besluiten ondergebracht in verschillende onderwerpen. Zo vindt u snel uw weg naar het thema dat u interesseert. Vervolgens ziet u de besluiten die de overheid neemt, met de gegevens die organisaties gebruiken en delen.",
+      "description_2": "Kies een onderwerp waar u meer over wilt weten.",
       "referenceToEvtp": "Bekijk de besluiten bij {evtpName}",
       "searchText": "Zoek naar een besluit"
     },
@@ -85,8 +86,9 @@
       "toegankelijkheid": "Toegankelijkheid",
       "db": "Dashboard",
       "gegevens": "Gegevens",
-      "organisaties": "Organisaties"
-
+      "organisaties": "Organisaties",
+      "archief": "Archief",
+      "kwetsbaarheid": "Kwetsbaarheid melden"
     }
   }
 }

@@ -1,10 +1,7 @@
 <template>
   <tr>
     <td class="text-left">
-      <v-row
-        class="centered"
-        style="white-space: nowrap; display: inline-block"
-      >
+      <v-row class="centered" style="white-space: nowrap; display: inline-block">
         <v-btn
           v-if="id && resource === 'evtp-version' && currentVersion"
           color="primary"
@@ -16,16 +13,11 @@
               id,
               resource,
               recordResource: resource,
-              versieNr: versieNr,
-            },
+              versieNr: versieNr
+            }
           }"
         >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            Wijzigen
-          </v-tooltip>
+          <v-tooltip activator="parent" location="top"> Wijzigen </v-tooltip>
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn
@@ -39,16 +31,11 @@
               id,
               resource,
               recordResource: resource,
-              tab: 'data',
-            },
+              tab: 'data'
+            }
           }"
         >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            Wijzigen
-          </v-tooltip>
+          <v-tooltip activator="parent" location="top"> Wijzigen </v-tooltip>
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn
@@ -59,19 +46,14 @@
               id,
               resource,
               recordResource: resource,
-              versieNr: versieNr ? versieNr + 1 : null,
-            },
+              versieNr: versieNr ? versieNr + 1 : null
+            }
           }"
           color="warning"
           flat
           class="mx-2 table-button"
         >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            Nieuwe versie aanmaken
-          </v-tooltip>
+          <v-tooltip activator="parent" location="top"> Nieuwe versie aanmaken </v-tooltip>
           <v-icon>mdi-table-multiple</v-icon>
         </v-btn>
         <v-btn
@@ -82,19 +64,14 @@
               id,
               resource,
               recordResource: resource,
-              versieNr: versieNr ? versieNr + 1 : null,
-            },
+              versieNr: versieNr ? versieNr + 1 : null
+            }
           }"
           color="green"
           flat
           class="mx-2 table-button"
         >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            Soortgelijke besluit maken
-          </v-tooltip>
+          <v-tooltip activator="parent" location="top"> Soortgelijke besluit maken </v-tooltip>
           <v-icon>mdi-plus-box-multiple-outline</v-icon>
         </v-btn>
         <v-btn
@@ -105,18 +82,21 @@
               id,
               resource,
               recordResource: resource,
-              tab: 'relations',
-            },
+              tab: 'relations'
+            }
           }"
           color="secondary"
           flat
           class="mx-2 table-button"
         >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            {{ ['gg', 'gg-koepel'].includes(resource) ? 'Relatie gegevensgroep' : ['oe', 'oe-koepel'].includes(resource) ? 'Relatie organisatie' : '' }}
+          <v-tooltip activator="parent" location="top">
+            {{
+              ['gg', 'gg-koepel'].includes(resource)
+                ? 'Relatie gegevensgroep'
+                : ['oe', 'oe-koepel'].includes(resource)
+                ? 'Relatie organisatie'
+                : ''
+            }}
           </v-tooltip>
           <v-icon>mdi-arrow-up-down-bold-outline</v-icon>
         </v-btn>
@@ -129,17 +109,14 @@
               resource,
               recordResource: resource,
               tab: 'relations',
-              versieNr: versieNr,
-            },
+              versieNr: versieNr
+            }
           }"
           color="secondary"
           flat
           class="mx-2 table-button"
         >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
+          <v-tooltip activator="parent" location="top">
             {{ 'Besluitenboom structuur' }}
           </v-tooltip>
           <v-icon>mdi-arrow-up-down-bold-outline</v-icon>
@@ -151,33 +128,16 @@
           flat
           @click="deleteObject(id)"
         >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            Verwijderen
-          </v-tooltip>
+          <v-tooltip activator="parent" location="top"> Verwijderen </v-tooltip>
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <span
-          v-if="!currentVersion"
-          color="primary"
-          class="mx-2 table-button"
-        >
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            Oudere versie
-          </v-tooltip>
+        <span v-if="!currentVersion" color="primary" class="mx-2 table-button">
+          <v-tooltip activator="parent" location="top"> Oudere versie </v-tooltip>
           <v-icon> mdi-file-hidden </v-icon>
         </span>
       </v-row>
     </td>
-    <td
-      v-for="dC in dataColumns"
-      :key="dC"
-    >
+    <td v-for="dC in dataColumns" :key="dC">
       {{ getValue(dC) }}
     </td>
   </tr>
@@ -186,10 +146,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import type { PropType } from 'vue'
+import axios from 'axios'
 import store from '@/store/index'
 import { TableModelForeignKey } from '@/types/Tables'
 import { getTableValue, formatDateToLocale } from '@/util/misc'
-import axios from 'axios'
 import { getPublicatieStatus } from '@/types/PublicatieStatus'
 
 export default defineComponent({
@@ -197,29 +157,29 @@ export default defineComponent({
   props: {
     dataColumns: {
       type: Object as PropType<Array<string>>,
-      required: true,
+      required: true
     },
     row: {
       type: Object,
-      default: () => { },
+      default: () => {}
     },
     primaryKey: {
       type: [Number, String],
-      required: true,
+      required: true
     },
     foreignKeys: {
       type: Object as PropType<Array<TableModelForeignKey>>,
-      required: true,
+      required: true
     },
     idPublicatiestatusBool: {
       type: Boolean,
-      required: true,
+      required: true
     },
     versieNr: {
       type: Number,
       default: 1,
-      required: false,
-    },
+      required: false
+    }
   },
   emits: ['relationUpdated'],
   computed: {
@@ -239,16 +199,20 @@ export default defineComponent({
       } else {
         return true
       }
-    },
+    }
   },
   methods: {
-    getForeignKey(fieldKey) {
+    getForeignKey(fieldKey: string) {
       return this.foreignKeys.find((fK) => fK.foreign_key == fieldKey)
     },
     getValue(column) {
       const foreignKey = this.getForeignKey(column)
       const value = getTableValue(foreignKey, this.row[column])
-      const versionNumber = ['entity_evtp_version', 'entity_evtp_version_oe_com_type'].includes(column) ? this.row[column]['versie_nr'] : 0
+      const versionNumber = ['entity_evtp_version', 'entity_evtp_version_oe_com_type'].includes(
+        column
+      )
+        ? this.row[column]['versie_nr']
+        : 0
       const maxLength = 100
 
       // Helper function
@@ -287,17 +251,17 @@ export default defineComponent({
         store.commit('activateSnackbar', {
           show: true,
           text: store.state.snackbar.succesfullDeletion,
-          color: store.state.snackbar.succes_color,
+          color: store.state.snackbar.succes_color
         })
       } catch (e) {
         store.commit('activateSnackbar', {
           show: true,
           text: store.state.snackbar.foreignKeyConstraints,
-          color: store.state.snackbar.error_color,
+          color: store.state.snackbar.error_color
         })
       }
-    },
-  },
+    }
+  }
 })
 </script>
 

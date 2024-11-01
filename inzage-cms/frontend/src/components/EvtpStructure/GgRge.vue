@@ -1,16 +1,7 @@
 <template>
-  <tr
-    v-for="(resource, index) in relation.values"
-    :key="index"
-    class="width-height-table"
-  >
-    <td
-      v-if="resource.length > 0"
-    >
-      <tr
-        v-for="(gstGg, indexGstGg) in sortedResource(resource)"
-        :key="indexGstGg"
-      >
+  <tr v-for="(resource, index) in relation.values" :key="index" class="width-height-table">
+    <td v-if="resource.length > 0">
+      <tr v-for="(gstGg, indexGstGg) in sortedResource(resource)" :key="indexGstGg">
         <td>
           <a
             v-if="getEntityRecordHref(relation, gstGg)"
@@ -19,16 +10,12 @@
           >
             {{ gstGg[relation.nameKey] }}
           </a>
-          <a
-            v-else
-          >
+          <a v-else>
             {{ gstGg[relation.nameKey] }}
           </a>
         </td>
         <v-btn
-          v-if="
-            relation.label == 'gegevensgroepen' && !disableEvtp
-          "
+          v-if="relation.label == 'gegevensgroepen' && !disableEvtp"
           width="20"
           height="20"
           class="btn-relation"
@@ -38,9 +25,7 @@
           @click="() => deleteGstGg(gstGg['gst_gg_cd'])"
         />
         <v-btn
-          v-else-if="
-            relation.label == 'regelingen' && !disableEvtp
-          "
+          v-else-if="relation.label == 'regelingen' && !disableEvtp"
           width="20"
           height="20"
           class="btn-relation"
@@ -57,9 +42,7 @@
 
     <td class="right-align">
       <v-btn
-        v-if="
-          relation.label == 'gegevensstroom type' && !disableEvtp && resource.length > 0
-        "
+        v-if="relation.label == 'gegevensstroom type' && !disableEvtp && resource.length > 0"
         class="btn-relation"
         icon="mdi-close"
         size="x-small"
@@ -79,8 +62,8 @@
             versieNr: versieNr
           },
           query: {
-            redirect: $route.fullPath,
-          },
+            redirect: $route.fullPath
+          }
         }"
       >
         <v-icon> mdi-plus-box-outline </v-icon>
@@ -97,8 +80,8 @@
             versieNr: versieNr
           },
           query: {
-            redirect: $route.fullPath,
-          },
+            redirect: $route.fullPath
+          }
         }"
       >
         <v-icon> mdi-plus-box-outline </v-icon>
@@ -116,8 +99,8 @@
             versieNr: versieNr
           },
           query: {
-            redirect: $route.fullPath,
-          },
+            redirect: $route.fullPath
+          }
         }"
       >
         <v-icon> mdi-plus-box-outline </v-icon>
@@ -136,40 +119,41 @@ export default defineComponent({
   props: {
     relation: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     nameKey: {
       type: String,
-      required: true,
+      required: true
     },
     primaryKey: {
       type: String,
-      required: true,
+      required: true
     },
     gstCd: {
       type: Array<number>,
-      required: true,
+      required: true
     },
     disableEvtp: {
       type: Boolean,
       default: false,
-      required: false,
+      required: false
     },
     versieNr: {
       type: [String, Number],
-      required: true,
-    },
+      required: true
+    }
   },
   emits: ['recordUpdated'],
   data() {
     return {
-      messsageToBeFilled:
-        'Druk op toevoegen om een koppeling te maken' as string,
+      messsageToBeFilled: 'Druk op toevoegen om een koppeling te maken' as string
     }
   },
   methods: {
-    sortedResource(resource){
-      let res = resource.slice().sort((a: { sort_key: number }, b: { sort_key: number }) => a.sort_key - b.sort_key)
+    sortedResource(resource) {
+      const res = resource
+        .slice()
+        .sort((a: { sort_key: number }, b: { sort_key: number }) => a.sort_key - b.sort_key)
       return res
     },
     async deleteGstGg(gst_gg_cd: string) {
@@ -178,7 +162,7 @@ export default defineComponent({
       store.commit('activateSnackbar', {
         show: true,
         text: store.state.snackbar.succesfullDeletion,
-        color: store.state.snackbar.succes_color,
+        color: store.state.snackbar.succes_color
       })
     },
     async deleteGstRge(gst_rge_cd: string) {
@@ -187,7 +171,7 @@ export default defineComponent({
       store.commit('activateSnackbar', {
         show: true,
         text: store.state.snackbar.succesfullDeletion,
-        color: store.state.snackbar.succes_color,
+        color: store.state.snackbar.succes_color
       })
     },
     async deleteGstGstt(gst_gstt_cd: string) {
@@ -196,11 +180,11 @@ export default defineComponent({
       store.commit('activateSnackbar', {
         show: true,
         text: store.state.snackbar.succesfullDeletion,
-        color: store.state.snackbar.succes_color,
+        color: store.state.snackbar.succes_color
       })
     },
     getEntityRecordHref(relation, resource) {
-      if (!relation.linkedRelation){
+      if (!relation.linkedRelation) {
         return ''
       }
       return this.$router.resolve({
@@ -209,14 +193,14 @@ export default defineComponent({
           id: resource[relation.linkedRelationKey],
           resource: relation.linkedRelation,
           recordResource: relation.linkedRelation,
-          tab: 'data',
+          tab: 'data'
         },
         query: {
           redirect: this.$route.fullPath
-        },
+        }
       }).href
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -224,6 +208,5 @@ export default defineComponent({
 @import '/src/styles/styles.scss';
 .no-hover {
   cursor: default;
-
 }
 </style>

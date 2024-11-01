@@ -13,14 +13,10 @@
         }}</ExternalLink>
       </p>
       <p v-if="link4">
-        <ExternalLink :href="link4.url" :is-mobile="isMobile">{{
-          link4.text
-        }}</ExternalLink>
+        <ExternalLink :href="link4.url" :is-mobile="isMobile">{{ link4.text }}</ExternalLink>
       </p>
       <p v-if="link7">
-        <ExternalLink :href="link7.url" :is-mobile="isMobile">{{
-          link7.text
-        }}</ExternalLink>
+        <ExternalLink :href="link7.url" :is-mobile="isMobile">{{ link7.text }}</ExternalLink>
       </p>
     </div>
   </div>
@@ -37,20 +33,14 @@ const { t } = useI18n()
 const isMobile = useMobileBreakpoint().large
 
 // Computed properties
-const answer1 = computed(
-  () => props.question?.answer_1 && t(props.question.answer_1)
-)
-const answer2 = computed(
-  () => props.question?.answer_2 && t(props.question.answer_2)
-)
-const answer3 = computed(
-  () => props.question?.answer_3 && t(props.question.answer_3)
-)
+const answer1 = computed(() => props.question?.answer_1 && t(props.question.answer_1))
+const answer2 = computed(() => props.question?.answer_2 && t(props.question.answer_2))
+const answer3 = computed(() => props.question?.answer_3 && t(props.question.answer_3))
 const link3 = computed(() => {
   if (props.question?.link_3_url && props.question?.link_3_text) {
     return {
       url: t(props.question.link_3_url),
-      text: t(props.question.link_3_text),
+      text: t(props.question.link_3_text)
     }
   }
   return null
@@ -59,7 +49,7 @@ const link4 = computed(() => {
   if (props.question?.link_4_url && props.question?.link_4_text) {
     return {
       url: t(props.question.link_4_url),
-      text: t(props.question.link_4_text),
+      text: t(props.question.link_4_text)
     }
   }
   return null
@@ -68,7 +58,7 @@ const link7 = computed(() => {
   if (props.question?.link_5_url && props.question?.link_5_text) {
     return {
       url: t(props.question.link_5_url),
-      text: t(props.question.link_5_text),
+      text: t(props.question.link_5_text)
     }
   }
   return null

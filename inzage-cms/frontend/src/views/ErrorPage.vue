@@ -1,12 +1,7 @@
 <template>
   <div class="error-page">
-    <h1 class="error-title">
-      Pagina niet gevonden
-    </h1>
-    <a
-      class="error-button"
-      href="/"
-    >Ga terug naar hoofdpagina</a>
+    <h1 class="error-title">Pagina niet gevonden</h1>
+    <a class="error-button" href="/">Ga terug naar hoofdpagina</a>
   </div>
 </template>
 
@@ -15,8 +10,8 @@ export default {
   methods: {
     goHome() {
       // this.$router.push({ name: 'Dashboard' })
-    },
-  },
+    }
+  }
 }
 </script>
 
