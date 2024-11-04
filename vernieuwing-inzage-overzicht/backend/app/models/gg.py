@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from sqlalchemy import VARCHAR, Boolean, ForeignKey, Integer
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.hybrid import (
     hybrid_property,
 )
@@ -64,6 +65,7 @@ class Gg(Base, DefaultColumns):
         Integer, comment="Sorteer volgorde van de koepelgegevensgroep in een besluit"
     )
     koepel: Mapped[bool | None] = mapped_column(Boolean, comment="Wel of geen koepel")
+    vector: Mapped[str] = mapped_column(TSVECTOR)
 
     # Relationships
     parent_gg_struct: Mapped["GgStruct"] = relationship(

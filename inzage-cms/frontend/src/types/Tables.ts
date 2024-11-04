@@ -24,12 +24,15 @@ export type TableModelColumn = {
   IS_NULLABLE: boolean
 }
 
-export type TableModelForeignKey = {
-  foreign_key: string
-  direction: string
-  foreign_resource: string
-  foreign_table: TableModel
+export type Fields = {
+  required: boolean
+  optional: boolean
+  readonly: boolean
+  max_length: string
+  data_type: string
 }
+
+/* eslint-disable no-use-before-define */
 
 export type TableModel = {
   resource: string
@@ -40,10 +43,9 @@ export type TableModel = {
   fields: { [key: string]: Fields[] }
 }
 
-export type Fields = {
-  required: boolean
-  optional: boolean
-  readonly: boolean
-  max_length: string
-  data_type: string
+export type TableModelForeignKey = {
+  foreign_key: string
+  direction: string
+  foreign_resource: string
+  foreign_table: TableModel
 }

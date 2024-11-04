@@ -3,16 +3,11 @@
     v-if="modelValue"
     class="modal-background"
     role="dialog"
-    :aria-labelledby="
-      modalTitle === 'faqQuestionTitle'
-        ? 'faqQuestionTitle'
-        : 'onderwerpenTitle-' + indexModalTitle
-    "
+    aria-modal="true"
     @click.self="$emit('update:modelValue', false)"
   >
     <div class="modal-view">
       <button
-        ref="closeButton"
         class="close-button"
         :aria-label="$t('closeSubjectTile')"
         @click="$emit('update:modelValue', false)"
@@ -39,14 +34,13 @@ const props = withDefaults(
     height: 'auto',
     maxHeight: 'auto',
     modalTitle: '',
-    indexModalTitle: 0,
+    indexModalTitle: 0
   }
 )
 
 const emit = defineEmits<{
   (e: 'update:modelValue', modelValue: boolean): void
 }>()
-const closeButton = ref<HTMLElement | null>(null)
 
 onMounted(() => {
   const escListener = (event: any) => {
@@ -60,22 +54,43 @@ onMounted(() => {
   })
 })
 
+const unfocus = (modelValue: boolean) => {
+  const focusableElements = document.querySelectorAll(`
+      a:not(.modal-view):not(.modal-view *),
+      div:not(.modal-view):not(.modal-view *),
+      input:not(.modal-view):not(.modal-view *),
+      button:not(.modal-view):not(.modal-view *)
+      `)
+  if (modelValue) {
+    document.body.style.overflow = 'hidden'
+    focusableElements.forEach((el) => {
+      if (el.hasAttribute('tabindex')) {
+        // temporary store tabindex
+        el.setAttribute('data-original-tabindex', el.getAttribute('tabindex') as string)
+      }
+    })
+    focusableElements.forEach((el) => el.setAttribute('tabindex', '-2'))
+  } else {
+    document.body.style.overflow = ''
+    focusableElements.forEach((el) => el.removeAttribute('tabindex'))
+
+    focusableElements.forEach((el) => {
+      // reset tabindex
+      if (el.hasAttribute('data-original-tabindex')) {
+        el.setAttribute('tabindex', el.getAttribute('data-original-tabindex') as string)
+      }
+    })
+  }
+}
+
+onBeforeUnmount(() => {
+  unfocus(false)
+})
+
 watch(
   () => props.modelValue,
   (modelValue) => {
-    nextTick(() => {
-      const focusableElements = document.querySelectorAll(
-        'button:not(.close-button, .show-button), a:not(.items, .is-external-icon.external-link.exclusive-modal-mobile), input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
-      if (modelValue) {
-        closeButton.value?.focus()
-        document.body.style.overflow = 'hidden'
-        focusableElements.forEach((el) => el.setAttribute('tabindex', '-1'))
-      } else {
-        document.body.style.overflow = ''
-        focusableElements.forEach((el) => el.removeAttribute('tabindex'))
-      }
-    })
+    unfocus(modelValue)
   }
 )
 
@@ -114,5 +129,10 @@ onBeforeUnmount(() => {
 }
 .icon {
   padding-left: 0px !important;
+}
+</style>
+<style global>
+.slot {
+  background-color: aqua;
 }
 </style>

@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl, field_validator
 
 from app.schemas.evtp_version import EvtpVersionMinimalList
 from app.schemas.oe_com_type import OeComTypeMinimalList
+from app.util.misc import validate_url
 
 
 class EvtpOeComType(BaseModel):
@@ -13,7 +14,7 @@ class EvtpOeComType(BaseModel):
     evtp_cd: int
     oe_com_type_cd: int
     versie_nr: int
-    link: str | None
+    link: HttpUrl | None
     user_nm: str
     ts_mut: datetime
     ts_end: datetime
@@ -33,3 +34,5 @@ class EvtpOeComTypeIn(BaseModel):
     oe_com_type_cd: int
     versie_nr: int
     link: str | None = None
+
+    _validate_re_link = field_validator("link")(validate_url)

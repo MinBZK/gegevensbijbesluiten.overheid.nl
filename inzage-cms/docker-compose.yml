@@ -1,6 +1,6 @@
 services:
   db-inzage:
-    image: postgres:14-alpine
+    image: ankane/pgvector
     container_name: ${POSTGRES_DB}_postgres_db
     restart: always
     env_file:

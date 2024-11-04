@@ -1,19 +1,11 @@
 <template>
   <th style="white-space: nowrap">
     {{ header }}
-    <v-icon
-      class="th-icon"
-      :class="{ 'th-icon-filter': !!selectedFilters }"
-      @click="dialog = true"
-    >
+    <v-icon class="th-icon" :class="{ 'th-icon-filter': !!selectedFilters }" @click="dialog = true">
       mdi-filter
     </v-icon>
   </th>
-  <v-dialog
-    v-model="dialog"
-    scrollable
-    max-width="600"
-  >
+  <v-dialog v-model="dialog" scrollable max-width="600">
     <v-card>
       <v-toolbar color="primary">
         <v-toolbar-title> {{ header }}</v-toolbar-title>
@@ -35,24 +27,12 @@
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn
-          v-if="checkedValues.length != 0"
-          color="primary"
-          @click="checkedValues = []"
-        >
+        <v-btn v-if="checkedValues.length != 0" color="primary" @click="checkedValues = []">
           Filters verwijderen
         </v-btn>
         <v-spacer />
-        <v-btn
-          color="primary"
-          @click="dialog = false"
-        >
-          Sluiten
-        </v-btn>
-        <v-btn
-          color="primary"
-          @click=";[$emit('setFilter', checkedValues), (dialog = false)]"
-        >
+        <v-btn color="primary" @click="dialog = false"> Sluiten </v-btn>
+        <v-btn color="primary" @click=";[$emit('setFilter', checkedValues), (dialog = false)]">
           Toepassen
         </v-btn>
       </v-card-actions>
@@ -70,41 +50,39 @@ export default defineComponent({
     header: {
       type: String,
       default: null,
-      required: false,
+      required: false
     },
     values: {
       type: Array as PropType<Array<string>>,
-      required: true,
+      required: true
     },
     selectedFilters: {
       type: Object,
       default: () => {},
-      required: false,
+      required: false
     },
     labelKey: {
       type: String,
       default: null,
-      required: false,
-    },
+      required: false
+    }
   },
   emits: ['setFilter'],
   data() {
     return {
       dialog: false,
-      checkedValues: [],
+      checkedValues: []
     }
   },
   watch: {
     dialog: {
       handler() {
-        this.checkedValues = this.selectedFilters
-          ? this.selectedFilters.values
-          : []
+        this.checkedValues = this.selectedFilters ? this.selectedFilters.values : []
       },
       immediate: true,
-      flush: 'post',
-    },
-  },
+      flush: 'post'
+    }
+  }
 })
 </script>
 

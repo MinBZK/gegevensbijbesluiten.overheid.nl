@@ -7,7 +7,7 @@
       :class="{
         container: true,
         'banner-content': true,
-        'homepage-height': isHomepage,
+        'homepage-height': isHomepage
       }"
     >
       <div class="introduction">
@@ -23,18 +23,10 @@
             <NuxtLink :to="{ name: 'onderwerp' }">
               {{ p(`${pageData[0].pageLink_1}`) }}
             </NuxtLink>
-          </span>
-          <span v-if="pageData[0].pageLink_2" class="no-margin-description">
-            {{ t('or') }}
-            <NuxtLink :to="{ name: 'besluit' }">
-              {{ p(`${pageData[0].pageLink_2}`) }} </NuxtLink
-            >.
+            {{ p(`${pageData[0].pageDescriptionParagraph_2_2}`) }}
           </span>
         </p>
-        <p
-          v-if="pageData[0].pageDescriptionParagraph_3"
-          class="no-margin-description"
-        >
+        <p v-if="pageData[0].pageDescriptionParagraph_3" class="no-margin-description">
           {{ p(`${pageData[0].pageDescriptionParagraph_3}`) }}
         </p>
         <p v-if="pageData[0].pageDescriptionItalics">
@@ -43,11 +35,11 @@
         <FormOverheidButton
           v-if="pageData[0].routeName === 'index'"
           :label="t('readMore')"
-          @click="() => $router.push(`/uitleg`)"
+          to="/uitleg"
         />
       </div>
       <div :class="{ hero: true, 'is-homepage': isHomepage }">
-        <img :src="pageData[0].bannerImage" alt="" />
+        <img :src="pageData[0].bannerImage" :alt="t('getHeroExplanation')" />
       </div>
     </div>
   </div>
@@ -65,28 +57,18 @@ const isMobile = useMobileBreakpoint().small
 
 const navigationItemsTranslated = computed(() =>
   navigationItems.map((item) => {
-    const matchedHeader = navigationHeaders.find(
-      (header) => header.routeName === item.routeName
-    )
+    const matchedHeader = navigationHeaders.find((header) => header.routeName === item.routeName)
     return {
       label: p(item.localeName),
       routeName: item.routeName,
       banner: matchedHeader ? matchedHeader.banner : '',
       pageTitle: matchedHeader ? matchedHeader.pageTitle : '',
-      pageDescriptionParagraph_1: matchedHeader
-        ? matchedHeader.pageDescriptionParagraph_1
-        : '',
-      pageDescriptionParagraph_2: matchedHeader
-        ? matchedHeader.pageDescriptionParagraph_2
-        : '',
-      pageDescriptionParagraph_3: matchedHeader
-        ? matchedHeader.pageDescriptionParagraph_3
-        : '',
+      pageDescriptionParagraph_1: matchedHeader ? matchedHeader.pageDescriptionParagraph_1 : '',
+      pageDescriptionParagraph_2: matchedHeader ? matchedHeader.pageDescriptionParagraph_2 : '',
+      pageDescriptionParagraph_2_2: matchedHeader ? matchedHeader.pageDescriptionParagraph_2_2 : '',
+      pageDescriptionParagraph_3: matchedHeader ? matchedHeader.pageDescriptionParagraph_3 : '',
       pageLink_1: matchedHeader ? matchedHeader.pageLink_1 : '',
-      pageLink_2: matchedHeader ? matchedHeader.pageLink_2 : '',
-      pageDescriptionItalic: matchedHeader
-        ? matchedHeader.pageDescriptionItalic
-        : '',
+      pageDescriptionItalic: matchedHeader ? matchedHeader.pageDescriptionItalic : ''
     }
   })
 )
@@ -97,24 +79,21 @@ type pageMeta = {
   pageTitle: string
   pageDescriptionParagraph_1: string
   pageDescriptionParagraph_2: string
+  pageDescriptionParagraph_2_2: string
   pageDescriptionParagraph_3: string
   pageDescriptionItalics: string
   pageLink_1: string
-  pageLink_2: string
   show: boolean
 }
 
 const pageData = computed<pageMeta[]>(() => {
   const path = currentRoute.path
-  const crumbStrings: string[] =
-    path !== '/' ? ('/' + path).split('/').slice(1) : ['index']
+  const crumbStrings: string[] = path !== '/' ? ('/' + path).split('/').slice(1) : ['index']
 
   const filteredCrumbStrings = crumbStrings.filter((crumb) => crumb)
 
   const crumbs: pageMeta[] = filteredCrumbStrings.map((crumb: string) => {
-    const item = navigationItemsTranslated.value.find(
-      (item) => item.routeName === crumb
-    )
+    const item = navigationItemsTranslated.value.find((item) => item.routeName === crumb)
 
     return {
       routeName: crumb,
@@ -122,11 +101,11 @@ const pageData = computed<pageMeta[]>(() => {
       pageTitle: item ? item.pageTitle : '',
       pageDescriptionParagraph_1: item ? item.pageDescriptionParagraph_1 : '',
       pageDescriptionParagraph_2: item ? item.pageDescriptionParagraph_2 : '',
+      pageDescriptionParagraph_2_2: item ? item.pageDescriptionParagraph_2_2 : '',
       pageDescriptionParagraph_3: item ? item.pageDescriptionParagraph_3 : '',
       pageDescriptionItalics: item ? item.pageDescriptionItalic : '',
       pageLink_1: item ? item.pageLink_1 : '',
-      pageLink_2: item ? item.pageLink_2 : '',
-      show: !!item?.banner,
+      show: !!item?.banner
     }
   })
   return crumbs
@@ -152,14 +131,17 @@ const pageData = computed<pageMeta[]>(() => {
 
 .banner-content {
   display: grid;
-  grid-template-columns: 60fr 50fr;
+  grid-template-columns: 60fr 25fr;
   column-gap: 10px;
   height: calc(476px - 52px);
 
-  @media (max-width: 65em) {
+  @media (max-width: 90em) {
     grid-template-columns: auto;
-    grid-template-rows: 50fr 10em;
+    grid-template-rows: 50fr 20em;
     height: auto !important;
+  }
+  @media (max-width: 70em) {
+    grid-template-rows: 50fr 10em;
   }
 }
 
@@ -172,7 +154,7 @@ const pageData = computed<pageMeta[]>(() => {
   display: flex;
   justify-content: right;
 
-  @media (max-width: 50em) {
+  @media (max-width: 90em) {
     justify-content: center;
   }
 

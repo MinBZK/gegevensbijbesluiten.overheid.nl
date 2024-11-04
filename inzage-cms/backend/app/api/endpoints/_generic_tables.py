@@ -1,5 +1,11 @@
 import app.models as models
-from app.api.endpoints._default import delete_attr, delete_relation_parent_child, generate_router
+from app.api.endpoints._default import (
+    delete_attr,
+    delete_relation_parent_child,
+    generate_router,
+    get_child_gg,
+    get_parent_gg,
+)
 from app.config.resource import TableResource
 
 # Generate endpoints for all models that fits the generic table pattern
@@ -15,11 +21,18 @@ gg_struct = generate_router(
     base_model=models.gg.GgStruct,
     additional_routes=[delete_relation_parent_child],
 )
+
 gg_router = generate_router(
-    model_name=TableResource.gg.name, base_model=models.gg.Gg, filter_by_default={"koepel": False}
+    model_name=TableResource.gg.name,
+    base_model=models.gg.Gg,
+    filter_by_default={"koepel": False},
+    additional_routes=[get_parent_gg],
 )
 gg_koepel_router = generate_router(
-    model_name=TableResource.gg.name, base_model=models.gg.Gg, filter_by_default={"koepel": True}
+    model_name=TableResource.gg.name,
+    base_model=models.gg.Gg,
+    filter_by_default={"koepel": True},
+    additional_routes=[get_child_gg],
 )
 gst_gg_router = generate_router(model_name=TableResource.gst_gg.name, base_model=models.gst.GstGg)
 gst_gstt_router = generate_router(model_name=TableResource.gst_gstt.name, base_model=models.gst.GstGstt)
@@ -28,6 +41,7 @@ gst_type_router = generate_router(model_name=TableResource.gst_type.name, base_m
 gst_router = generate_router(model_name=TableResource.gst.name, base_model=models.gst.Gst)
 ibron_router = generate_router(model_name=TableResource.ibron.name, base_model=models.ibron.Ibron)
 oe_com_type_router = generate_router(model_name=TableResource.oe_com_type.name, base_model=models.oe.OeComType)
+omg_router = generate_router(model_name=TableResource.omg.name, base_model=models.evtp.Omg)
 oe_koepel_oe_router = generate_router(
     model_name=TableResource.oe_koepel_oe.name,
     base_model=models.oe.OeKoepelOe,

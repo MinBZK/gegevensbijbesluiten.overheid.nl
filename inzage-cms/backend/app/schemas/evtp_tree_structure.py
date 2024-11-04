@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, HttpUrl
 
 from app.schemas.evtp_ond import OndMinimalList
 from app.schemas.oe_com_type import OeComTypeMinimalList
 from app.schemas.oe_koepel_oe import OeKoepelOe, OeKoepelOeWithRelations
+from app.schemas.omg import OmgMinimalList
 
 
 # Base classes, have no relations
@@ -31,7 +32,10 @@ class EvtpOndBase(BaseModel):
 
 class IbronBase(BaseModel):
     ibron_cd: int
-    omschrijving: str
+    titel: str
+    afko: str | None
+    lidw: str | None
+    link: HttpUrl | None
     oe_cd: int | None
     user_nm: str
     notitie: str | None
@@ -47,7 +51,6 @@ class IbronWithRelations(IbronBase):
 
 
 class OeWithRelations(OeBase):
-    entity_ibron: IbronWithRelations | None
     parent_entities: list[OeKoepelOe]
     count_parents: int
 
@@ -98,6 +101,7 @@ class GgWithParentsChildren(GgWithRelationCount):
 class RgeBase(BaseModel):
     rge_cd: int
     titel: str
+    re_link: str | None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -203,5 +207,6 @@ class EvtpTreeStructure(BaseModel):
     entities_evtp_gst: list[EvtpGstTreeStructure] | None
     entities_evtp_oe_com_type: list[EvtpOeComType] | None
     entities_evtp_ond: list[EvtpOndBase] | None
+    entity_omg: OmgMinimalList | None
 
     model_config = ConfigDict(from_attributes=True)

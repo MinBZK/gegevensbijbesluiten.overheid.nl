@@ -22,9 +22,7 @@ const currentDate = computed(() => {
   const year: string = date.getFullYear().toString()
   const hours: string = date.getHours().toString()
   const minutes: string =
-    date.getMinutes() < 10
-      ? '0'.concat(date.getMinutes().toString())
-      : date.getMinutes().toString()
+    date.getMinutes() < 10 ? '0'.concat(date.getMinutes().toString()) : date.getMinutes().toString()
 
   return monthDay + ' ' + month + ' ' + year + ' | ' + hours + ':' + minutes
 })
@@ -33,7 +31,7 @@ const { data } = await dashboardService.getTotalCount()
 const evtpCount = data
 
 definePageMeta({
-  title: 'Dashboard',
+  title: 'Dashboard'
 })
 useHead({ title: 'Dashboard' })
 </script>

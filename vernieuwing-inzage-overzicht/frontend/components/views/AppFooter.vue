@@ -3,22 +3,13 @@
     <div class="footer-content container">
       <div class="footer-text">
         {{ t('footer.text_1') }}
-        <NuxtLink :to="{ name: 'footer-contact' }">
-          {{ t('footer.text_2') }}</NuxtLink
-        >
+        <NuxtLink :to="{ name: 'footer-contact' }"> {{ t('footer.text_2') }}</NuxtLink>
       </div>
       <div class="footer-links">
         <div v-for="footerKey in footerKeys" :key="footerKey">
           <ul class="list list--linked">
-            <li
-              v-for="page in footer[footerKey]"
-              :key="page.label"
-              class="list__item"
-            >
-              <NuxtLink
-                v-if="footerKey != 'external'"
-                :to="`/footer${page.path}`"
-              >
+            <li v-for="page in footer[footerKey]" :key="page.label" class="list__item">
+              <NuxtLink v-if="footerKey != 'external'" :to="`/footer${page.path}`">
                 {{ t(`footer.paths.${page.key}`) }}
               </NuxtLink>
               <ExternalLink v-if="footerKey == 'external'" :href="page.path">{{

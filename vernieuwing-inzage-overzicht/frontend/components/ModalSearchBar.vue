@@ -1,11 +1,10 @@
 <template>
   <div>
-    <label id="search-label" class="form__label form__label--accent">{{
-      searchExplanation
-    }}</label>
+    <label id="search-label" class="form__label form__label--accent">{{ searchExplanation }}</label>
     <div class="input-wrapper">
       <input
         id="input-text-98789"
+        ref="searchInput"
         v-model="searchValue"
         type="text"
         name="98789"
@@ -27,8 +26,8 @@
 defineProps({
   searchExplanation: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 
 const { t } = useI18n()
@@ -40,8 +39,10 @@ const emit = defineEmits<{
 
 const searchValue = ref<string>('')
 const searchHint = computed(() => t('search'))
+const searchInput = ref<HTMLElement | null>(null)
 
 onMounted(() => {
+  searchInput.value?.focus()
   // clear any search on remounting
   emit('doSearch', '')
 })

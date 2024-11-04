@@ -1,14 +1,8 @@
 <template>
   <v-card-text class="form-container">
     <v-timeline side="end">
-      <template
-        v-for="(relation, index) in relations"
-        :key="relation.label"
-      >
-        <v-timeline-item
-          :dot-color="relation.color"
-          size="small"
-        >
+      <template v-for="(relation, index) in relations" :key="relation.label">
+        <v-timeline-item :dot-color="relation.color" size="small">
           <strong>{{ relation.label }}</strong>
           <v-card-text>
             <EntityRecordRelationsTable
@@ -25,11 +19,7 @@
             />
           </v-card-text>
         </v-timeline-item>
-        <v-timeline-item
-          v-if="index == 0"
-          dot-color="primary"
-          size="small"
-        >
+        <v-timeline-item v-if="index == 0" dot-color="primary" size="small">
           <strong>Geselecteerde entiteit</strong>
           <v-card-text>{{ record[descriptionKey] }}</v-card-text>
         </v-timeline-item>
@@ -38,12 +28,7 @@
   </v-card-text>
   <v-card-actions>
     <v-spacer />
-    <v-btn
-      color="primary"
-      @click="$emit('close')"
-    >
-      Scherm afsluiten
-    </v-btn>
+    <v-btn color="primary" @click="$emit('close')"> Scherm afsluiten </v-btn>
   </v-card-actions>
 </template>
 
@@ -58,46 +43,46 @@ export default defineComponent({
   props: {
     record: {
       type: Object,
-      default: () => { },
+      default: () => {}
     },
     primaryKey: {
       type: String,
-      required: true,
+      required: true
     },
     foreignKeys: {
       type: Object,
-      required: true,
+      required: true
     },
     descriptionKey: {
       type: String,
-      required: true,
+      required: true
     },
     resource: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   emits: ['close', 'relationUpdated'],
   data() {
     return {
-      self: {} as object,
+      self: {} as object
     }
   },
   computed: {
     children() {
       return this.record.child_entities
         ? this.record.child_entities.map((entity) => {
-          entity.relatedEntity = entity.child_entity
-          return entity
-        })
+            entity.relatedEntity = entity.child_entity
+            return entity
+          })
         : []
     },
     parents() {
       return this.record.parent_entities
         ? this.record.parent_entities.map((entity) => {
-          entity.relatedEntity = entity.parent_entity
-          return entity
-        })
+            entity.relatedEntity = entity.parent_entity
+            return entity
+          })
         : []
     },
     relations() {
@@ -106,16 +91,17 @@ export default defineComponent({
         label: string
         color: string
         relationKey: string
-
       }
 
       const relations: Array<Entity> = [
         {
           values: this.resource.endsWith('koepel') ? this.children : this.parents,
-          label: this.resource.endsWith('koepel') ? 'Onderliggende entiteiten' : 'Bovenliggende entiteit',
+          label: this.resource.endsWith('koepel')
+            ? 'Onderliggende entiteiten'
+            : 'Bovenliggende entiteit',
           color: 'secondary',
-          relationKey: this.resource.endsWith('koepel') ? 'children' : 'parents',
-        },
+          relationKey: this.resource.endsWith('koepel') ? 'children' : 'parents'
+        }
       ]
       return relations
     },
@@ -127,7 +113,7 @@ export default defineComponent({
     getForeignKey(relationKey) {
       const relationFieldMapping = {
         parents: 'parent_entities',
-        children: 'child_entities',
+        children: 'child_entities'
       }
       const foreignKey = this.foreignKeys.find(
         (fK) => fK['foreign_key'] == relationFieldMapping[relationKey]
@@ -140,7 +126,7 @@ export default defineComponent({
     getEndpoint(relationKey) {
       const foreignKey = this.getForeignKey(relationKey)
       return `${store.state.APIurl}/${foreignKey.foreign_table.resource}`
-    },
-  },
+    }
+  }
 })
 </script>

@@ -1,16 +1,12 @@
 <template>
-  <v-footer
-    class="footer"
-    :color="colour"
-    padless
-  />
+  <v-footer class="footer" :color="colour" padless />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import axios from 'axios'
 import store from '@/store/index'
 import { getEnvironment } from '@/util/misc'
-import axios from 'axios'
 
 export default defineComponent({
   name: 'FOOTER',
@@ -18,7 +14,7 @@ export default defineComponent({
     return {
       envObj: [] as Array<object>,
       colour: '' as string,
-      environment: '' as string,
+      environment: '' as string
     }
   },
   async created() {
@@ -42,8 +38,8 @@ export default defineComponent({
       } else {
         this.colour = 'primary'
       }
-    },
-  },
+    }
+  }
 })
 </script>
 

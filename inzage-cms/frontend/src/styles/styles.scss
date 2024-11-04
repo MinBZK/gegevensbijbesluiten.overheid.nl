@@ -88,6 +88,7 @@ p {
         color: white !important;
     }
     &.ja-nee {
+    &.ja-nee {
         display: block;
         margin: 16px 32px 32px 32px;
     }
@@ -123,6 +124,7 @@ p {
     color: $primary;
     text-decoration: none;
   }
+  }
 .centered {
     text-align: center;
 }
@@ -150,4 +152,9 @@ p {
 .cursor-hover:hover{
     cursor: pointer;
     text-decoration: underline;
+}
+
+.subtext {
+    font-style: italic;
+    color: black;
 }

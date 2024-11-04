@@ -1,4 +1,6 @@
+from pydantic import HttpUrl
 from sqlalchemy import VARCHAR, ForeignKey, Integer
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -43,14 +45,9 @@ class Oe(Base, DefaultColumns):
     oe_upc: Mapped[int] = mapped_column(Integer)
 
     afko: Mapped[str | None] = mapped_column(VARCHAR(15), comment="Afkorting van de organisatorische eenheid")
-    e_contact: Mapped[str | None] = mapped_column(
-        VARCHAR(200),
-        comment="E-mail contactadres - indien alleen een prefix is opgenomen wordt de domeinnaam ge-append",
-    )
     huisnummer: Mapped[str | None] = mapped_column(VARCHAR(10), comment="Huisnummer")
     huisnummer_toev: Mapped[str | None] = mapped_column(VARCHAR(10), comment="Huisnummer toevoeging")
-    ibron_cd: Mapped[int | None] = mapped_column(Integer, ForeignKey("ibron.ibron_cd"), comment="Informatiebron code")
-    internet_domein: Mapped[str | None] = mapped_column(VARCHAR(200), comment="Internet domeinnaam")
+    internet_domein: Mapped[HttpUrl | None] = mapped_column(VARCHAR(200), comment="Internet domeinnaam")
     lidw_sgebr: Mapped[str | None] = mapped_column(VARCHAR(12), comment="Lidwoord van de organisatie")
     naam_officieel: Mapped[str] = mapped_column(VARCHAR(4000), comment="Taken van de organistorische eenheid")
     naam_spraakgbr: Mapped[str] = mapped_column(
@@ -61,9 +58,9 @@ class Oe(Base, DefaultColumns):
     provincie: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Provincie")
     straat: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Straatnaam")
     telefoon: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Telefoonnummer")
+    vector: Mapped[str] = mapped_column(TSVECTOR)
 
     # Relationships
-    entity_ibron: Mapped["Ibron"] = relationship("Ibron", foreign_keys=[ibron_cd])  # type: ignore # noqa: F821
     parent_oe_struct: Mapped["OeKoepelOe"] = relationship(
         "OeKoepelOe", primaryjoin="Oe.oe_cd == OeKoepelOe.oe_cd", back_populates="child_entity", single_parent=True
     )
@@ -111,6 +108,7 @@ class OeKoepel(Base, DefaultColumns):
     )
     titel: Mapped[str] = mapped_column(VARCHAR(255), comment="Titel van de koepelorganisatie")
     omschrijving: Mapped[str] = mapped_column(VARCHAR(4000), comment="Omschrijving van de koepelorganisatie")
+    vector: Mapped[str] = mapped_column(TSVECTOR)
 
     child_oe_struct: Mapped["OeKoepelOe"] = relationship(
         "OeKoepelOe",

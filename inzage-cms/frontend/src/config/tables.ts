@@ -13,6 +13,7 @@ const tables: Array<Table> = [
       evtp_cd: 'Code Besluit',
       evtp_nm: 'Naam Besluit',
       oe_best: 'Besluitnemende Oe',
+      omg_cd: 'Omgeving',
       versie_nr: 'Versie nummer',
       id_publicatiestatus: 'Status Besluit',
       user_nm: 'ID redacteur',
@@ -28,7 +29,7 @@ const tables: Array<Table> = [
       soort_besluit: 'Soort besluit',
       aanleiding: 'Aanleiding besluit',
       gebr_dl: 'Gebruiksdoel gegevens',
-      huidige_versie: 'Huidige versie',
+      huidige_versie: 'Huidige versie'
     },
     hiddenColumns: [
       'omschrijving',
@@ -37,7 +38,7 @@ const tables: Array<Table> = [
       'aanleiding',
       'gebr_dl',
       'huidige_versie',
-      'uri',
+      'uri'
     ],
     fieldOrder: [
       'evtp_cd',
@@ -49,16 +50,17 @@ const tables: Array<Table> = [
       'lidw_soort_besluit',
       'soort_besluit',
       'oe_best',
+      'omg_cd',
       'aanleiding',
       'gebr_dl',
       'notitie',
-      "overige_informatie",
-      "overige_informatie_link",
+      'overige_informatie',
+      'overige_informatie_link',
       'user_nm',
       'ts_mut',
       'id_publicatiestatus',
-      'ts_publ',
-    ],
+      'ts_publ'
+    ]
   },
   {
     label: 'Accorderingen',
@@ -76,7 +78,7 @@ const tables: Array<Table> = [
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
       volg_nr: 'Volgnummer',
-      bestand_acc_cd: 'Code bestand',
+      bestand_acc_cd: 'Code bestand'
     },
     hiddenColumns: [],
     fieldOrder: [
@@ -87,8 +89,8 @@ const tables: Array<Table> = [
       'notitie',
       'user_nm',
       'volg_nr',
-      'bestand_acc_cd',
-    ],
+      'bestand_acc_cd'
+    ]
   },
   {
     label: 'Koppeling communicatiekanaal',
@@ -105,7 +107,7 @@ const tables: Array<Table> = [
       versie_nr: 'Besluit versie',
       link: 'Link',
       user_nm: 'ID Redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
     fieldOrder: [
@@ -115,8 +117,8 @@ const tables: Array<Table> = [
       'oe_com_type_cd',
       'link',
       'user_nm',
-      'ts_mut',
-    ],
+      'ts_mut'
+    ]
   },
   {
     label: 'Koppeling gegevensstroom',
@@ -136,7 +138,7 @@ const tables: Array<Table> = [
       conditie: 'Conditie',
       user_nm: 'ID Redacteur',
       ts_mut: 'Tijdstip laatste mutatie',
-      sort_key: 'Sorteer sleutel',
+      sort_key: 'Sorteer sleutel'
     },
     hiddenColumns: [],
     fieldOrder: [
@@ -148,8 +150,8 @@ const tables: Array<Table> = [
       'conditie',
       'user_nm',
       'ts_mut',
-      'sort_key',
-    ],
+      'sort_key'
+    ]
   },
   {
     label: 'Koppeling onderwerp',
@@ -166,17 +168,10 @@ const tables: Array<Table> = [
       versie_nr: 'Besluit versie',
       user_nm: 'ID Redacteur',
       notitie: 'Notitieveld',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
-    fieldOrder: [
-    'evtp_cd',
-    'versie_nr',
-    'ond_cd',
-    'notitie',
-    'user_nm',
-    'ts_mut'
-  ],
+    fieldOrder: ['evtp_cd', 'versie_nr', 'ond_cd', 'notitie', 'user_nm', 'ts_mut']
   },
   {
     label: 'Gegevensstromen',
@@ -196,7 +191,7 @@ const tables: Array<Table> = [
       ibron_cd: 'Ibron',
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: ['ext_lnk_aut', 'ibron_cd', 'ts_mut'],
     fieldOrder: [
@@ -209,8 +204,8 @@ const tables: Array<Table> = [
       'ibron_cd',
       'notitie',
       'user_nm',
-      'ts_mut',
-    ],
+      'ts_mut'
+    ]
   },
   {
     label: 'Gegevensstroomtype',
@@ -227,18 +222,10 @@ const tables: Array<Table> = [
       notitie: 'Notitieveld',
       ts_mut: 'Tijdstip laatste mutatie',
       user_nm: 'ID Redacteur',
-      gstt_pp: 'Push/Pull',
+      gstt_pp: 'Push/Pull'
     },
     hiddenColumns: [],
-    fieldOrder: [
-      'gstt_cd',
-      'gstt_naam',
-      'gstt_oms',
-      'notitie',
-      'ts_mut',
-      'user_nm',
-      'gstt_pp',
-    ],
+    fieldOrder: ['gstt_cd', 'gstt_naam', 'gstt_oms', 'notitie', 'ts_mut', 'user_nm', 'gstt_pp']
   },
   {
     label: 'Koppeling gegevensgroep',
@@ -256,7 +243,7 @@ const tables: Array<Table> = [
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
       ts_mut: 'Tijdstip laatste mutatie',
-      sort_key: 'Sorteersleutel',
+      sort_key: 'Sorteersleutel'
     },
     hiddenColumns: [],
     fieldOrder: [
@@ -267,8 +254,8 @@ const tables: Array<Table> = [
       'notitie',
       'user_nm',
       'ts_mut',
-      'sort_key',
-    ],
+      'sort_key'
+    ]
   },
   {
     label: 'Koppeling gegevensstroomtype',
@@ -286,18 +273,10 @@ const tables: Array<Table> = [
       gst_cd: 'Code gst',
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
-    fieldOrder: [
-      'gst_gstt_cd',
-      'gst_cd',
-      'versie_nr',
-      'gstt_cd',
-      'notitie',
-      'user_nm',
-      'ts_mut',
-    ],
+    fieldOrder: ['gst_gstt_cd', 'gst_cd', 'versie_nr', 'gstt_cd', 'notitie', 'user_nm', 'ts_mut']
   },
   {
     label: 'Koppeling wettelijke regelingen',
@@ -315,7 +294,7 @@ const tables: Array<Table> = [
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
       ts_mut: 'Tijdstip laatste mutatie',
-      sort_key: 'Sorteersleutel',
+      sort_key: 'Sorteersleutel'
     },
     hiddenColumns: [],
     fieldOrder: [
@@ -326,8 +305,8 @@ const tables: Array<Table> = [
       'notitie',
       'user_nm',
       'ts_mut',
-      'sort_key',
-    ],
+      'sort_key'
+    ]
   },
   {
     label: 'Gegevensgroepen',
@@ -346,7 +325,7 @@ const tables: Array<Table> = [
       sort_key: 'Sorteer sleutel',
       user_nm: 'ID Redacteur',
       ts_mut: 'Tijdstip laatste mutatie',
-      koepel: 'Selecteer of het een koepel is',
+      koepel: 'Selecteer of het een koepel is'
     },
     hiddenColumns: ['koepel'],
     fieldOrder: [
@@ -358,8 +337,8 @@ const tables: Array<Table> = [
       'sort_key',
       'koepel',
       'user_nm',
-      'ts_mut',
-    ],
+      'ts_mut'
+    ]
   },
   {
     label: 'Gegevensgroepen koepel',
@@ -378,7 +357,7 @@ const tables: Array<Table> = [
       sort_key: 'Sorteer sleutel',
       user_nm: 'ID Redacteur',
       ts_mut: 'Tijdstip laatste mutatie',
-      koepel: 'Selecteer of het een koepel is',
+      koepel: 'Selecteer of het een koepel is'
     },
     hiddenColumns: ['koepel'],
     fieldOrder: [
@@ -390,8 +369,8 @@ const tables: Array<Table> = [
       'sort_key',
       'koepel',
       'user_nm',
-      'ts_mut',
-    ],
+      'ts_mut'
+    ]
   },
   {
     label: 'Gegevensgroepenstructuur',
@@ -407,17 +386,10 @@ const tables: Array<Table> = [
       gg_cd_sup: 'Code gg hoger',
       notitie: 'Notitieveld',
       user_nm: 'ID redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: ['ts_mut'],
-    fieldOrder: [
-      'gg_struct_cd',
-      'gg_cd_sub',
-      'gg_cd_sup',
-      'notitie',
-      'user_nm',
-      'ts_mut',
-    ],
+    fieldOrder: ['gg_struct_cd', 'gg_cd_sub', 'gg_cd_sup', 'notitie', 'user_nm', 'ts_mut']
   },
   {
     label: 'Gegevensgroep sortering per besluit',
@@ -433,17 +405,10 @@ const tables: Array<Table> = [
       gg_cd: 'Gegevensgroep',
       sort_key: 'Sorteersleutel',
       user_nm: 'ID Redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
-    fieldOrder: [
-      'gg_evtp_sort_cd',
-      'evtp_cd',
-      'gg_cd',
-      'sort_key',
-      'user_nm',
-      'ts_mut',
-    ],
+    fieldOrder: ['gg_evtp_sort_cd', 'evtp_cd', 'gg_cd', 'sort_key', 'user_nm', 'ts_mut']
   },
   {
     label: 'Organisaties',
@@ -469,10 +434,8 @@ const tables: Array<Table> = [
       provincie: 'Provincie',
       telefoon: 'Telefoonnummer',
       internet_domein: 'Domeinnaam internet',
-      e_contact: 'Link Mijn-omgeving',
       user_nm: 'ID redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
-      ibron_cd: 'Informatiebron',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     fieldOrder: [
       'oe_cd',
@@ -490,10 +453,8 @@ const tables: Array<Table> = [
       'provincie',
       'telefoon',
       'internet_domein',
-      'e_contact',
       'user_nm',
-      'ts_mut',
-      'ibron_cd',
+      'ts_mut'
     ],
     hiddenColumns: [
       'straat',
@@ -504,13 +465,12 @@ const tables: Array<Table> = [
       'postcode',
       'provincie',
       'telefoon',
-      'e_contact',
       'huisnummer',
       'huisnummer_toev',
       'plaats',
       'ts_mut',
-      'ibron_cd',
-    ],
+      'ibron_cd'
+    ]
   },
   {
     label: 'Organisatie koepel',
@@ -526,17 +486,10 @@ const tables: Array<Table> = [
       omschrijving: 'Omschrijving koepelorganisatie',
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: ['ts_mut'],
-    fieldOrder: [
-      'oe_koepel_cd',
-      'titel',
-      'omschrijving',
-      'notitie',
-      'user_nm',
-      'ts_mut',
-    ],
+    fieldOrder: ['oe_koepel_cd', 'titel', 'omschrijving', 'notitie', 'user_nm', 'ts_mut']
   },
   {
     label: 'Koppeling organisatie koepel',
@@ -552,17 +505,10 @@ const tables: Array<Table> = [
       oe_cd: 'Organisatie',
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: ['ts_mut'],
-    fieldOrder: [
-      'oe_koepel_oe_cd',
-      'oe_cd',
-      'oe_koepel_cd',
-      'notitie',
-      'user_nm',
-      'ts_mut',
-    ],
+    fieldOrder: ['oe_koepel_oe_cd', 'oe_cd', 'oe_koepel_cd', 'notitie', 'user_nm', 'ts_mut']
   },
   // placeholder for the group overig
   {
@@ -575,7 +521,28 @@ const tables: Array<Table> = [
     maxWidthDialog: 0,
     columns: {},
     hiddenColumns: [],
-    fieldOrder: [],
+    fieldOrder: []
+  },
+  {
+    label: 'Organisatie omgevingen',
+    visible: true,
+    group: 'Organisaties',
+    resource: 'omg',
+    nameKey: 'titel',
+    primaryKey: 'omg_cd',
+    maxWidthDialog: 1160,
+    columns: {
+      omg_cd: 'Omgeving code',
+      oe_cd: 'Organisatie',
+      titel: 'Naam omgeving/portaal',
+      link: 'Link omgeving/portaal',
+      lidw: 'Lidwoord omgeving/portaal',
+      user_nm: 'ID Redacteur',
+      notitie: 'Notitieveld',
+      ts_mut: 'Tijdstip laatste mutatie'
+    },
+    hiddenColumns: [],
+    fieldOrder: ['omg_cd', 'titel', 'oe_cd', 'link', 'lidw', 'notitie', 'ts_mut']
   },
   {
     label: 'Communicatiekanalen',
@@ -590,17 +557,12 @@ const tables: Array<Table> = [
       omschrijving: 'Kanaal omschrijving',
       user_nm: 'ID Redacteur',
       notitie: 'Notitieveld',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
-    fieldOrder: [
-      'oe_com_type_cd',
-      'omschrijving',
-      'user_nm',
-      'notitie',
-      'ts_mut',
-    ],
+    fieldOrder: ['oe_com_type_cd', 'omschrijving', 'user_nm', 'notitie', 'ts_mut']
   },
+
   {
     label: 'Infobronnen',
     visible: true,
@@ -611,21 +573,27 @@ const tables: Array<Table> = [
     maxWidthDialog: 1160,
     columns: {
       ibron_cd: 'Ibron',
-      omschrijving: 'Naam van de bron',
+      titel: 'Naam infobron',
+      afko: 'Afkorting infobron',
+      lidw: 'Lidwoord infobron',
+      link: 'Link infobron',
       oe_cd: 'Code OE uitgever',
       user_nm: 'ID Redacteur',
       notitie: 'Notitieveld',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
     fieldOrder: [
       'ibron_cd',
-      'omschrijving',
+      'titel',
+      'afko',
+      'lidw',
+      'link',
       'oe_cd',
       'notitie',
       'user_nm',
-      'ts_mut',
-    ],
+      'ts_mut'
+    ]
   },
   {
     label: 'Onderwerpen',
@@ -642,18 +610,10 @@ const tables: Array<Table> = [
       sort_key: 'Sorteer sleutel',
       user_nm: 'ID Redacteur',
       notitie: 'Notitieveld',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
-    fieldOrder: [
-      'ond_cd',
-      'titel',
-      'omschrijving',
-      'sort_key',
-      'notitie',
-      'user_nm',
-      'ts_mut',
-    ],
+    fieldOrder: ['ond_cd', 'titel', 'omschrijving', 'sort_key', 'notitie', 'user_nm', 'ts_mut']
   },
   {
     label: 'Wettelijke regelingen',
@@ -670,19 +630,11 @@ const tables: Array<Table> = [
       user_nm: 'ID Redacteur',
       notitie: 'Notitieveld',
       re_link: 'Link naar basiswettenbestand',
-      ts_mut: 'Tijdstip laatste mutatie',
+      ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
-    fieldOrder: [
-      'rge_cd',
-      'titel',
-      'tekst',
-      're_link',
-      'notitie',
-      'user_nm',
-      'ts_mut',
-    ],
-  },
+    fieldOrder: ['rge_cd', 'titel', 'tekst', 're_link', 'notitie', 'user_nm', 'ts_mut']
+  }
 ]
 
 export { tables }

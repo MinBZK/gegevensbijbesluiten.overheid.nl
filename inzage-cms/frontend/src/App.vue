@@ -3,17 +3,10 @@
     <HeaderCms />
     <v-main>
       <router-view />
-      <v-snackbar
-        v-model="getSnackbar"
-        :timeout="2000"
-        :color="getFeedbackMessageColor()"
-      >
+      <v-snackbar v-model="getSnackbar" :timeout="2000" :color="getFeedbackMessageColor()">
         {{ getFeedbackMessage() }}
         <template #actions>
-          <v-btn
-            variant="text"
-            @click="closeSnackbar"
-          >
+          <v-btn variant="text" @click="closeSnackbar">
             <v-icon>mdi-window-close</v-icon>
           </v-btn>
         </template>
@@ -32,7 +25,7 @@ export default {
   name: 'App',
   components: {
     HeaderCms,
-    FooterCms,
+    FooterCms
   },
   computed: {
     getSnackbar: {
@@ -41,8 +34,8 @@ export default {
       },
       set(value) {
         store.commit('activateSnackbar', { show: value })
-      },
-    },
+      }
+    }
   },
   methods: {
     closeSnackbar() {
@@ -53,7 +46,7 @@ export default {
     },
     getFeedbackMessageColor() {
       return store.state.snackbar.color
-    },
-  },
+    }
+  }
 }
 </script>

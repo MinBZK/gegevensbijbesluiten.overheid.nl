@@ -1,12 +1,19 @@
 <template>
   <tr class="width-height-table">
     <td>
-      <a
-        :href="getEntityRecordHref(relation, primaryKey)"
-        class="cursor-hover"
-      >
-        {{ relation.values[0][nameKey] }}
-      </a>
+      <tr>
+        <a :href="getEntityRecordHref(relation, primaryKey)" class="cursor-hover">
+          {{ relation.values[0][nameKey] }}
+        </a>
+      </tr>
+      <tr v-if="relation.values[0].entity_omg">
+        <a class="subtext">
+          {{
+            relation.values[0].entity_omg.titel.substr(0, 70) +
+            (relation.values[0].entity_omg.titel.length > 70 ? '...' : '')
+          }}
+        </a>
+      </tr>
     </td>
   </tr>
 </template>
@@ -19,18 +26,21 @@ export default defineComponent({
   props: {
     relation: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     nameKey: {
       type: String,
-      required: true,
+      required: true
     },
     primaryKey: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   methods: {
+    getOmgRecordHref(relation, primaryKey) {
+      return this.getEntityRecordHref(relation, primaryKey)
+    },
     getEntityRecordHref(relation, primaryKey) {
       return this.$router.resolve({
         name: 'entityRecord',
@@ -38,13 +48,13 @@ export default defineComponent({
           id: relation.resource[primaryKey],
           resource: relation.resource,
           recordResource: relation.resource,
-          tab: 'data',
+          tab: 'data'
         },
         query: {
           redirect: this.$route.fullPath
-        },
+        }
       }).href
-    },
-  },
+    }
+  }
 })
 </script>

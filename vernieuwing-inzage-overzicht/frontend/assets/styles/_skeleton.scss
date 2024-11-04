@@ -1,0 +1,77 @@
+.skeleton-content {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1em;
+}
+
+.skeleton-header {
+    height: 2.5em;
+    background-color: #e0e0e0;
+    margin-bottom: 1em;
+    width: 70%;
+}
+
+.skeleton-description {
+    height: 5.5em;
+    background-color: #f0f0f0;
+    margin-bottom: 1em;
+}
+
+.skeleton-white-box {
+    background-color: #ffffff;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.skeleton-list-item {
+    height: 3.1em;
+    background-color: #f0f0f0;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-footer {
+    display: flex;
+    gap: 0.5em;
+}
+
+.skeleton-content-items {
+    margin-bottom: 1em;
+}
+  
+.skeleton-content-item {
+    margin-bottom: 1em;
+}
+
+.skeleton-content-title {
+    height: 1.5em;
+    background-color: #e0e0e0;
+    margin-bottom: 0.5em;
+    width: 40%;
+}
+
+.skeleton-content-description {
+    height: 3em;
+    background-color: #f0f0f0;
+}
+
+@keyframes shimmer {
+0% {
+    background-position: -468px 0;
+}
+100% {
+    background-position: 468px 0;
+}
+}
+
+.skeleton-header,
+.skeleton-description,
+.skeleton-content-title,
+.skeleton-list-item {
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: shimmer;
+    animation-timing-function: linear;
+    background: linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%);
+    background-size: 800px 104px;
+}

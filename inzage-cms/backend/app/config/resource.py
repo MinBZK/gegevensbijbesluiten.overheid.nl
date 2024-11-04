@@ -17,6 +17,7 @@ class TableResource(str, Enum):
     evtp_oe_com_type = "evtp-oe-com-type"
     oe = "oe"
     oe_com_type = "oe-com-type"
+    omg = "omg"
     gg = "gg"
     gg_koepel = "gg-koepel"
     gg_struct = "gg-struct"
@@ -41,6 +42,7 @@ MAPPING_RESOURCE_TO_TABLE = {
     TableResource.evtp_oe_com_type.value: models.evtp.EvtpOeComType.__tablename__,
     TableResource.oe.value: models.oe.Oe.__tablename__,
     TableResource.oe_com_type.value: models.oe.OeComType.__tablename__,
+    TableResource.omg.value: models.evtp.Omg.__tablename__,
     TableResource.gg.value: models.gg.Gg.__tablename__,
     TableResource.gg_koepel.value: models.gg.Gg.__tablename__,
     TableResource.gg_struct.value: models.gg.GgStruct.__tablename__,
@@ -68,22 +70,23 @@ class MappingPublicatiestatus(tuple, Enum):
 
 
 EXCEPTIONS_REQUIRED_FIELDS = {
-    TableResource.evtp_version.value: ["oe_best", "omschrijving"],
+    TableResource.evtp_version.value: ["oe_best"],
     TableResource.evtp_gst.value: [],
     TableResource.evtp_acc.value: [],
     TableResource.evtp_oe_com_type.value: [],
+    TableResource.omg.value: [],
     TableResource.oe.value: ["naam_officieel"],
     TableResource.oe_com_type.value: [],
-    TableResource.gg.value: ["omschrijving_uitgebreid", "omschrijving"],
+    TableResource.gg.value: [],
     TableResource.gg_struct.value: [],
     TableResource.gg_evtp_sort.value: [],
     TableResource.gst.value: [],
-    TableResource.rge.value: [],
+    TableResource.rge.value: ["re_link"],
     TableResource.oe_koepel_oe.value: [],
     TableResource.oe_koepel.value: [],
     TableResource.ibron.value: [],
     TableResource.gst_gg.value: [],
-    TableResource.gst_type.value: ["gstt_oms"],
+    TableResource.gst_type.value: [],
     TableResource.gst_gstt.value: [],
     TableResource.bestand_acc.value: [],
     TableResource.ond.value: [],
@@ -105,9 +108,7 @@ MAPPING_TABLE_TO_RESOURCE = {
         resource=TableResource.oe,
         description_key=models.oe.Oe.naam_officieel.name,
         primary_key=models.oe.Oe.oe_cd.name,
-        foreign_key_mapping={
-            "ibron_cd": "entity_ibron",
-        },
+        foreign_key_mapping={},
         input_schema=schemas.oe.OeIn,
     ),
     models.gg.Gg.__tablename__: TableToResourceMapping(
@@ -182,12 +183,13 @@ MAPPING_TABLE_TO_RESOURCE = {
         foreign_key_mapping={
             "oe_best": "verantwoordelijke_oe",
             "evtp_cd_sup": "parent_evtp",
+            "omg_cd": "entity_omg",
         },
         input_schema=schemas.evtp_version.EvtpVersionIn,
     ),
     models.oe.OeKoepel.__tablename__: TableToResourceMapping(
         resource=TableResource.oe_koepel,
-        description_key="titel",
+        description_key=models.evtp.Omg.titel.name,
         primary_key=models.oe.OeKoepel.oe_koepel_cd.name,
         foreign_key_mapping={},
         input_schema=schemas.oe_koepel.OeKoepelIn,
@@ -204,7 +206,7 @@ MAPPING_TABLE_TO_RESOURCE = {
     ),
     models.ibron.Ibron.__tablename__: TableToResourceMapping(
         resource=TableResource.ibron,
-        description_key=models.ibron.Ibron.omschrijving.name,
+        description_key=models.ibron.Ibron.titel.name,
         primary_key=models.ibron.Ibron.ibron_cd.name,
         foreign_key_mapping={"oe_cd": "entity_oe"},
         input_schema=schemas.ibron.IbronIn,
@@ -262,6 +264,15 @@ MAPPING_TABLE_TO_RESOURCE = {
             "oe_com_type_cd": "entity_oe_com_type",
         },
         input_schema=schemas.evtp_oe_com_type.EvtpOeComTypeIn,
+    ),
+    models.evtp.Omg.__tablename__: TableToResourceMapping(
+        resource=TableResource.omg,
+        description_key="titel",
+        primary_key=models.evtp.Omg.omg_cd.name,
+        foreign_key_mapping={
+            "oe_cd": "entity_oe",
+        },
+        input_schema=schemas.omg.OmgIn,
     ),
     models.oe.OeComType.__tablename__: TableToResourceMapping(
         resource=TableResource.oe_com_type,

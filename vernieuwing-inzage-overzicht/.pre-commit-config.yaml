@@ -3,8 +3,15 @@ repos:
     rev: v0.4.2
     hooks:
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
+        name: ruff check
+        entry: bash -c 'cd backend && poetry run ruff check app --fix && poetry run ruff check tests --fix'
+        language: python
+        types: [python]
       - id: ruff-format
+        name: ruff format
+        entry: bash -c 'cd backend && poetry run ruff format app && poetry run ruff format tests'
+        language: python
+        types: [python]
   # - repo: local
   #   hooks:
   #   -   id: coverage

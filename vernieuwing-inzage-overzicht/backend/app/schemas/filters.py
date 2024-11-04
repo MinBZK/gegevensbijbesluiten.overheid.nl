@@ -11,16 +11,10 @@ class FilterData(BaseModel):
 
 class EvtpFilterData(BaseModel):
     organisation: list[FilterData]
-    onderwerp: list[FilterData]
 
 
 class GgFilterData(BaseModel):
     organisation: list[FilterData]
-    onderwerp: list[FilterData]
-
-
-class OeFilterData(BaseModel):
-    onderwerp: list[FilterData]
 
 
 class SelectedFilters(BaseModel):

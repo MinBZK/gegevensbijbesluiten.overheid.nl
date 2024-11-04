@@ -4,9 +4,7 @@
       v-for="article in reversedArticles"
       :key="article.title"
       class="article-card"
-      @click.prevent="
-        navigateTo(article.link, { external: true, open: { target: '_blank' } })
-      "
+      @click.prevent="navigateTo(article.link, { external: true, open: { target: '_blank' } })"
       @keydown.enter.prevent="
         navigateTo(article.link, { external: true, open: { target: '_blank' } })
       "
@@ -14,12 +12,7 @@
         navigateTo(article.link, { external: true, open: { target: '_blank' } })
       "
     >
-      <img
-        :src="article.image"
-        :alt="t(article.alt)"
-        class="article-card-image"
-        tabindex="-1"
-      />
+      <img :src="article.image" :alt="t(article.alt)" class="article-card-image" tabindex="-1" />
       <div class="article-card-text">
         <p>{{ t(article.date) }}</p>
         <h3>{{ t(article.title) }}</h3>

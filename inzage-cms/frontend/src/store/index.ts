@@ -8,7 +8,7 @@ const store = createStore({
       email: '',
       token: '',
       admin: false,
-      isAuthenticated: false,
+      isAuthenticated: false
     },
     APIurl: 'http://localhost:8000/api',
     snackbar: {
@@ -21,14 +21,13 @@ const store = createStore({
       succesfullDeletion: 'Uw verwijdering is definitief',
       foreignKeyConstraints:
         'Error: er zijn nog verwijzingen naar deze rij vanuit een andere tabel',
-      wrongFileExtension:
-        'Let op, bestand is niet geupload omdat deze geen pdf of word betreft.',
+      wrongFileExtension: 'Let op, bestand is niet geupload omdat deze geen pdf of word betreft.',
       malwareDetected:
         'Let op, bestand is niet geupload vanwege een potentiele virus in het bestand',
       unknown: 'Er is iets mis gegaan',
       duplication: 'Error: deze koppeling bestaat al in de tabel',
-      show: false,
-    },
+      show: false
+    }
   },
   mutations: {
     changeUserEmail(state, payload) {
@@ -50,7 +49,7 @@ const store = createStore({
       state.snackbar.feedbackMessage = text
       state.snackbar.show = show
       state.snackbar.color = color
-    },
+    }
   },
   actions: {
     updateUserEmail({ commit }, payload) {
@@ -64,9 +63,9 @@ const store = createStore({
     },
     updateAPIurl({ commit }, payload) {
       commit('changeAPIurl', payload)
-    },
+    }
   },
-  modules: {},
+  modules: {}
 })
 
 export default store

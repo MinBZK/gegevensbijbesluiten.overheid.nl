@@ -1,6 +1,6 @@
 <template>
   <div v-if="filterData && selectedFilters">
-    <template v-if="!isMobile">
+    <template v-if="!isMobile || showFilterForArchive">
       <FilterSelectedFilters
         v-if="selectedFilters.length"
         :selected-filters="selectedFilters"
@@ -47,11 +47,14 @@ const props = defineProps<{
 }>()
 
 const isMobile = useMobileBreakpoint().small
+const showFilterForArchive = ref(true as boolean)
 
 const orgFilterActive = computed(() => {
-  return !!props.selectedFilters?.find(
-    (filter) => filter.key === 'organisation'
-  )
+  return !!props.selectedFilters?.find((filter) => filter.key === 'organisation')
+})
+
+onMounted(() => {
+  showFilterForArchive.value = false
 })
 </script>
 

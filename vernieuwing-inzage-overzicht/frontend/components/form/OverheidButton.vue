@@ -1,5 +1,6 @@
 <template>
   <form
+    v-if="!to"
     :class="props.alignHorizontally && 'inline-form'"
     :action="action"
     @click="clickButton"
@@ -11,9 +12,9 @@
       :class="[
         {
           'button--block': fullWidth,
-          disabled: disabled,
+          disabled: disabled
         },
-        `button--${props.style}`,
+        `button--${props.style}`
       ]"
       type="submit"
       :aria-disabled="disabled ? 'true' : 'false'"
@@ -31,6 +32,31 @@
       /></span>
     </button>
   </form>
+  <NuxtLink
+    v-else
+    :to="to"
+    :class="[
+      'button button--nolabel nuxtlink',
+      {
+        'button--block': fullWidth,
+        disabled: disabled
+      },
+      `button--${props.style}`
+    ]"
+    :aria-disabled="disabled ? 'true' : 'false'"
+    :aria-label="ariaLabel"
+    :aria-expanded="ariaExpanded == undefined ? undefined : ariaExpanded"
+    :role="roleLink == undefined ? undefined : roleLink"
+  >
+    <span v-if="!textCollapseAllAccordions" class="button__label">
+      {{ label }} <NuxtIcon v-if="icon" size="0.9em" :name="icon" />
+    </span>
+    <span v-else class="button__label">
+      <span>{{ label }} </span>
+      <span class="visually-hidden"> {{ textCollapseAllAccordions }} </span>
+      <NuxtIcon v-if="icon" size="0.9em" :name="icon" />
+    </span>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">
@@ -48,6 +74,7 @@ const props = withDefaults(
     textCollapseAllAccordions?: string | undefined
     ariaExpanded?: boolean | undefined
     roleLink?: string | undefined
+    to?: string | undefined
   }>(),
   {
     icon: null,
@@ -62,6 +89,7 @@ const props = withDefaults(
     textCollapseAllAccordions: undefined,
     ariaExpanded: undefined,
     roleLink: undefined,
+    to: undefined
   }
 )
 
@@ -88,8 +116,10 @@ const clickButton = (e: Event) => {
     width: 100%;
   }
 }
-form button {
-  margin-top: 9px;
+
+form button,
+.nuxtlink {
+  margin-top: 10px;
 }
 
 .inline-form {

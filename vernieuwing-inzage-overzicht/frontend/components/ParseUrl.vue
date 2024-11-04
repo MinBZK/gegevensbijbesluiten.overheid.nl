@@ -10,23 +10,23 @@ const linkify = (inputText: string) => {
   const patterns: { [key: string]: any } = {
     url_remove_www_with_https: {
       regex: /(?<!(http(s)?:\/\/))www\./gm,
-      template: 'https://',
+      template: 'https://'
     },
     url_remove_www_without_https: {
       regex: /(?<=http(s)?:\/\/)www\./gm,
-      template: '',
+      template: ''
     },
     url: {
       regex:
         // eslint-disable-next-line
         /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim,
-      template: `<a href="$1" target="_blank" class="is-external-icon">$1 <span class="visually-hidden">${externalLinkLabel}</span></a>`,
+      template: `<a href="$1" target="_blank" class="is-external-icon">$1 <span class="visually-hidden">${externalLinkLabel}</span></a>`
     },
     mail: {
       // eslint-disable-next-line
       regex: /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim,
-      template: '<a href="mailto:$1" class="is-external-icon">$1</a>',
-    },
+      template: '<a href="mailto:$1" class="is-external-icon">$1</a>'
+    }
   }
 
   let replacedText: string = inputText

@@ -6,8 +6,7 @@
         v-model="selectedForeignRecord"
         :items="recordsList"
         :loading="loading"
-        :label="`Selecteer: ${label || fieldKey}` + (required ? ' (verplicht)' : '')
-        "
+        :label="`Selecteer: ${label || fieldKey}` + (required ? ' (verplicht)' : '')"
         :disabled="disableEvtp"
         density="comfortable"
         variant="outlined"
@@ -25,7 +24,7 @@
         variant="outlined"
       />
       <v-textarea
-        v-else-if="(fieldKey == 'versie_nr')"
+        v-else-if="fieldKey == 'versie_nr'"
         :model-value="getModelValue()"
         :label="(label || fieldKey) + (required ? '' : '')"
         density="compact"
@@ -58,17 +57,14 @@
         persistent-placeholder
         rows="1"
         auto-grow
-        @update:model-value="(v) => [
-          (value = v),
-          !v && isIntegerKey ? $emit('update', null) : $emit('update', v),
-        ]
+        @update:model-value="
+          (v) => [(value = v), !v && isIntegerKey ? $emit('update', null) : $emit('update', v)]
         "
       />
     </v-col>
     <v-col cols="3">
       <v-btn
-        v-if="foreignResourceModel && value && foreignKey && foreignResourceInClient
-        "
+        v-if="foreignResourceModel && value && foreignKey && foreignResourceInClient"
         size="small"
         icon="mdi-link"
         variant="outlined"
@@ -79,8 +75,8 @@
           params: {
             tab: 'data',
             recordResource: foreignResourceModel.resource,
-            id: value[foreignKey.foreign_table.primary_key],
-          },
+            id: value[foreignKey.foreign_table.primary_key]
+          }
         }"
       />
     </v-col>
@@ -89,9 +85,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { TableModelColumn, TableModelForeignKey } from '@/types/Tables'
 import type { PropType } from 'vue'
 import axios from 'axios'
+import { TableModelColumn, TableModelForeignKey } from '@/types/Tables'
 import store from '@/store/index'
 import { getTableValue, getTableKey, formatDateToLocale } from '@/util/misc'
 import { getPublicatieStatus } from '@/types/PublicatieStatus'
@@ -102,75 +98,79 @@ export default defineComponent({
   props: {
     label: {
       type: undefined,
-      required: true,
+      required: true
     },
     fieldKey: {
       type: String,
-      required: true,
+      required: true
     },
     originalKey: {
       type: String,
-      required: true,
+      required: true
     },
     initialValue: {
       type: [String, Number, Array, Object, Boolean],
       default: null,
-      required: false,
+      required: false
     },
     tableName: {
       type: String,
-      required: true,
+      required: true
     },
     modelColumns: {
       type: Object as PropType<TableModelColumn>,
-      default: () => { },
-      required: false,
+      default: () => {},
+      required: false
     },
     readonly: {
       type: Boolean,
-      required: true,
+      required: true
     },
     fieldProperties: {
       type: Object,
-      default: () => { },
-      required: false,
+      default: () => {},
+      required: false
     },
     foreignKey: {
       type: Object as PropType<TableModelForeignKey>,
-      default: () => { },
-      required: false,
+      default: () => {},
+      required: false
     },
     required: {
       type: Boolean,
-      required: true,
+      required: true
     },
     dataType: {
       type: String,
-      required: true,
+      required: true
     },
     disableEvtp: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
   emits: ['update'],
   data() {
     return {
       value: '' as string,
       rules: [
-        (v: string) => (this.required && !v ? 'Verplicht veld' : true),
-        (v: string) =>
-          this.isIntegerKey
-            ? /^\d*$/.test(v)
-              ? true
-              : 'Voer een geldig getal in'
+        (v) => (this.required && !v ? 'Verplicht veld' : true),
+        (v) => (this.isIntegerKey && !/^\d*$/.test(v) && v ? 'Voer een geldig getal in' : true),
+        (v) =>
+          v && v.length >= (this.fieldProperties?.max_length || 1000)
+            ? 'Maximum aan karakters is bereikt'
             : true,
-        (v: string) =>
-          v
-            ? v.length >= (this.fieldProperties?.max_length || 1000)
-              ? 'Maximum aan karakters is bereikt'
-              : true
-            : true,
+        (v) =>
+          [
+            're_link',
+            'link',
+            'uri',
+            'overige_informatie_link',
+            'ext_lnk_aut',
+            'internet_domein'
+          ].includes(this.fieldKey) && !/^(ftp|http|https):\/\/[^ "]+$/.test(v.trim())
+            ? 'Voer een geldige URL in de vorm van https://...'
+            : true
       ],
       fieldValueOptions: [] as Array<object>,
       loading: true as boolean,
@@ -178,7 +178,7 @@ export default defineComponent({
       selectedForeignRecord: '' as string,
       koepelOptions: ['Ja', 'Nee'],
       selectedKoepel: '' as string,
-      selectedIdPublicatiestatus: '' as string,
+      selectedIdPublicatiestatus: '' as string
     }
   },
   computed: {
@@ -186,28 +186,24 @@ export default defineComponent({
       return store
     },
     isIntegerKey() {
-      return this.dataType == 'integer' ||
+      return !!(
+        this.dataType == 'integer' ||
         this.dataType == 'bigint' ||
         this.dataType == 'smallint'
-        ? true
-        : false
+      )
     },
     foreignResource() {
       return this.foreignKey ? this.foreignKey.foreign_resource : null
     },
     maximumValueLength() {
-      return this.fieldProperties
-        ? this.fieldProperties.max_length || 1000
-        : null
+      return this.fieldProperties ? this.fieldProperties.max_length || 1000 : null
     },
     foreignResourceModel() {
       return this.foreignKey?.foreign_table
     },
     foreignResourceInClient() {
       const resources = tables.map((t) => t.resource)
-      return this.foreignResource
-        ? resources.includes(this.foreignResource)
-        : false
+      return this.foreignResource ? resources.includes(this.foreignResource) : false
     },
     primaryKey() {
       return this.foreignKey?.foreign_table.primary_key || ''
@@ -216,18 +212,14 @@ export default defineComponent({
       return this.foreignKey?.foreign_table.description_key || ''
     },
     recordsList() {
-      if ((this.records.some((r) => 'versie_nr' in r))) {
+      if (this.records.some((r) => 'versie_nr' in r)) {
         return this.records.map(
-          (r) =>
-            `${r[this.descriptionKey]} (${r[this.primaryKey]}) versie: ${r['versie_nr']
-            }`
+          (r) => `${r[this.descriptionKey]} (${r[this.primaryKey]}) versie: ${r['versie_nr']}`
         )
       } else {
-        return this.records.map(
-          (r) => `${r[this.descriptionKey]} (${r[this.primaryKey]})`
-        )
+        return this.records.map((r) => `${r[this.descriptionKey]} (${r[this.primaryKey]})`)
       }
-    },
+    }
   },
   watch: {
     selectedKoepel() {
@@ -240,26 +232,23 @@ export default defineComponent({
     selectedForeignRecord() {
       const selectedForeignRecordObject = Object.assign(
         {},
-        (this.records.some((r) => 'versie_nr' in r))
+        this.records.some((r) => 'versie_nr' in r)
           ? this.records.filter(
-            (r) =>
-              `${r[this.descriptionKey]} (${r[this.primaryKey]}) versie: ${r['versie_nr']
-              }` === this.selectedForeignRecord
-          )
+              (r) =>
+                `${r[this.descriptionKey]} (${r[this.primaryKey]}) versie: ${r['versie_nr']}` ===
+                this.selectedForeignRecord
+            )
           : this.records.filter(
-            (r) =>
-              `${r[this.descriptionKey]} (${r[this.primaryKey]})` ===
-              this.selectedForeignRecord
-          )
+              (r) =>
+                `${r[this.descriptionKey]} (${r[this.primaryKey]})` === this.selectedForeignRecord
+            )
       )[0]
       selectedForeignRecordObject
         ? this.$emit('update', selectedForeignRecordObject)
         : this.$emit(
-          'update',
-          this.records.filter(
-            (r) => r[this.descriptionKey] == this.selectedForeignRecord
-          )[0]
-        )
+            'update',
+            this.records.filter((r) => r[this.descriptionKey] == this.selectedForeignRecord)[0]
+          )
     },
     value() {
       const maxLength = this.maximumValueLength
@@ -276,20 +265,19 @@ export default defineComponent({
         this.setSelectedKoepel()
         this.setSelectedidPublicationStatus()
       },
-      immediate: true,
+      immediate: true
     },
     selectedValue(v) {
       this.$emit('update', v)
-    },
+    }
   },
   async created() {
-    this.updateForeignRecord()
+    await this.updateForeignRecord()
   },
   methods: {
     setSelectedKoepel() {
       if (this.fieldKey === 'koepel') {
-        this.selectedKoepel =
-          this.initialValue == null ? '' : this.initialValue ? 'Ja' : 'Nee'
+        this.selectedKoepel = this.initialValue == null ? '' : this.initialValue ? 'Ja' : 'Nee'
       }
     },
     setSelectedidPublicationStatus() {
@@ -299,18 +287,19 @@ export default defineComponent({
       }
     },
     async updateForeignRecord() {
-      this.foreignResource ? await this.getData() : null
+      if (this.foreignResource) {
+        await this.getData()
+      }
       if (this.records.length > 0) {
         const modelValue = this.getModelValue()
         if (modelValue) {
-          if (this.initialValue['versie_nr']) {
-            this.selectedForeignRecord = `${modelValue} (${this.getModelKey()}) versie: ${this.initialValue['versie_nr']
-            }`
-          }
-          else {
-            this.selectedForeignRecord = `${modelValue} (${this.getModelKey()})`
-          }
-        } else this.selectedForeignRecord = ''
+          const version = this.initialValue['versie_nr']
+            ? ` versie: ${this.initialValue['versie_nr']}`
+            : ''
+          this.selectedForeignRecord = `${modelValue} (${this.getModelKey()})${version}`
+        } else {
+          this.selectedForeignRecord = ''
+        }
       }
     },
     async getFieldValueOptions() {
@@ -322,20 +311,25 @@ export default defineComponent({
       }
     },
     getModelValue() {
-      let recordDataFormatted = formatDateToLocale(this.fieldKey, this.value)
+      const recordDataFormatted = formatDateToLocale(this.fieldKey, this.value)
       return getTableValue(this.foreignKey, recordDataFormatted)
     },
     getModelKey() {
       return getTableKey(this.foreignKey, this.value)
     },
     async getData() {
-      const { data } = await axios.get(
-        `${store.state.APIurl}/${this.foreignResource}-list/`
-      )
+      let target = this.foreignResource
+      if (this.originalKey == 'gg_cd_sup') {
+        target = 'gg/gg-sup'
+      }
+      if (this.originalKey == 'gg_cd_sub') {
+        target = 'gg-koepel/gg-sub'
+      }
+      const { data } = await axios.get(`${store.state.APIurl}/${target}-list/`)
       this.records = data
       this.loading = false
-    },
-  },
+    }
+  }
 })
 </script>
 

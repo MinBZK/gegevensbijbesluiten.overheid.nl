@@ -5,15 +5,12 @@
         {{ t('goBack') }}
       </NuxtLink>
     </div>
-    <div class="container row container--centered">
+    <div class="container row container--centered bottom-margin">
       <div class="md-padding">
         <div class="next-to-each-other">
           <h1 class="no-margin">{{ evtpGg.besluit.evtp_nm }}</h1>
           <span class="next-to-h1">
-            <ChipsOnderwerp
-              :chips="evtpGg.besluit.ond"
-              class="title"
-            ></ChipsOnderwerp>
+            <ChipsOnderwerp :chips="evtpGg.besluit.ond" class="title"></ChipsOnderwerp>
           </span>
         </div>
         <p>
@@ -21,114 +18,11 @@
             {{ evtpGg.besluit.omschrijving }}
           </ParseUrl>
         </p>
-        <div class="accordion">
-          <div
-            ref="gstAccordionHeaderEvtpCom"
-            class="accordion-header"
-            tabindex="0"
-            role="button"
-            :aria-expanded="
-              isAccordionActive(evtpGg.besluit_communicatie.evtp_oebest)
-            "
-            @click="
-              () =>
-                openCloseAccordion(
-                  evtpGg.besluit_communicatie.evtp_oebest,
-                  gstAccordionHeaderEvtpCom
-                )
-            "
-            @keydown.enter="
-              () =>
-                openCloseAccordion(
-                  evtpGg.besluit_communicatie.evtp_oebest,
-                  gstAccordionHeaderEvtpCom
-                )
-            "
-            @keydown.space.prevent="
-              () =>
-                openCloseAccordion(
-                  evtpGg.besluit_communicatie.evtp_oebest,
-                  gstAccordionHeaderEvtpCom
-                )
-            "
-          >
-            <h3 class="psentence accordion-header-with-chevron">
-              {{ t('gegevensgroepen.evtpCommunication') }}
-            </h3>
-            <NuxtIcon
-              :name="getIconAccordion(evtpGg.besluit_communicatie.evtp_oebest)"
-            />
-          </div>
-          <div
-            v-show="isAccordionActive(evtpGg.besluit_communicatie.evtp_oebest)"
-            :id="evtpGg.besluit_communicatie.evtp_oebest"
-            class="accordion-body"
-          >
-            <p>{{ t('gegevensgroepen.youReceiveMessage') }}</p>
-            <span v-if="evtpGg.besluit_communicatie.evtp_oe_com_type">
-              <ul class="white-card-list">
-                <li
-                  v-for="(evtp_oe_com_type, index) in evtpGg
-                    .besluit_communicatie.evtp_oe_com_type"
-                  :key="index"
-                >
-                  {{ evtp_oe_com_type.omschrijving }}
-                  <ParseUrl :key="evtpGg.besluit_communicatie.oe_best_econtact">
-                    {{ evtp_oe_com_type.link }}
-                  </ParseUrl>
-                </li>
-              </ul>
-            </span>
-            <span v-else-if="evtpGg.besluit_communicatie.oe_best_econtact">
-              <p
-                v-if="
-                  evtpGg.besluit_communicatie.oe_best_econtact.startsWith(
-                    'https'
-                  )
-                "
-                class="white-card lowercase"
-              >
-                <ParseUrl :key="evtpGg.besluit_communicatie.oe_best_econtact">
-                  {{ evtpGg.besluit_communicatie.oe_best_econtact }}
-                </ParseUrl>
-              </p>
-              <p v-else>
-                <ParseUrl :key="evtpGg.besluit_communicatie.oe_best_econtact">
-                  {{ evtpGg.besluit_communicatie.oe_best_econtact }}
-                </ParseUrl>
-              </p>
-            </span>
-            <span v-else>
-              <p class="white-card">
-                <NuxtIcon
-                  class="info-square"
-                  name="mdi:information-box-outline"
-                  alt=""
-                />
-                {{ t('gegevensstromen.multipleTypeMessages') }}
-              </p>
-            </span>
-            <span v-if="evtpGg.besluit_communicatie.oe_best_internetdomein">
-              <h4>{{ t('gegevensstromen.wantToKnowMore') }}</h4>
-              <p>
-                <ExternalLink
-                  :href="evtpGg.besluit_communicatie.oe_best_internetdomein"
-                >
-                  {{
-                    t('gegevensstromen.pleaseContact', {
-                      destination_organisation:
-                        evtpGg.besluit_communicatie.evtp_oebest,
-                    })
-                  }}
-                </ExternalLink>
-              </p>
-            </span>
-          </div>
-        </div>
+
         <h2 class="no-margin">
           {{
             t('gegevensgroepen.dataWithEvtp', {
-              evtp_name: evtpGg.besluit.evtp_nm,
+              evtp_name: evtpGg.besluit.evtp_nm
             })
           }}
         </h2>
@@ -139,7 +33,7 @@
               destination_organisation: evtpGg.besluit.oe_naam_officieel,
               decision_type: `${evtpGg.besluit.lidw_soort_besluit || ''} ${
                 evtpGg.besluit.soort_besluit || ''
-              }`,
+              }`
             })
           }}
           {{ convertedString }}
@@ -166,12 +60,8 @@
           tabindex="0"
           :aria-expanded="isAccordionActive(ggParent)"
           @click="() => openCloseAccordion(ggParent, ggAccordionHeader[index])"
-          @keydown.enter="
-            () => openCloseAccordion(ggParent, ggAccordionHeader[index])
-          "
-          @keydown.space.prevent="
-            () => openCloseAccordion(ggParent, ggAccordionHeader[index])
-          "
+          @keydown.enter="() => openCloseAccordion(ggParent, ggAccordionHeader[index])"
+          @keydown.space.prevent="() => openCloseAccordion(ggParent, ggAccordionHeader[index])"
         >
           <h3 class="h3-sentence">{{ ggParent }}</h3>
           <NuxtIcon :name="getIconAccordion(ggParent)" />
@@ -202,14 +92,8 @@
                 :hidden-text="` van ${ggParent} afkomstig van ${gst['oe_best_naamspraakgbr']}`"
                 :role-link="'link'"
                 icon="material-symbols:chevron-right"
-                @click="
-                  () =>
-                    $router.push(
-                      getLink(
-                        `/besluit/${evtpGg.besluit.evtp_upc}/${gst.gst_upc}`,
-                        evtpVersionNr
-                      ).value
-                    )
+                :to="
+                  getLink(`/besluit/${evtpGg.besluit.evtp_upc}/${gst.gst_upc}`, evtpVersionNr).value
                 "
               />
             </div>
@@ -225,6 +109,84 @@
         />
       </div>
 
+      <h2>{{ t('gegevensgroepen.additionalItemsHeader') }}</h2>
+
+      <div class="accordion">
+        <div
+          ref="gstAccordionHeaderEvtpCom"
+          class="accordion-header"
+          tabindex="0"
+          role="button"
+          :aria-expanded="isAccordionActive(evtpGg.besluit_communicatie.evtp_oebest)"
+          @click="
+            () =>
+              openCloseAccordion(evtpGg.besluit_communicatie.evtp_oebest, gstAccordionHeaderEvtpCom)
+          "
+          @keydown.enter="
+            () =>
+              openCloseAccordion(evtpGg.besluit_communicatie.evtp_oebest, gstAccordionHeaderEvtpCom)
+          "
+          @keydown.space.prevent="
+            () =>
+              openCloseAccordion(evtpGg.besluit_communicatie.evtp_oebest, gstAccordionHeaderEvtpCom)
+          "
+        >
+          <h3 class="psentence accordion-header-with-chevron">
+            {{ t('gegevensgroepen.evtpCommunication') }}
+          </h3>
+          <NuxtIcon :name="getIconAccordion(evtpGg.besluit_communicatie.evtp_oebest)" />
+        </div>
+        <div
+          v-show="isAccordionActive(evtpGg.besluit_communicatie.evtp_oebest)"
+          :id="evtpGg.besluit_communicatie.evtp_oebest"
+          class="accordion-body"
+        >
+          <p>{{ t('gegevensgroepen.youReceiveMessage') }}</p>
+          <span v-if="evtpGg.besluit_communicatie.evtp_oe_com_type">
+            <ul class="white-card-list">
+              <li
+                v-for="(evtp_oe_com_type, index) in evtpGg.besluit_communicatie.evtp_oe_com_type"
+                :key="index"
+              >
+                {{ evtp_oe_com_type.omschrijving }}
+                <ParseUrl :key="index">
+                  {{ evtp_oe_com_type.link }}
+                </ParseUrl>
+              </li>
+            </ul>
+          </span>
+          <span v-else>
+            <p class="white-card">
+              <NuxtIcon class="info-square" name="mdi:information-box-outline" alt="" />
+              {{ t('gegevensstromen.multipleTypeMessages') }}
+            </p>
+          </span>
+          <span
+            v-if="evtpGg.besluit_communicatie.oe_best_internetdomein || evtpGg.besluit.entity_omg"
+          >
+            <h4>{{ t('gegevensstromen.wantToKnowMore') }}</h4>
+            <p v-if="evtpGg.besluit.entity_omg">
+              <ExternalLink :href="evtpGg.besluit.entity_omg.link">
+                {{
+                  t('gegevensstromen.portalLogin', {
+                    article: evtpGg.besluit.entity_omg.lidw,
+                    destination_portal: evtpGg.besluit.entity_omg.titel
+                  })
+                }}
+              </ExternalLink>
+            </p>
+            <p v-if="evtpGg.besluit_communicatie.oe_best_internetdomein">
+              <ExternalLink :href="evtpGg.besluit_communicatie.oe_best_internetdomein">
+                {{
+                  t('gegevensstromen.pleaseContact', {
+                    destination_organisation: evtpGg.besluit_communicatie.evtp_oebest
+                  })
+                }}
+              </ExternalLink>
+            </p>
+          </span>
+        </div>
+      </div>
       <div
         v-if="
           evtpGg.besluit_communicatie.overige_informatie_link ||
@@ -237,9 +199,7 @@
           class="accordion-header"
           tabindex="0"
           role="button"
-          :aria-expanded="
-            isAccordionActive(evtpGg.besluit_communicatie.overige_informatie)
-          "
+          :aria-expanded="isAccordionActive(evtpGg.besluit_communicatie.overige_informatie)"
           @click="
             () =>
               openCloseAccordion(
@@ -265,16 +225,10 @@
           <h3 class="psentence accordion-header-with-chevron">
             {{ t('gegevensgroepen.additionalInfoTitle') }}
           </h3>
-          <NuxtIcon
-            :name="
-              getIconAccordion(evtpGg.besluit_communicatie.overige_informatie)
-            "
-          />
+          <NuxtIcon :name="getIconAccordion(evtpGg.besluit_communicatie.overige_informatie)" />
         </div>
         <div
-          v-show="
-            isAccordionActive(evtpGg.besluit_communicatie.overige_informatie)
-          "
+          v-show="isAccordionActive(evtpGg.besluit_communicatie.overige_informatie)"
           :id="evtpGg.besluit_communicatie.overige_informatie"
           class="accordion-body"
         >
@@ -287,9 +241,7 @@
           <span v-if="evtpGg.besluit_communicatie.overige_informatie_link">
             <h4>{{ t('gegevensgroepen.wantToKnowMore') }}</h4>
             <p>
-              <ExternalLink
-                :href="evtpGg.besluit_communicatie.overige_informatie_link"
-              >
+              <ExternalLink :href="evtpGg.besluit_communicatie.overige_informatie_link">
                 {{ t('gegevensgroepen.additionalInfoLink') }}
               </ExternalLink>
             </p>
@@ -310,7 +262,7 @@ import {
   hideUnhideAccordionAllAccordions,
   activeItem,
   resetAccordion,
-  getIconAccordion,
+  getIconAccordion
 } from '@/utils/index'
 import { getLink, channelIfConcept } from '~/common/common-functions'
 
@@ -344,23 +296,25 @@ Object.keys(evtpGg.value.gegevensgroep).forEach((header, index) =>
   activeItem.value.push({ header, active, iconAccordion, index })
 )
 
+hideUnhideAccordionAllAccordions(true)
+
 activeItem.value.push({
   header: evtpGg.value.besluit_communicatie.evtp_oebest,
   active,
   iconAccordion,
-  index: 100,
+  index: 100
 })
 
 activeItem.value.push({
   header: evtpGg.value.besluit_communicatie.overige_informatie,
   active,
   iconAccordion,
-  index: 101,
+  index: 101
 })
 
 if (!evtpGg.value) {
   throw createError({
-    statusCode: 404,
+    statusCode: 404
   })
 }
 
@@ -390,7 +344,7 @@ evtpNm.value.upc = evtpUpc
 evtpNm.value.versionNr = evtpVersionNr
 
 useHead({
-  title: `${evtpGg.value.besluit.evtp_nm} - ${evtpGg.value.besluit.oe_naam_spraakgbr}`,
+  title: `${evtpGg.value.besluit.evtp_nm} - ${evtpGg.value.besluit.oe_naam_spraakgbr}`
 })
 
 onMounted(() => {
@@ -398,6 +352,7 @@ onMounted(() => {
     'button:not(.close-button, .show-button), [href], a:not(.items, a:not(.items, .is-external-icon, .external-link), input, select, textarea'
   )
   focusableElements.forEach((el) => el.removeAttribute('tabindex'))
+  hideUnhideAccordionAllAccordions(false)
 })
 </script>
 <style scoped lang="scss">
@@ -445,7 +400,6 @@ onMounted(() => {
 
   .next-to-h1 {
     margin-left: 20px;
-    margin-top: 10px;
     white-space: nowrap;
     display: inline;
     position: absolute;
@@ -542,5 +496,8 @@ ul.no-list {
 
 .formoverheid-padding {
   padding: 0px 0px 1.35em;
+}
+.bottom-margin {
+  margin-bottom: 5em;
 }
 </style>

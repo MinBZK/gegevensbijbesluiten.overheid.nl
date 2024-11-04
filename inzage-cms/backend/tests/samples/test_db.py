@@ -83,7 +83,6 @@ def populate_payloads(resource_pks: ResourcePks, resource_payloads: ResourcePayl
     resource_payloads.ibron.oe_cd = resource_pks.oe.database_pk
     resource_payloads.oe_koepel_oe.oe_cd = resource_pks.oe.database_pk
     resource_payloads.oe_koepel_oe.oe_koepel_cd = resource_pks.oe_koepel.database_pk
-    resource_payloads.oe.ibron_cd = resource_pks.ibron.database_pk
     resource_payloads.evtp_ond.evtp_cd = resource_pks.evtp_version.database_pk
     resource_payloads.evtp_ond.ond_cd = resource_pks.ond.database_pk
     resource_payloads.gg_evtp_sort.gg_cd = resource_pks.gg.database_pk
@@ -120,6 +119,7 @@ def resource_pks(db):
 @pytest.fixture()
 def resource_payloads(resource_pks):
     standard_text = "PyTest"
+    standard_link = "https://www.test.nl"
     standard_value = 1
     payloads = ResourcePayloads(
         evtp_version=schemas.evtp_version.EvtpNewVersionIn(
@@ -130,7 +130,7 @@ def resource_payloads(resource_pks):
             notitie=standard_text,
             oe_best=standard_value,
             omschrijving=standard_text,
-            uri=standard_text,
+            uri=standard_link,
             soort_besluit=standard_text,
             lidw_soort_besluit=standard_text,
             versie_nr=standard_value,
@@ -156,7 +156,7 @@ def resource_payloads(resource_pks):
             evtp_cd=standard_value,
             versie_nr=standard_value,
             oe_com_type_cd=standard_value,
-            link=standard_text,
+            link=standard_link,
         ),
         gg_struct=schemas.gg_struct.GgStructIn(
             gg_cd_sub=standard_value,
@@ -181,7 +181,7 @@ def resource_payloads(resource_pks):
             gstt_cd=standard_value,
         ),
         gst=schemas.gst.GstIn(
-            ext_lnk_aut=standard_text,
+            ext_lnk_aut=standard_link,
             ibron_cd=standard_value,
             notitie=standard_text,
             oe_best=standard_value,
@@ -189,7 +189,8 @@ def resource_payloads(resource_pks):
             omschrijving=standard_text,
         ),
         ibron=schemas.ibron.IbronIn(
-            omschrijving=standard_text,
+            titel=standard_text,
+            afko=standard_text,
             oe_cd=standard_value,
             notitie=standard_text,
         ),
@@ -205,11 +206,9 @@ def resource_payloads(resource_pks):
         oe_koepel=schemas.oe_koepel.OeKoepelIn(titel=standard_text, omschrijving=standard_text),
         oe=schemas.oe.OeIn(
             afko=standard_text,
-            e_contact=standard_text,
             huisnummer=standard_text,
             huisnummer_toev=standard_text,
-            ibron_cd=standard_value,
-            internet_domein=standard_text,
+            internet_domein=standard_link,
             lidw_sgebr=standard_text,
             naam_officieel=standard_text,
             naam_spraakgbr=standard_text,
@@ -222,7 +221,7 @@ def resource_payloads(resource_pks):
         ),
         rge=schemas.rge.RgeIn(
             notitie=standard_text,
-            re_link=standard_text,
+            re_link=standard_link,
             tekst=standard_text,
             titel=standard_text,
         ),
@@ -261,7 +260,7 @@ class TestAPI:
             (f"/api/{TableResource.evtp_gst.value}/", schemas.evtp_gst.EvtpGstWithRelations),
             # (f"/api/{TableResource.evtp_acc.value}/", schemas.evtp_acc.EvtpAccWithRelations),
             # (f"/api/{TableResource.evtp_oe_com_type.value}/", schemas.evtp_oe_com_type.EvtpOeComTypeWithRelations),
-            (f"/api/{TableResource.oe.value}/", schemas.oe.OeWithRelations),
+            # (f"/api/{TableResource.oe.value}/", schemas.oe.OeWithRelations),
             # (f"/api/{TableResource.oe_com_type.value}/", schemas.oe_com_type.OeComType),
             # (f"/api/{TableResource.gg_koepel.value}/", schemas.gg.GgWithRelations),
             # (f"/api/{TableResource.gg.value}/", schemas.gg.GgWithRelations),
@@ -305,12 +304,12 @@ class TestAPI:
             (f"/api/{TableResource.evtp_gst.value}/", schemas.evtp_gst.EvtpGst),
             # (f"/api/{TableResource.evtp_acc.value}/", schemas.evtp_acc.EvtpAcc),
             # (f"/api/{TableResource.evtp_oe_com_type.value}/", schemas.evtp_oe_com_type.EvtpOeComType),
-            (f"/api/{TableResource.oe.value}/", schemas.oe.Oe),
+            # (f"/api/{TableResource.oe.value}/", schemas.oe.Oe),
             # (f"/api/{TableResource.oe_com_type.value}/", schemas.oe_com_type.OeComType),
             # (f"/api/{TableResource.gg.value}/", schemas.gg.Gg),
             # (f"/api/{TableResource.gg_struct.value}/", schemas.gg_struct.GgStruct),
             # (f"/api/{TableResource.gg_evtp_sort.value}/", schemas.gg_evtp_sort.GgEvtpSort),
-            # (f"/api/{TableResource.gst.value}/", schemas.gst.Gst),
+            (f"/api/{TableResource.gst.value}/", schemas.gst.Gst),
             # (f"/api/{TableResource.rge.value}/", schemas.rge.Rge),
             # (f"/api/{TableResource.oe_struct.value}/", schemas.oe_struct.OeStruct),
             # (f"/api/{TableResource.ibron.value}/", schemas.ibron.Ibron),

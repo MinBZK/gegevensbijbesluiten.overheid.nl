@@ -1,28 +1,23 @@
 import logging
-from typing import Sequence
+from typing import List, Sequence
 
 from sqlalchemy import (
     and_,
+    desc,
     func,
     or_,
     select,
     text,
-    true,
 )
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.sql.expression import (
     case,
 )
 
 import app.models as models
 import app.schemas as schemas
-from app.core.config import (
-    CURRENT_VERSION,
-    PUBLICATION_RANGE,
-)
-from app.utils.decorators import (
-    timeit_once,
-)
+from app.core.config import CURRENT_VERSION, PUBLICATION_RANGE
+from app.crud.tls_search import build_filters_gg, get_similarity_search_clause, prep_search_for_query
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -51,7 +46,6 @@ def get_details(db: Session, gg_upc: int) -> schemas.details.GgDetails:
     evtp_gst = models.evtp.EvtpGst
     gst = models.gst.Gst
     oe = models.oe.Oe
-    # ibron = models.Ibron
 
     # Fetch all connected gst's
     selected_gg = db.execute(select(gg).filter(gg.gg_upc == gg_upc)).scalars().one()
@@ -128,160 +122,242 @@ def get_details(db: Session, gg_upc: int) -> schemas.details.GgDetails:
     return result
 
 
-@timeit_once
-def get_filtered(
-    db: Session,
-    gg_query: schemas.gg.GgQuery,
-) -> schemas.gg.GgQueryResult:
+def get_filtered(db: Session, gg_query: schemas.gg.GgQuery) -> schemas.gg.GgQueryResult:
     """
     Get list of Gg's based on search parameters
     Q1 - Queries all Parent Gg's matching the search queries, including all child Gg's
     Q2 - Queries all Child Gg's matching the search queries, grouped under their parent Gg's
-    Q2 - Queries all Child Gg's matching the search queries, grouped under their parent Gg's
     Returns: Concatenated list of Q1 + Q2 (in that order)
     """
-    selected_columns = ["omschrijving"]
-    filters = []
-    selected_filters = []
+    model_gg = models.gg.Gg
+    model_gg_struct = models.gg.GgStruct
 
-    if gg_query.searchtext:
-        selected_filters.append({"key": "searchtext", "value": gg_query.searchtext})
-        search_clauses = [
-            col.ilike(f"%{gg_query.searchtext.lower()}%")
-            for col in [c for c in models.gg.Gg.__table__.columns if c.key in selected_columns]
-        ]
-        filters.append(or_(*search_clauses))
+    grouped_children = search_parent_ggs(db, gg_query, model_gg)
+    children_results = search_child_ggs(db, gg_query, model_gg)
 
-    where_clause = and_(true(), *filters)
+    child_parent_pairs = create_child_parent_pairs(grouped_children, children_results)
+    filtered_pairs = filter_orphaned_children(db, child_parent_pairs)
 
-    # --------------- Q1 query for parent gg's --------------- #
-    # apply the filters and searchqueries to find parent_gg's and generate a list of all its children
-    # this query is not fast, so skip it when there is no searchquery
-    if gg_query.searchtext:
-        parent_searchresult = (
-            db.execute(select(models.gg.Gg).filter(models.gg.Gg.child_gg_struct.has()).filter(where_clause))
-            .scalars()
-            .all()
-        )
-        grouped_children = [[item.gg_cd, child.gg_cd] for item in parent_searchresult for child in item.child_gg_entity]
+    parents = get_paginated_parents(db, gg_query, filtered_pairs, model_gg, model_gg_struct)
+
+    unique_parents = set(pair.parent_cd for pair in filtered_pairs)
+    unique_children = set(pair.child_cd for pair in filtered_pairs)
+
+    return schemas.gg.GgQueryResult(
+        result_gg=parents,
+        total_count_koepel=len(unique_parents),
+        total_count_underlying=len(unique_children),
+    )
+
+
+def search_parent_ggs(db: Session, gg_query: schemas.gg.GgQuery, model_gg) -> List[schemas.ChildParentPair]:
+    if not gg_query.searchtext:
+        return []
+
+    filter_ilike, filter_synonyms, similarity_score = build_filters_gg(gg_query.searchtext, model_gg)
+    where_clause = and_(model_gg.child_gg_struct.has(), or_(filter_ilike, filter_synonyms))
+
+    parent_searchresult = db.scalars(select(model_gg).filter(where_clause).order_by(desc(similarity_score))).all()
+
+    if not parent_searchresult:
+        logging.info("Enter search - Ilike search with synonyms did not give any results for parent gegevens")
+        searchtext = prep_search_for_query(gg_query.searchtext)
+        filter_similarities = get_similarity_search_clause(searchtext, model_gg, suggestion_search=False)
+        parent_searchresult = db.scalars(
+            select(model_gg).filter(filter_similarities).order_by(desc(similarity_score))
+        ).all()
+        if parent_searchresult:
+            logging.info(f"Enter-search - Similarity search query for parent gegevens: {gg_query.searchtext}")
+        else:
+            logging.info("Enter-search - Similarity search query did not give any results for parent gegevens")
     else:
-        grouped_children = []
+        logging.info(f"Enter search - Ilike search with synonyms results for parent gegevens: {gg_query.searchtext}")
 
-    # --------------- Q2 query for child gg's ---------------
+    return [
+        schemas.ChildParentPair(parent_cd=item.gg_cd, child_cd=child.gg_cd)
+        for item in parent_searchresult
+        for child in item.child_gg_entity
+    ]
+
+
+def search_child_ggs(db: Session, gg_query: schemas.gg.GgQuery, model_gg):
+    filter_ilike, filter_synonyms, similarity_score = build_filters_gg(gg_query.searchtext, model_gg)
+    where_clause = and_(
+        or_(filter_ilike, filter_synonyms), model_gg.parent_gg_entity.any(), model_gg.gst_gg_entity.has()
+    )
+
     children_searchresult = (
-        db.execute(
-            select(models.gg.Gg.gg_cd)
-            .filter(models.gg.Gg.parent_gg_entity.any())
-            .filter(models.gg.Gg.gst_gg_entity.has())
+        db.scalars(
+            select(model_gg)
+            .options(joinedload(model_gg.parent_gg_entity))
             .filter(where_clause)
+            .order_by(similarity_score)
         )
-        .scalars()
+        .unique()
         .all()
     )
 
-    # Match the children to their parents (gg_cd only)
-    if children_searchresult:
-        isolated_children = db.execute(
-            text(
-                f"""
-                SELECT parent_gg.gg_cd, child_gg.gg_cd
-                FROM gg AS parent_gg
-                JOIN gg_struct ON parent_gg.gg_cd = gg_struct.gg_cd_sup
-                JOIN gg AS child_gg ON gg_struct.gg_cd_sub = child_gg.gg_cd
-                WHERE child_gg.gg_cd IN ({', '.join(map(repr, children_searchresult))})
-                ORDER BY parent_gg.gg_cd, child_gg.gg_cd;
-                """
-            )
-        ).all()
-    else:
-        isolated_children = []
-
-    # --------------- combine and process Q1 + Q2 --------------- #
-    # Concatenate the matched parents and the children
-    child_parent_cds = list(grouped_children) + isolated_children  # type: ignore
-
-    if not child_parent_cds:
-        # No results found
-        parents = []
-        num_results = 0
-
-    else:
-        # Filter any child gg's without any published evtp's
-        valid_child_gg_cds = (
-            db.execute(
-                text(
-                    f"""
-                        SELECT gg.gg_cd
-                        FROM gg
-                        INNER JOIN gst_gg ON
-                            gg.gg_cd = gst_gg.gg_cd
-                            AND gst_gg.ts_end > {func.now()}
-                            AND gst_gg.ts_start < {func.now()}
-                        INNER JOIN evtp_gst ON
-                            gst_gg.gst_cd = evtp_gst.gst_cd
-                        INNER JOIN evtp_version ON
-                            evtp_gst.evtp_cd = evtp_version.evtp_cd
-                            AND evtp_version.id_publicatiestatus IN ({', '.join(map(repr, PUBLICATION_RANGE))})
-                            AND evtp_version.ts_start < evtp_gst.ts_end
-                            AND evtp_version.ts_end > evtp_gst.ts_start;
-                """
-                )
-            )
-            .scalars()
+    if not children_searchresult:
+        logging.info("Enter search - Ilike search did not give any results for child gegevens")
+        searchtext = prep_search_for_query(gg_query.searchtext)
+        filter_similarities = get_similarity_search_clause(searchtext, model_gg, suggestion_search=False)
+        children_searchresult = (
+            db.scalars(select(model_gg).options(joinedload(model_gg.parent_gg_entity)).filter(filter_similarities))
+            .unique()
             .all()
         )
+        if children_searchresult:
+            logging.info(f"Enter-search - Similarity search query for child gegevens: {gg_query.searchtext}")
+        else:
+            logging.info("Enter-search - Similarity search query did not give any results for child gegevens")
+    else:
+        logging.info(f"Enter search - Ilike search with synonyms results for child gegevens: {gg_query.searchtext}")
 
-        child_parent_cds = [
-            (parent_cd, child_cd) for parent_cd, child_cd in child_parent_cds if child_cd in valid_child_gg_cds
-        ]
-        num_results = len(set(cp[0] for cp in child_parent_cds))
+    return children_searchresult
 
-        # Clip the results to the desired limit and offset
-        result_range = (
-            (gg_query.page - 1) * gg_query.limit,
-            gg_query.page * gg_query.limit,
+
+def create_child_parent_pairs(
+    grouped_children: List[schemas.ChildParentPair], children_searchresult
+) -> List[schemas.ChildParentPair]:
+    isolated_children = [
+        schemas.ChildParentPair(parent_cd=parent.gg_cd, child_cd=item.gg_cd)
+        for item in children_searchresult
+        for parent in item.parent_gg_entity
+    ]
+    return grouped_children + isolated_children
+
+
+def filter_orphaned_children(
+    db: Session, child_parent_pairs: List[schemas.ChildParentPair]
+) -> List[schemas.ChildParentPair]:
+    valid_child_gg_cds = db.scalars(
+        text(
+            f"""
+            SELECT gg.gg_cd
+            FROM gg
+            INNER JOIN gst_gg ON
+                gg.gg_cd = gst_gg.gg_cd
+                AND gst_gg.ts_end > {func.now()}
+                AND gst_gg.ts_start < {func.now()}
+            INNER JOIN evtp_gst ON
+                gst_gg.gst_cd = evtp_gst.gst_cd
+            INNER JOIN evtp_version ON
+                evtp_gst.evtp_cd = evtp_version.evtp_cd
+                AND evtp_version.id_publicatiestatus IN ({', '.join(map(repr, PUBLICATION_RANGE))})
+                AND evtp_version.ts_start < evtp_gst.ts_end
+                AND evtp_version.ts_end > evtp_gst.ts_start;
+            """
         )
-        parent_cds = sorted(set(cp[0] for cp in child_parent_cds))[result_range[0] : result_range[1]]
-        child_parent_cds_ranged = [
-            (parent_cd, child_cd) for parent_cd, child_cd in child_parent_cds if parent_cd in parent_cds
-        ]
+    ).all()
 
-        # Reorder items to place parent_gg matches first
-        if parent_cds:
-            id_ordering = case(
-                {_id: index for index, _id in enumerate(parent_cds)},
-                value=models.gg.Gg.gg_cd,
+    return [pair for pair in child_parent_pairs if pair.child_cd in valid_child_gg_cds]
+
+
+def get_paginated_parents(
+    db: Session,
+    gg_query: schemas.gg.GgQuery,
+    child_parent_pairs: List[schemas.ChildParentPair],
+    model_gg,
+    model_gg_struct,
+):
+    result_range = ((gg_query.page - 1) * gg_query.limit, gg_query.page * gg_query.limit)
+    parent_cds = sorted(set(pair.parent_cd for pair in child_parent_pairs))[result_range[0] : result_range[1]]
+
+    if not parent_cds:
+        return []
+
+    id_ordering = case({_id: index for index, _id in enumerate(parent_cds)}, value=model_gg.gg_cd)
+
+    q_parents = db.scalars(select(model_gg).filter(model_gg.gg_cd.in_(parent_cds)).order_by(id_ordering))
+
+    parents = []
+    for item in q_parents:
+        q_children_cds = [pair.child_cd for pair in child_parent_pairs if pair.parent_cd == item.gg_cd]
+        q_children = db.scalars(
+            select(model_gg_struct).filter(
+                model_gg_struct.gg_cd_sub.in_(q_children_cds),
+                model_gg_struct.gg_cd_sup == item.gg_cd,
             )
-        else:
-            id_ordering = None
+        )
 
-        # Query parents in the desired order
-        parents = []
-        if id_ordering is not None:
-            q_parents = db.scalars(
-                select(models.gg.Gg).filter(models.gg.Gg.gg_cd.in_(parent_cds)).order_by(id_ordering)
+        children = list(q_children)
+        parent = schemas.gg.ParentGg(
+            gg_cd=item.gg_cd,
+            omschrijving=item.omschrijving,
+            omschrijving_uitgebreid=item.omschrijving_uitgebreid,
+            child_gg_struct=children,
+        )
+        parents.append(parent)
+
+    return parents
+
+
+def get_search_suggestion(db: Session, search_query: str):
+    model_gg = models.gg.Gg
+    query_filters = []
+
+    valid_child_gg_cds = db.scalars(
+        text(
+            f"""
+            SELECT gg.gg_cd
+            FROM gg
+            JOIN gst_gg gsg ON
+                gg.gg_cd = gsg.gg_cd
+                AND gsg.ts_end > {func.now()}
+                AND gsg.ts_start < {func.now()}
+            JOIN evtp_gst eg ON
+                gsg.gst_cd = eg.gst_cd
+            JOIN evtp_version ev ON
+                eg.evtp_cd = ev.evtp_cd
+                AND ev.id_publicatiestatus IN ({', '.join(map(repr, PUBLICATION_RANGE))})
+                AND ev.ts_start < eg.ts_end
+                AND ev.ts_end > eg.ts_start;
+            """
+        )
+    ).all()
+
+    if search_query:
+        filter_ilike = model_gg.omschrijving.ilike(f"%{search_query}%")
+        filter_synonyms = model_gg.vector.op("@@")(func.websearch_to_tsquery("NLD", search_query))
+        similarity_score = func.similarity(model_gg.omschrijving, search_query)
+
+        query = (
+            select(model_gg)
+            .where(and_(*query_filters, or_(filter_ilike, filter_synonyms), model_gg.gg_cd.in_(valid_child_gg_cds)))
+            .order_by(desc(similarity_score))
+        )
+
+        query_gg = db.execute(query).scalars().all()
+
+        if not query_gg:
+            logging.info("Suggestion search - ilike did not give any results for child gegevens")
+            search_condition = get_similarity_search_clause(
+                search_query, model=model_gg, suggestion_search=True, search_restricted=False
             )
-
-            for item in q_parents:
-                q_children_cds = [
-                    child_cd for parent_cd, child_cd in child_parent_cds_ranged if parent_cd == item.gg_cd
-                ]
-
-                q_children = db.scalars(
-                    select(models.gg.GgStruct).filter(models.gg.GgStruct.gg_cd_sub.in_(q_children_cds))
-                )
-
-                parent = schemas.gg.ParentGg(
-                    gg_cd=item.gg_cd,
-                    omschrijving=item.omschrijving,
-                    omschrijving_uitgebreid=item.omschrijving_uitgebreid,
-                    child_gg_struct=[child for child in q_children],  # type: ignore
-                )
-                parents.append(parent)
+            query_filters.append(search_condition)
+            query = (
+                select(model_gg, similarity_score)
+                .where(and_(*query_filters, model_gg.gg_cd.in_(valid_child_gg_cds)))
+                .order_by(desc(similarity_score))
+            )
+            query_gg = db.execute(query).scalars().all()
+            if query_gg:
+                logging.info(f"Suggestion-search - Similarity search query for gegevens for: {search_query}")
+            else:
+                logging.info("Suggestion-search - Similarity search did not give any results for gegevens")
         else:
-            q_parents = []
+            logging.info(
+                f"Suggestion search - Ilike search with synonyms results for child gegevens for: {search_query}"
+            )
+    else:
+        query = select(model_gg).where(and_(*query_filters))
+        query_gg = db.execute(query).scalars().all()
 
-    response = schemas.gg.GgQueryResult(
-        results=parents, total_count_koepel=num_results, total_count_underlying=len(child_parent_cds)
+    return schemas.common.SearchSuggestionsAllEntities(
+        gg=[
+            schemas.common.SearchSuggestion(title=query_object.omschrijving, upc=query_object.gg_upc, version=None)
+            for query_object in query_gg
+        ],
+        evtp=[],
+        oe=[],
     )
-    return response

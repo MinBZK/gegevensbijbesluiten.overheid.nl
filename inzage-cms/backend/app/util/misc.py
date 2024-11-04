@@ -1,5 +1,8 @@
 from random import choice, randint
 from string import ascii_lowercase
+from urllib.parse import urlparse
+
+from pydantic_core import PydanticCustomError
 
 
 def get_lower_hash(length: int) -> str:
@@ -29,3 +32,20 @@ def upc_check(upc_code: str) -> bool:
     o = int(r[1]) + int(r[3]) + int(r[5])
     c = (e * 3 + o) % 10
     return True if c == int(r[7]) else False
+
+
+def validate_url(value: str | None):
+    """
+    Validates if the given value is a valid URL.
+    Returns an empty string if the value is not a valid URL.
+    """
+    if value and urlparse(value).hostname:
+        return value
+    elif value is None or value == "":
+        return None
+    else:
+        raise PydanticCustomError(
+            "not_valid_link",
+            "{field} is not a valid URL.",
+            {"field": value},
+        )

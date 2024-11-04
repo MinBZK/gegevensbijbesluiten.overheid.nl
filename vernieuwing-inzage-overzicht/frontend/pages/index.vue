@@ -1,17 +1,16 @@
 <template>
   <div>
     <div class="container">
-      <SearchBar :search-explanation="t('pages.onderwerpen.searchText')" />
+      <SearchBar :search-explanation="t('SearchAllEntities')" :suggestions-hidden="''" />
     </div>
     <div class="container">
       <div class="section onderwerpen-section">
-        <h2 class="h2">{{ t('onderwerpen.title') }}</h2>
         <OnderwerpenCards :number-of-tiles="6" :show-icons="false" />
         <FormOverheidButton
           class="meer-onderwerpen-button"
           :label="t('onderwerpen.moreButton')"
           :full-width="true"
-          @click="() => $router.push({ name: 'onderwerp' })"
+          to="/onderwerp"
         />
       </div>
     </div>
@@ -32,11 +31,11 @@
 const { t } = useI18n()
 
 definePageMeta({
-  title: 'Home',
+  title: 'Home'
 })
 providePageTitle({
   title: 'homepageTitle',
-  labelType: 'locale-index',
+  labelType: 'locale-index'
 })
 </script>
 

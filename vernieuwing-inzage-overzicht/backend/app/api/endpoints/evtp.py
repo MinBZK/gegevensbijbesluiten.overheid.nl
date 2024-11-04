@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import (
     StreamingResponse,
 )
@@ -26,6 +26,17 @@ async def get_filtered(
     db: Session = Depends(get_sync_session),
 ) -> schemas.evtp.EvtpQueryResult:
     return crud.evtp.get_filtered(db=db, evtp_query=search_query)
+
+
+@router.get(
+    "/suggestion",
+    response_model=schemas.common.SearchSuggestionsAllEntities,
+)
+async def get_search_suggestion(
+    search_query: str = Query(default=""),
+    db: Session = Depends(get_sync_session),
+):
+    return crud.evtp.get_search_suggestion(db=db, search_query=search_query)
 
 
 @router.get("/count")

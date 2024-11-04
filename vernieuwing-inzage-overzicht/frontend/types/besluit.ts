@@ -1,10 +1,10 @@
 import type { SelectedFilter, BesluitFilterData } from './filter'
+import type { GgChild } from './gegeven'
 
 export interface Oe {
   oe_cd: number
   oe_upc: number
   afko: string
-  e_contact: string
   huisnummer: string
   huisnummer_toev: string
   ibron_cd: number
@@ -38,7 +38,6 @@ type EvtpOeComType = {
 }
 
 type EvtpCommunication = {
-  oe_best_econtact: string
   evtp_oe_com_type: EvtpOeComType[]
   oe_best_internetdomein: string
   evtp_oebest: string
@@ -76,6 +75,15 @@ export interface EvtpGg {
     oe_naam_spraakgbr: string
     oe_naam_officieel: string
     ond: string[]
+    entity_omg: {
+      titel: string
+      lidw: string
+      link: string
+      entity_oe: {
+        naam_spraakgbr: string
+        lidw_sgebr: string
+      }
+    }
   }
   gegevensgroep: {
     ggParentObject: object[]
@@ -86,14 +94,15 @@ export interface EvtpGg {
 
 type BronOrganisatie = {
   header_oe_bron_naamofficieel: string
+  oe_bron_naampraakgebr: string
   oe_bron_lidwsgebr: string
   oe_bron_internetdomein: string
-  ibron_oe_lidwsgebr: string
   ibron_oe_naam_officieel: string
-  ibron_oe_naam_spraakgbr: string
-  oe_bron_naampraakgebr: string
+  ibron_oe_lidw: string
+  ibron_titel: string
+  ibron_link: string
+  ibron_lidw: string
   gsttype_gsttoms: string[]
-  ibron_oe_econtact: string
   gst_extlnkaut: string
 }
 
@@ -104,7 +113,7 @@ type Rge = {
 
 type GegevensgroepGrondslag = {
   header_oe_best_naamofficieel: string
-  gg_child: string[]
+  gg_child: GgChild[]
   gg_parent: string
   gg_omschrijvinguitgebreid: string[]
   evtp_aanleiding: string
@@ -124,7 +133,7 @@ export interface EvtpGst {
 export const EvtpGstHeader = {
   besluit: 'besluit',
   bron_organisatie: 'bron_organisatie',
-  gegevensgroep_grondslag: 'gegevensgroep_grondslag',
+  gegevensgroep_grondslag: 'gegevensgroep_grondslag'
 }
 
 type OeStatistics = {
@@ -144,8 +153,21 @@ export interface EvtpQuery {
 }
 
 export interface EvtpQueryResult {
-  results: Evtp[]
+  result_evtp: Evtp[]
   total_count: number
   filter_data: BesluitFilterData
   selected_filters: SelectedFilter[]
+}
+
+export type SearchSuggestion = {
+  title: string
+  version: number | undefined
+  upc: string
+}
+
+export type SearchSuggestionsAllEntities = {
+  evtp: SearchSuggestion[] | []
+  gg: SearchSuggestion[] | []
+  oe: SearchSuggestion[] | []
+  [key: string]: SearchSuggestion[]
 }

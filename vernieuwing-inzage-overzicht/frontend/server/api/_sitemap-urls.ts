@@ -2,9 +2,7 @@ import axios from 'axios'
 
 export default cachedEventHandler(
   async () => {
-    const response = await axios.get(
-      process.env.NUXT_PUBLIC_API_BASE_URL + '/sitemap-urls'
-    )
+    const response = await axios.get(process.env.NUXT_PUBLIC_API_BASE_URL + '/sitemap-urls')
     if (response.status !== 200) {
       return []
     }
@@ -12,6 +10,6 @@ export default cachedEventHandler(
   },
   {
     name: 'sitemap-dynamic-url',
-    maxAge: 10, // cache URLs for 10 minutes
+    maxAge: 10 // cache URLs for 10 minutes
   }
 )

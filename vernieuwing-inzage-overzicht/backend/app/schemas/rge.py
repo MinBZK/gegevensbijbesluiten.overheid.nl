@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, HttpUrl
 
 
 class Rge(BaseModel):
     notitie: str | None
-    re_link: str | None
+    re_link: HttpUrl | None
     rge_cd: int
     tekst: str | None
     titel: str

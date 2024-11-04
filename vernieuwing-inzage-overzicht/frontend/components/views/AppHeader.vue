@@ -15,10 +15,7 @@
         </button>
         <div class="logo">
           <NuxtLink :to="{ name: 'index' }" tabindex="2">
-            <img
-              src="@/assets/images/logo.svg"
-              alt="Logo Overheid.nl, ga naar de startpagina"
-            />
+            <img src="@/assets/images/logo.svg" alt="Logo Overheid.nl, ga naar de startpagina" />
           </NuxtLink>
           <div class="logo__you-are-here">
             <p class="visually-hidden">U bent nu hier:</p>
@@ -30,20 +27,14 @@
         </div>
       </div>
     </div>
-    <nav
-      id="nav"
-      class="header__nav"
-      :class="!menuExpanded && 'header__nav--closed'"
-    >
+    <nav id="nav" class="header__nav" :class="!menuExpanded && 'header__nav--closed'">
       <div class="container">
         <ul>
           <li
             v-for="item in navigationHeaders"
             :key="item.label"
             :class="{
-              active: item.highlightOnRoutes.includes(
-                currentRoute.name as string
-              ),
+              active: item.highlightOnRoutes.includes(currentRoute.name as string)
             }"
           >
             <NuxtLink

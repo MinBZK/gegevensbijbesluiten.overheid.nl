@@ -22,7 +22,7 @@ import { computed } from 'vue'
 const { t } = useI18n()
 
 definePageMeta({
-  title: 'Contact',
+  title: 'Contact'
 })
 
 const pageTitle = computed(() => t('footer.paths.contact'))

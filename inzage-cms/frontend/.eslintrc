@@ -1,0 +1,20 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "@nuxtjs/eslint-config-typescript",
+    "plugin:nuxt/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "ignorePatterns": ["**/*.png"],
+  "rules": {
+    "dot-notation": "off",
+    "vue/no-v-html": "off",
+    "no-console": "off",
+    "camelcase": "off",
+    "eqeqeq": "off"
+  }
+}

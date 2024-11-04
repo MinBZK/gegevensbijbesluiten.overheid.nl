@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from app.schemas import (
     ChildGg,
+    EvtpCompact,
     EvtpVersion,
     Oe,
 )
@@ -11,9 +12,9 @@ from app.schemas import (
 
 class OeDetails(BaseModel):
     oe: Oe
-    evtpManaged: list[EvtpVersion]
-    ggManaged: list[ChildGg]
-    ggReceive: list[ChildGg]
+    evtpManaged: list[EvtpCompact]
+    # ggManaged: list[ChildGg]
+    # ggReceive: list[ChildGg]
 
 
 class GgDetails(BaseModel):

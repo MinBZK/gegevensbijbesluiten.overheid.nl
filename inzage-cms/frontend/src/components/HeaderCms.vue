@@ -1,46 +1,25 @@
 <template>
   <div id="header-component">
-    <v-app-bar
-      flat
-      height="125"
-    >
-      <v-col
-        justify="center"
-        align="center"
-      >
+    <v-app-bar flat height="125">
+      <v-col justify="center" align="center">
         <div class="logo">
           <div class="wrapper">
             <a href="/dashboard">
-              <img
-                alt="Rijksoverheid Logo"
-                :src="require('@/assets/logo-ro.svg')"
-              >
+              <img alt="Rijksoverheid Logo" :src="require('@/assets/logo-ro.svg')" />
             </a>
           </div>
         </div>
       </v-col>
     </v-app-bar>
-    <v-app-bar
-      :color="colour"
-      flat
-      height="70"
-    >
+    <v-app-bar :color="colour" flat height="70">
       <v-toolbar-title>
-        <router-link
-          :to="{ name: 'DashboardCharts' }"
-          style="color: #ffffff"
-        >
+        <router-link :to="{ name: 'DashboardCharts' }" style="color: #ffffff">
           Beheermodule Algemene Inzage
         </router-link>
       </v-toolbar-title>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     </v-app-bar>
-    <v-navigation-drawer
-      v-if="getAuthentication()"
-      v-model="drawer"
-      location="right"
-      width="350"
-    >
+    <v-navigation-drawer v-if="getAuthentication()" v-model="drawer" location="right" width="350">
       <v-list>
         <v-list-item
           :is="item.enabled && !item.current ? 'router-link' : 'span'"
@@ -49,29 +28,20 @@
           :to="item.to"
         >
           <v-list-item-title
-            :class="item.enabled
-              ? item.current
-                ? 'current-page'
-                : ''
-              : 'disabled-item'
-            "
+            :class="item.enabled ? (item.current ? 'current-page' : '') : 'disabled-item'"
           >
-            <router-link
-              class="menu-item"
-              :to="item.to"
-            >
+            <router-link class="menu-item" :to="item.to">
               {{ item.text }}
             </router-link>
           </v-list-item-title>
         </v-list-item>
       </v-list>
       <v-list>
-        <div
-          v-for="(groupData, group) in sortedTables"
-          :key="group"
-        >
+        <div v-for="(groupData, group) in sortedTables" :key="group">
           <span v-if="group === 'Overig'">
-            <v-list-item><strong>{{ group }}</strong></v-list-item>
+            <v-list-item
+              ><strong>{{ group }}</strong></v-list-item
+            >
           </span>
           <router-link
             v-else
@@ -79,14 +49,21 @@
             :to="{ name: 'table', params: { resource: groupData.resource } }"
           >
             <v-list-item>
-              <span :class="{ 'active-link': $route.name === 'table' && $route.params.resource === groupData.resource }">
+              <span
+                :class="{
+                  'active-link':
+                    $route.name === 'table' && $route.params.resource === groupData.resource
+                }"
+              >
                 <strong>{{ group }}</strong>
               </span>
             </v-list-item>
           </router-link>
           <v-divider />
           <v-list-item
-            v-for="t in groupData.tables.filter((table) => table.resource !== groupData.resource && group !== groupData.label)"
+            v-for="t in groupData.tables.filter(
+              (table) => table.resource !== groupData.resource && group !== groupData.label
+            )"
             :key="t.label"
           >
             <router-link
@@ -104,12 +81,12 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
+import axios from 'axios'
 import { tables } from '@/config/tables'
 import { Table } from '@/types/Tables'
-import { defineComponent } from 'vue'
 import store from '@/store/index'
 import { getEnvironment } from '@/util/misc'
-import axios from 'axios'
 
 export default defineComponent({
   name: 'HEADER',
@@ -119,12 +96,13 @@ export default defineComponent({
       tables,
       envObj: [] as Array<object>,
       colour: '' as string,
-      environment: '' as string,
+      environment: '' as string
     }
   },
   computed: {
     sortedTables() {
-      const groupedTables = tables.filter((item) => item.visible)
+      const groupedTables = tables
+        .filter((item) => item.visible)
         .reduce((acc, table) => {
           const group = table.group || 'Overig'
           if (!acc[group]) {
@@ -134,20 +112,17 @@ export default defineComponent({
           return acc
         }, {} as { [key: string]: Table[] })
 
-      const sortedGroupedTables = Object.entries(groupedTables).reduce(
-        (acc, [group, tables]) => {
-          const resource = tables[0].resource
-          acc[group] = {
-            group,
-            resource,
-            tables: tables.sort((a, b) =>
-              a.label.localeCompare(b.label, undefined, { numeric: true })
-            ),
-          }
-          return acc
-        },
-        {} as { [key: string]: { group: string; resource: string; tables: Table[] } }
-      )
+      const sortedGroupedTables = Object.entries(groupedTables).reduce((acc, [group, tables]) => {
+        const resource = tables[0].resource
+        acc[group] = {
+          group,
+          resource,
+          tables: tables.sort((a, b) =>
+            a.label.localeCompare(b.label, undefined, { numeric: true })
+          )
+        }
+        return acc
+      }, {} as { [key: string]: { group: string; resource: string; tables: Table[] } })
       return sortedGroupedTables
     },
     menuButtons(): {
@@ -161,27 +136,27 @@ export default defineComponent({
           text: 'Dashboard',
           to: '/dashboard',
           enabled: store.state.user.isAuthenticated,
-          current: this.$route.name == 'dashboard',
+          current: this.$route.name == 'dashboard'
         },
         {
           text: 'Publiceren',
           to: '/publiceren',
           enabled: store.state.user.isAuthenticated,
-          current: this.$route.name == 'Publiceren',
+          current: this.$route.name == 'Publiceren'
         },
         {
           text: 'Uitloggen',
           to: '/logout',
           enabled: store.state.user.isAuthenticated,
-          current: this.$route.name == 'Logout',
-        },
+          current: this.$route.name == 'Logout'
+        }
       ]
-    },
+    }
   },
   watch: {
     group() {
       this.drawer = false
-    },
+    }
   },
   async created() {
     try {
@@ -211,8 +186,8 @@ export default defineComponent({
         return true
       }
       return store.state.user.isAuthenticated
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -237,7 +212,7 @@ export default defineComponent({
   transform: translateX(50%);
 }
 
-.v-toolbar__content>.v-btn {
+.v-toolbar__content > .v-btn {
   align-self: center !important;
   margin-right: 40px !important;
   font-size: 26px;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-header">
-      <span class="card-icon" :data-icon="ond.titel"></span>
+      <img class="card-icon" :alt="ond.titel" :src="`${getIcon(ond.titel)}`" />
       <h1>{{ ond.titel }}</h1>
     </div>
     <p v-if="isMobile">{{ ond.omschrijving }}</p>
@@ -19,10 +19,9 @@
         <li v-for="(evtp, index) in evtps" :key="index">
           <NuxtLink
             :to="getLink(`/besluit/${evtp.evtp_upc}`, evtp.versie_nr).value"
+            :aria-label="`Lees meer over ${evtp.evtp_nm}`"
             >{{ evtp.evtp_nm }}
-            <span v-if="channelIfConcept">
-              {{ `${t(`versionNumber`)} ${evtp.versie_nr}` }}</span
-            >
+            <span v-if="channelIfConcept"> {{ `${t(`versionNumber`)} ${evtp.versie_nr}` }}</span>
           </NuxtLink>
         </li>
       </ul>
@@ -36,6 +35,7 @@
 
 <script setup lang="ts">
 import evtpService from '~~/services/besluit'
+import { getIcon } from '~~/services/onderwerp'
 import type { Ond } from '~~/types/besluit'
 import { getLink, channelIfConcept } from '~/common/common-functions'
 
@@ -57,7 +57,7 @@ const closeModal = () => {
 const handleSearch = (searchValue: string) => {
   searchPerformed.value = true
   evtps.value = (data.value || []).filter((evtp) =>
-    evtp.evtp_nm.toLowerCase().includes(searchValue.toLowerCase())
+    evtp.evtp_nm.toLowerCase().includes(searchValue.toLowerCase().trim())
   )
 }
 

@@ -35,12 +35,12 @@ import { computed } from 'vue'
 const { t } = useI18n()
 
 definePageMeta({
-  title: 'Toegankelijkheid',
+  title: 'Toegankelijkheid'
 })
 const pageTitle = computed(() => t('footer.paths.toegankelijkheid'))
 useHead({ title: pageTitle })
 providePageTitle({
   title: 'footer.paths.toegankelijkheid',
-  labelType: 'locale-index',
+  labelType: 'locale-index'
 })
 </script>

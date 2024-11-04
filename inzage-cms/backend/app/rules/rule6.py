@@ -8,7 +8,7 @@ class Rule6(SuperRule):
     __feedback_message = ""
     __explanation = "Onder een besluit zijn bepaalde velden die verplicht ingevuld moeten worden"
     code = 6
-    name = "Verplichten velden zijn niet ingevuld"
+    name = "Verplichte velden zijn niet ingevuld"
 
     def __init__(self, importance=Importance.ERROR) -> None:
         super().__init__(
@@ -93,6 +93,27 @@ class Rule6(SuperRule):
                                 "feedback_message": f"De verplichte velden '{mandatory_field}' zijn niet \
                                     ingevuld onder gegevensstroom {gst_object.get('entity_gst').get('omschrijving')} \
                                     en gegevensgroep {gg_object.get('entity_gg').get('omschrijving')}",
+                            }
+                        )
+
+        # mandatory_fields in rge
+        table = TableResource.rge
+        for mandatory_field in config.resource.EXCEPTIONS_REQUIRED_FIELDS[table]:
+            for gst_object in evtp_structure.get("entities_evtp_gst"):
+                for rge_object in gst_object.get("entities_gst_rge"):
+                    try:
+                        rge_object.get("entity_rge").get(mandatory_field).strip()
+                    except Exception:
+                        results.append(
+                            {
+                                "result": True,
+                                "mandatory_field": mandatory_field,
+                                "table": table,
+                                "gst": gst_object.get("entity_gst").get("omschrijving"),
+                                "rge": rge_object.get("entity_rge").get("titel"),
+                                "feedback_message": f"De verplichte velden '{mandatory_field}' zijn niet \
+                                    ingevuld onder gegevensstroom {gst_object.get('entity_gst').get('omschrijving')} \
+                                    en wettelijke regeling {rge_object.get('entity_rge').get('titel')}",
                             }
                         )
 

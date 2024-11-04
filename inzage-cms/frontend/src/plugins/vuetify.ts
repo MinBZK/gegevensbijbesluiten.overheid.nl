@@ -14,19 +14,19 @@ const beheermodule_theme: ThemeDefinition = {
     success: '#4CAF50',
     warning: '#FFC107',
     headerTextColour: '#000000',
-    headerHoverColour: '#FCF29A',
-  },
+    headerHoverColour: '#FCF29A'
+  }
 }
 
 export default createVuetify({
   theme: {
     defaultTheme: 'beheermodule_theme',
     themes: {
-      beheermodule_theme,
+      beheermodule_theme
     },
-    cspNonce: 'eQw4j9WgXcB',
+    cspNonce: 'eQw4j9WgXcB'
   },
   locale: {
-    messages: nl,
-  },
+    messages: nl
+  }
 })

@@ -4,6 +4,6 @@ export default defineI18nConfig(() => ({
   fallbackLocale: 'nl',
   globalInjection: true,
   messages: {
-    nl,
-  },
+    nl
+  }
 }))

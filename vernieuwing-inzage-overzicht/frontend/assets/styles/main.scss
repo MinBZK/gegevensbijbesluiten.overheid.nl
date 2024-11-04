@@ -2,7 +2,11 @@
 @import '_koop_print.scss';
 @import '_skiplinks.scss';
 @import '_fonts.scss';
+@import '_skeleton.scss';
 
+.no-padding-left {
+  padding-left: 0 !important;
+}
 .accordion-body {
   padding: 0.8em 1.35em 1.35em 1.35em;
 }
@@ -168,42 +172,6 @@ a.focus-border:focus {
   color: $primary-darker;
   font-size: 1em;
 }
-[data-icon='Gezondheid'] {
-  background-image: url('../images/icons/onderwerp/icon-health.svg');
-}
-[data-icon='Identiteit'] {
-  background-image: url('../images/icons/onderwerp/icon-identity.svg');
-}
-[data-icon='Inkomen'] {
-  background-image: url('../images/icons/onderwerp/icon-income.svg');
-}
-[data-icon='Onderwijs'] {
-  background-image: url('../images/icons/onderwerp/icon-education.svg');
-}
-[data-icon='Recht'] {
-  background-image: url('../images/icons/onderwerp/icon-law.svg');
-}
-[data-icon='Schulden'] {
-  background-image: url('../images/icons/onderwerp/icon-liabilities.svg');
-}
-[data-icon='Vervoer'] {
-  background-image: url('../images/icons/onderwerp/icon-transport.svg');
-}
-[data-icon='Werk'] {
-  background-image: url('../images/icons/onderwerp/icon-career.svg');
-}
-[data-icon='Wonen'] {
-  background-image: url('../images/icons/onderwerp/icon-living.svg');
-}
-[data-icon='Familie'] {
-  background-image: url('../images/icons/onderwerp/icon-family.svg');
-}
-[data-icon='Belastingen'] {
-  background-image: url('../images/icons/onderwerp/icon-tax.svg');
-}
-[data-icon='Ondernemen'] {
-  background-image: url('../images/icons/onderwerp/icon-undertaking.svg');
-}
 
 .card-container {
   max-width: 1280px;
@@ -220,14 +188,19 @@ a.focus-border:focus {
 }
 
 .card-item {
-  min-height:35em;
+  min-height: 35em;
   height: 100%;
   border-radius: 4px;
-  padding: 0.7em 1.5em 1em 1.5em;
+  padding: 0.7em 1.5em 1em 1.5em !important;
   background-color: $tertiary;
   transition: box-shadow 0.3s ease-out;
   display: flex;
   flex-direction: column;
+}
+
+.card-item-override-oe-gg {
+  @extend .card-item;
+  min-height: 25em;
 }
 
 .card-hover {
@@ -238,12 +211,13 @@ a.focus-border:focus {
 }
 
 .card-sub-content {
-  margin-bottom: 0.8em;
+  margin-bottom: 1.0em;
 }
 
 .white-box{
   background-color: $white;
-  padding: 0.8em;
+  padding: 1.0em;
+  margin-bottom: 1.0em;
 }
 
 .margin-top {
@@ -258,4 +232,25 @@ p {
 }
 .modal-title-padding {
   padding-right: 1em;
+}
+
+
+.h2-sentence {
+  font-size: 1.375em;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  margin: -1px;
+  overflow: hidden;
+}
+
+.ul-padding {
+  padding-left: 0px;
+}
+
+.li-padding {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }

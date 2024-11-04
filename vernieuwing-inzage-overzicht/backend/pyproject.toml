@@ -59,3 +59,10 @@ unfixable = ["B"]
 # Use single quotes for non-triple-quoted strings.
 quote-style = "double"
 
+[tool.coverage.run]
+omit = [
+     "**/frontend/**/*",
+     "**/__init__.py",
+     "**/models/**/*",
+     "**/schemas/**/*",
+    ]

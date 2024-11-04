@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app import crud
 from app.api.endpoints import (
+    common,
     evtp,
     evtp_tree,
     gg,
@@ -48,6 +49,11 @@ router.include_router(
     oe.router,
     prefix="/oe",
     tags=["Organisaties"],
+)
+router.include_router(
+    common.router,
+    prefix="/common",
+    tags=["Entiteiten"],
 )
 
 
