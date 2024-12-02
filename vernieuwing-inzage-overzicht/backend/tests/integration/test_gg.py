@@ -4,6 +4,8 @@ from random import randint
 
 import pytest
 from app.crud.gg import get_all
+from app.schemas.common import SearchSuggestionsAllEntities
+from tests.integration.config import ApiFilter
 
 logging = logging.getLogger(__name__)
 
@@ -28,7 +30,7 @@ def randomised_urls(db) -> list[str]:
     for _ in range(10):
         ggs_ind = randint(0, len(gg_list) - 1)
         gg_upc = gg_list[ggs_ind].gg_upc
-        urls.append(f"/api/gg/{gg_upc}/")
+        urls.append(f"/api/gg/{gg_upc}")
     return urls
 
 
@@ -40,7 +42,7 @@ def filters():
     ]
 
 
-class TestAPI:
+class TestGg:
     def test_get_requests(self, client, randomised_urls):
         """Test a random set of gg endpoints"""
         for url in randomised_urls:
@@ -65,6 +67,9 @@ class TestAPI:
             results.append(len(response_object["result_gg"]))
         assert results[0] > results[1]
 
-
-if __name__ == "__main__":
-    pytest.main()
+    def test_tls_searchbar(self, client):
+        filter_option_1 = ApiFilter(endpoint="api/gg/suggestion", params={"search_query": "pers"})
+        response = client.get(filter_option_1.endpoint, params=filter_option_1.params)
+        assert response.status_code == 200, "Get request has failed"
+        result = SearchSuggestionsAllEntities.model_validate(response.json())
+        assert result.gg and len(result.gg) > 0, "No gg found"

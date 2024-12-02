@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { TableModel, TableModelForeignKey } from '@/types/Tables'
 
 const getPrimaryKey = (tableModel: TableModel) => {
@@ -52,7 +52,7 @@ const getEnvironment = (envObj: Array<object>, variable: string) => {
 const formatDateToLocale = (fieldKey: string, recordData: string) => {
   if ((fieldKey === 'ts_mut' || fieldKey === 'ts_publ') && recordData) {
     const dateString = recordData.toString()
-    const date = moment(dateString).utcOffset(2)
+    const date = moment(dateString).tz('Europe/Amsterdam')
     return date.locale('nl').format('DD-MM-YYYY HH:mm')
   }
   return recordData || ''

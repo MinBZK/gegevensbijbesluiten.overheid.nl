@@ -1,4 +1,5 @@
 export interface Question {
+  question_nr: number
   question: string
   answer_1: string
   answer_2: string
@@ -14,6 +15,7 @@ export interface Question {
 // References to locale text
 export const questions: Question[] = [
   {
+    question_nr: 1,
     question: 'faq.1.question',
     answer_1: 'faq.1.answer_1',
     answer_2: 'faq.1.answer_2',
@@ -22,27 +24,32 @@ export const questions: Question[] = [
     link_3_url: 'faq.1.link_3_url'
   },
   {
+    question_nr: 2,
     question: 'faq.2.question',
     answer_1: 'faq.2.answer_1',
     answer_2: 'faq.2.answer_2'
   },
   {
+    question_nr: 3,
     question: 'faq.3.question',
     answer_1: 'faq.3.answer_1',
     answer_2: 'faq.3.answer_2',
     answer_3: 'faq.3.answer_3'
   },
   {
+    question_nr: 4,
     question: 'faq.4.question',
     answer_1: 'faq.4.answer_1',
     answer_2: 'faq.4.answer_2'
   },
   {
+    question_nr: 5,
     question: 'faq.5.question',
     answer_1: 'faq.5.answer_1',
     answer_2: 'faq.5.answer_2'
   },
   {
+    question_nr: 6,
     question: 'faq.6.question',
     answer_1: 'faq.6.answer_1',
     answer_2: 'faq.6.answer_2',
@@ -51,6 +58,7 @@ export const questions: Question[] = [
     link_3_url: 'faq.6.link_3_url'
   },
   {
+    question_nr: 7,
     question: 'faq.7.question',
     answer_1: 'faq.7.answer_1',
     answer_2: 'faq.7.answer_2',

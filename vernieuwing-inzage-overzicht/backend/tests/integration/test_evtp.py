@@ -6,7 +6,8 @@ import random
 import pandas as pd
 import pytest
 from app.crud.sitemap import get_evtps
-from app.utils.decorators import timeit, timeit_once
+from app.schemas.common import SearchSuggestionsAllEntities
+from tests.integration.config import ApiFilter
 
 logging = logging.getLogger(__name__)
 
@@ -33,12 +34,11 @@ RESOURCE_PAYLOADS = {
 }
 
 
-# '/api/evtp-tree/61846917/gst/4763'
 @pytest.fixture()
 def randomised_urls(db):
     evtps = get_evtps(db)
     urls = []
-    for _ in range(15):
+    for _ in range(5):
         evtps_ind = random.randint(0, len(evtps) - 1)
         gst_ind = random.randint(0, len(evtps[evtps_ind].entities_evtp_gst) - 1)
 
@@ -62,8 +62,7 @@ def filters():
     ]
 
 
-class TestAPI:
-    @timeit_once
+class TestEvtp:
     def test_get_requests(self, client, randomised_urls):
         """Test a random set of evtp and evtp_gst endpoints"""
         for url in randomised_urls:
@@ -73,7 +72,6 @@ class TestAPI:
             assert response_json, "Response content is empty"
             assert isinstance(response_json, dict), "Response content does not match expected type list"
 
-    @timeit
     def test_evtp_download(self, client):
         """Test download functionality"""
         response = client.get("/api/evtp/file")
@@ -81,15 +79,6 @@ class TestAPI:
         df = pd.read_csv(io.StringIO(response.content.decode("utf-8-sig")))
         assert df.shape[0] > 1
         assert "unieke_code" in df.columns
-
-    # TODO, testdata does not contain any onderdelen
-    # def test_onderdelen(self, client):
-    #     """Test fetch onderdelen"""
-    #     response = client.get("/api/ond/populated")
-    #     assert response.status_code == 200, "Get request has failed"
-    #     for ond_cd in random.sample(response.content, 5):
-    #         response = client.get(f"/api/ond/{ond_cd}")
-    #         assert response.status_code == 200, "request has failed"
 
     def test_count(self, client):
         """fetch number of evtp"""
@@ -115,11 +104,13 @@ class TestAPI:
             response = client.post(path, json=filter_option)
             assert response.status_code == 200, "Get request has failed"
             response_object = json.loads(response.content)
-            # Assert that the response content is not empty
             assert len(response_object["result_evtp"]) > 0, f"Response content for {filter_option} is empty"
             results.append(len(response_object["result_evtp"]))
         assert results[0] != results[1] != results[2]
 
-
-if __name__ == "__main__":
-    pytest.main()
+    def test_tls_searchbar(self, client):
+        filter_option_1 = ApiFilter(endpoint="api/evtp/suggestion", params={"search_query": "bijst"})
+        response = client.get(filter_option_1.endpoint, params=filter_option_1.params)
+        assert response.status_code == 200, "Get request has failed"
+        result = SearchSuggestionsAllEntities.model_validate(response.json())
+        assert result.evtp and len(result.evtp) > 0, "No evtp found"

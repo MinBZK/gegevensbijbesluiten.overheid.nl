@@ -1,9 +1,8 @@
 import logging
-from typing import Any, Generator
 
 import pytest
 from app.app_factory import create_app
-from app.database.database import get_sync_session
+from app.database.database import get_async_session, get_sync_session
 from fastapi.testclient import TestClient
 
 logging = logging.getLogger(__name__)
@@ -17,12 +16,18 @@ HEADERS = {
 
 
 @pytest.fixture
-def db():
+def db_sync():
     return next(get_sync_session())
 
 
 @pytest.fixture(scope="session")
-def client() -> Generator[TestClient, Any, None]:
+async def db_async():
+    async for session in get_async_session():
+        yield session
+
+
+@pytest.fixture(scope="session")
+def client():
     # Create a TestClient using the FastAPI app for testing
     with TestClient(app, headers=HEADERS) as test_client:
         yield test_client

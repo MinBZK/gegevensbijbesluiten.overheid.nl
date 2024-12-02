@@ -12,8 +12,12 @@
         >.
         {{ t(`footer.paths.archiefPage.p2_2`) }}
       </p>
-      <p class="p-margin-bottom-footer extra-margin-bottom">
+      <p>
         {{ t(`footer.paths.archiefPage.p3`) }}
+        <a href="mailto:algemeneinzage@ictu.nl"> algemeneinzage@ictu.nl</a>.
+      </p>
+      <p class="p-margin-bottom-footer extra-margin-bottom">
+        {{ t(`footer.paths.archiefPage.p4`) }}
         <ExternalLink :href="t('footer.paths.archiefPage.li2_link')">
           {{ t(`footer.paths.archiefPage.li2`) }} </ExternalLink
         >.
@@ -42,10 +46,12 @@ providePageTitle({ title: 'footer.paths.contact', labelType: 'locale-index' })
     margin-bottom: 35%;
   }
 }
+
 .green-color {
   background-color: #f0f8e8;
   margin-bottom: 0px !important;
 }
+
 .no-bottom-padding {
   padding-bottom: 0px !important;
   margin-bottom: 100px !important;

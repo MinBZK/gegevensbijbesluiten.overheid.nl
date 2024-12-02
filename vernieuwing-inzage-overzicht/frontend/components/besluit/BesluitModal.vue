@@ -2,7 +2,7 @@
   <div>
     <div class="card-header">
       <img class="card-icon" :alt="ond.titel" :src="`${getIcon(ond.titel)}`" />
-      <h1>{{ ond.titel }}</h1>
+      <h1 id="ond-title">{{ ond.titel }}</h1>
     </div>
     <p v-if="isMobile">{{ ond.omschrijving }}</p>
     <p>

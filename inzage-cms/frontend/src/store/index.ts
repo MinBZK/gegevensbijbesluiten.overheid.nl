@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import Keycloak from 'keycloak-js'
+import { ResourceLinkStatus } from '@/types/TableResource'
 
 const store = createStore({
   state: {
@@ -27,7 +28,9 @@ const store = createStore({
       unknown: 'Er is iets mis gegaan',
       duplication: 'Error: deze koppeling bestaat al in de tabel',
       show: false
-    }
+    },
+    linkStatus: null as ResourceLinkStatus | null,
+    selectedResource: null as string | null
   },
   mutations: {
     changeUserEmail(state, payload) {
@@ -49,6 +52,12 @@ const store = createStore({
       state.snackbar.feedbackMessage = text
       state.snackbar.show = show
       state.snackbar.color = color
+    },
+    setLinkStatus(state, linkStatus: ResourceLinkStatus) {
+      state.linkStatus = linkStatus
+    },
+    setSelectedResource(state, resource: string) {
+      state.selectedResource = resource
     }
   },
   actions: {

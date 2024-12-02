@@ -1,14 +1,15 @@
 <template>
+  <v-tooltip v-model="showToolTip"></v-tooltip>
   <v-dialog
-    :max-width="maxWidthDialog"
     no-click-animation
     scrollable
-    :model-value="true"
     persistent
+    :max-width="maxWidthDialog"
+    :model-value="true"
     @click:outside="close()"
   >
-    <v-card :class="{ 'no-horizontal-scroll': childProps.tab !== 'relations' }">
-      <v-card-title>{{ $attrs.title }}</v-card-title>
+    <v-card>
+      <v-card-title v-if="component.name !== 'OverviewEvtpTree'">{{ title }}</v-card-title>
       <component
         :is="component"
         v-bind="childProps"
@@ -22,9 +23,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import OverviewEvtpTree from '@/components/EvtpTable/OverviewEvtpTree.vue'
 
 export default defineComponent({
   name: 'DialogRouter',
+  components: {
+    OverviewEvtpTree
+  },
   props: {
     component: {
       type: Object,
@@ -37,11 +42,16 @@ export default defineComponent({
     maxWidthDialog: {
       type: Number,
       default: 0
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   emits: ['recordUpdated'],
   data() {
     return {
+      showToolTip: false,
       modelShow: true
     }
   },
@@ -59,14 +69,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style scoped>
-.v-card {
-  display: flex !important;
-  flex-direction: column;
-  overflow-x: auto;
-}
-.no-horizontal-scroll {
-  overflow-x: hidden;
-}
-</style>

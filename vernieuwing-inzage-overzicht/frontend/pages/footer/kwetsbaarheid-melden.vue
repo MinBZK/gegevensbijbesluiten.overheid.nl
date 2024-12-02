@@ -3,7 +3,11 @@
     <div>
       <h1 class="h1 margin-top">{{ t(`footer.paths.kwetsbaarheidPage.h1`) }}</h1>
       <p>
-        {{ t(`footer.paths.kwetsbaarheidPage.p1`) }}
+        {{ t(`footer.paths.kwetsbaarheidPage.p1_1`) }}
+        <a href="">
+          <a href="mailto:algemeneinzage@ictu.nl">algemeneinzage@ictu.nl</a>
+        </a>
+        {{ t(`footer.paths.kwetsbaarheidPage.p1_2`) }}
       </p>
       <p>
         <ExternalLink :href="t(`footer.paths.kwetsbaarheidPage.li1`)">
@@ -34,10 +38,12 @@ providePageTitle({ title: 'footer.paths.contact', labelType: 'locale-index' })
     margin-bottom: 35%;
   }
 }
+
 .green-color {
   background-color: #f0f8e8;
   margin-bottom: 0px !important;
 }
+
 .no-bottom-padding {
   padding-bottom: 0px !important;
   margin-bottom: 100px !important;

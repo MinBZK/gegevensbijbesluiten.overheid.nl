@@ -62,20 +62,23 @@
         "
       />
     </v-col>
-    <v-col cols="3">
+    <v-col cols="3" class="mt-1">
       <v-btn
         v-if="foreignResourceModel && value && foreignKey && foreignResourceInClient"
         size="small"
         icon="mdi-link"
         variant="outlined"
         color="primary"
-        class="px-0 mr-2"
+        class="px-0"
         :to="{
           name: 'entityRecord',
           params: {
             tab: 'data',
             recordResource: foreignResourceModel.resource,
             id: value[foreignKey.foreign_table.primary_key]
+          },
+          query: {
+            redirect: $route.fullPath
           }
         }"
       />
@@ -147,6 +150,11 @@ export default defineComponent({
     disableEvtp: {
       type: Boolean,
       required: true
+    },
+    ggCdParent: {
+      type: String,
+      default: null,
+      required: false
     }
   },
   emits: ['update'],
@@ -321,9 +329,11 @@ export default defineComponent({
       let target = this.foreignResource
       if (this.originalKey == 'gg_cd_sup') {
         target = 'gg/gg-sup'
-      }
-      if (this.originalKey == 'gg_cd_sub') {
+      } else if (this.originalKey == 'gg_cd_sub') {
         target = 'gg-koepel/gg-sub'
+      }
+      if (this.ggCdParent) {
+        target = `gg/gg-sub-filtered-${this.ggCdParent}`
       }
       const { data } = await axios.get(`${store.state.APIurl}/${target}-list/`)
       this.records = data

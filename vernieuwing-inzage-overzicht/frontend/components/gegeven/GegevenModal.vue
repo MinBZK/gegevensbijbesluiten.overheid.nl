@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="card-header">
-      <h1 class="h1--small no-margin modal-title-padding">{{ props.title }}</h1>
+      <h1 id="gegevens-card-title" class="h1--small no-margin modal-title-padding">
+        {{ props.title }}
+      </h1>
     </div>
     <p>
       <ModalSearchBar
-        :search-explanation="p('pages: gegevens.searchText')"
+        :search-explanation="t('pages.gegevens.searchText')"
         @do-search="handleSearch"
       />
     </p>
@@ -24,14 +26,13 @@
       </div>
     </template>
     <template v-else>
-      <p v-if="searchPerformed">{{ p('searchbar.GgNoResults') }}</p>
+      <p v-if="searchPerformed">{{ t('gegevens.noResults') }}</p>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { GgContent } from '@/components/gegeven/GegevenCard.vue'
-const { p } = usePreditor()
 const { t } = useI18n()
 
 const props = defineProps<{

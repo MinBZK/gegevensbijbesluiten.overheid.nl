@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Dashboard</h1>
+  <div class="container">
+    <h1 class="banner">Dashboard</h1>
     <h2>{{ totalCountText }}:&nbsp; {{ evtpCount }}</h2>
     <h2>{{ currentDate }}</h2>
     <div class="block-cards">
@@ -59,5 +59,8 @@ h2 {
 }
 h1 {
   margin-bottom: 0.4em;
+}
+.banner {
+  padding-top: 30px;
 }
 </style>

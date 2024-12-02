@@ -4,13 +4,14 @@
     <span>{{ t('filter.showFilters') }}</span>
   </button>
 
-  <ModalShell v-model="modal" width="400px" height="80%" modal-title="Filters">
+  <ModalShell v-model="modal" width="400px" height="80%" aria-labelledby="filter-title">
     <slot />
   </ModalShell>
 </template>
 
 <script setup lang="ts">
 const modal = ref<boolean>(false)
+
 const { t } = useI18n()
 
 const route = useRoute()

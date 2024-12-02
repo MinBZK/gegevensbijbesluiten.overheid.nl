@@ -63,8 +63,7 @@
             params: {
               id,
               resource,
-              recordResource: resource,
-              versieNr: versieNr ? versieNr + 1 : null
+              recordResource: resource
             }
           }"
           color="green"
@@ -100,7 +99,7 @@
           </v-tooltip>
           <v-icon>mdi-arrow-up-down-bold-outline</v-icon>
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           v-if="['evtp-version'].includes(resource)"
           :to="{
             name: 'entityEvtpStructure',
@@ -117,9 +116,26 @@
           class="mx-2 table-button"
         >
           <v-tooltip activator="parent" location="top">
-            {{ 'Besluitenboom structuur' }}
+            Besluitenboom structuur
           </v-tooltip>
           <v-icon>mdi-arrow-up-down-bold-outline</v-icon>
+        </v-btn> -->
+        <v-btn
+          v-if="['evtp-version'].includes(resource)"
+          :to="{
+            name: 'entityEvtpTable',
+            params: {
+              evtpCd: id,
+              versieNr: versieNr,
+              recordResource: resource
+            }
+          }"
+          color="secondary"
+          flat
+          class="mx-2 table-button"
+        >
+          <v-tooltip activator="parent" location="top"> Besluitboom </v-tooltip>
+          <v-icon>mdi-table-edit</v-icon>
         </v-btn>
         <v-btn
           v-if="id && !idPublicatiestatusBool && currentVersion"

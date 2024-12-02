@@ -18,13 +18,14 @@ class Gst(BaseModel):
     oe_best: int
     oe_bron: int
     omschrijving: str
+    conditie: str | None
     ts_mut: datetime
     user_nm: str
 
 
 class GstMinimalList(BaseModel):
     gst_cd: int
-    versie_nr: int | None = None
+    versie_nr: int | None
     omschrijving: str
 
 
@@ -37,6 +38,7 @@ class GstWithRelations(Gst):
 class GstIn(BaseModel):
     ext_lnk_aut: str | None = None
     ibron_cd: int | None = None
+    conditie: str | None = None
     notitie: str | None = None
     oe_best: int
     oe_bron: int

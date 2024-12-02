@@ -6,6 +6,7 @@ import { tables } from '@/config/tables'
 import TableCms from '@/components/TableCms.vue'
 import EntityRecord from '@/components/EntityRecord.vue'
 import DialogRouter from '@/components/DialogRouter.vue'
+import OverviewEvtpTree from '@/components/EvtpTable/OverviewEvtpTree.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -45,6 +46,14 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true
     },
     props: { tables }
+  },
+  {
+    path: '/beheer',
+    name: 'Beheer',
+    component: () => import('@/components/BeheerPage.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/table/:resource',
@@ -207,7 +216,25 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: 'new-gst-with-relation/:recordResource/:evtpCd/:versieNr',
+        path: 'record/:recordResource/evtpTree/:evtpCd/:versieNr',
+        name: 'entityEvtpTable',
+        component: DialogRouter,
+        props: (route) => {
+          const table = tables.find((t) => t.resource == route.params.recordResource)
+          return {
+            component: OverviewEvtpTree,
+            title: table ? table.label : 'Record',
+            maxWidthDialog: table?.maxWidthDialog,
+            childProps: {
+              evtpCd: route.params.evtpCd,
+              versieNr: route.params.versieNr,
+              resource: route.params.recordResource
+            }
+          }
+        }
+      },
+      {
+        path: 'new-gst-with-relation/:recordResource/:evtpCd/:oeBestCd/:versieNr',
         name: 'newEntityGstWithRelation',
         component: DialogRouter,
         props: (route) => {
@@ -218,6 +245,7 @@ const routes: Array<RouteRecordRaw> = [
             maxWidthDialog: table?.maxWidthDialog,
             childProps: {
               evtpCd: route.params.evtpCd,
+              oeBestCd: route.params.oeBestCd,
               versieNr: route.params.versieNr,
               resource: route.params.recordResource,
               tab: 'data'
@@ -263,7 +291,6 @@ const routes: Array<RouteRecordRaw> = [
           }
         }
       },
-
       {
         path: 'new-gst-gg-with-relation/:recordResource/:gstCd/:versieNr',
         name: 'newEntityGstGgWithRelation',
@@ -276,6 +303,26 @@ const routes: Array<RouteRecordRaw> = [
             maxWidthDialog: table?.maxWidthDialog,
             childProps: {
               gstCd: route.params.gstCd,
+              versieNr: route.params.versieNr,
+              resource: route.params.recordResource,
+              tab: 'data'
+            }
+          }
+        }
+      },
+      {
+        path: 'new-gst-gg-with-relation/:recordResource/:gstCd/:ggCdParent/:versieNr',
+        name: 'newEntityGstGgWithRelationFiltered',
+        component: DialogRouter,
+        props: (route) => {
+          const table = tables.find((t) => t.resource == route.params.recordResource)
+          return {
+            component: EntityRecord,
+            title: table ? table.label : 'Record',
+            maxWidthDialog: table?.maxWidthDialog,
+            childProps: {
+              gstCd: route.params.gstCd,
+              ggCdParent: route.params.ggCdParent,
               versieNr: route.params.versieNr,
               resource: route.params.recordResource,
               tab: 'data'

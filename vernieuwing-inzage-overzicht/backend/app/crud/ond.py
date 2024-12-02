@@ -3,7 +3,6 @@ from typing import Sequence
 
 from sqlalchemy import (
     and_,
-    exists,
     select,
 )
 from sqlalchemy.orm import (
@@ -26,9 +25,16 @@ def get_populated(db: Session, limit: int = 1000) -> Sequence[models.ond.Ond]:
     Gets onderwerpen which have at least one associated besluit.
     Returns: List of Ond object
     """
-    ond = models.ond.Ond
-    stmt = exists().where(ond.entities_ond)
-    return db.execute(select(ond).limit(limit).where(stmt).order_by(ond.sort_key)).scalars().all()
+    Ond = models.ond.Ond
+    EntityOnd = models.ond.EvtpOnd  # Assuming this is the association table or model
+
+    # Subquery to check for associated entities
+    subq = select(1).where(EntityOnd.ond_cd == Ond.ond_cd).exists()
+
+    # Main query
+    query = select(Ond).where(subq).order_by(Ond.sort_key).limit(limit)
+
+    return db.execute(query).scalars().all()
 
 
 def get_one_with_evtps(db: Session, ond_cd: int):

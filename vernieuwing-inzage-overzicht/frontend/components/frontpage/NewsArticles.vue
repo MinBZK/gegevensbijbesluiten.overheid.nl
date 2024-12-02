@@ -12,13 +12,14 @@
         navigateTo(article.link, { external: true, open: { target: '_blank' } })
       "
     >
-      <img :src="article.image" :alt="t(article.alt)" class="article-card-image" tabindex="-1" />
+      <img :src="article.image" alt="" class="article-card-image" tabindex="-1" />
       <div class="article-card-text">
+        <h3 class="no-margin">{{ t(article.title) }}</h3>
         <p>{{ t(article.date) }}</p>
-        <h3>{{ t(article.title) }}</h3>
         <p>{{ t(article.summary) }}</p>
         <ExternalLink :href="article.link" class="external-link">
-          {{ t('articles.readMore') }}
+          <span aria-hidden="true">{{ t('articles.readMore') }}</span>
+          <span class="sr-only">{{ t('articles.readMoreArticle', { n: t(article.title) }) }}</span>
         </ExternalLink>
       </div>
     </div>

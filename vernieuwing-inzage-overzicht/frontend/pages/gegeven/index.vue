@@ -2,14 +2,16 @@
   <div class="container">
     <SearchBar
       ref="searchbar"
-      :search-explanation="p('pages: gegevens.searchText')"
+      :search-explanation="t('pages.gegevens.searchText')"
       :suggestions-hidden="`pages.gegevens.suggestionsHidden`"
       @do-search="(searchtext) => doSearch(searchtext)"
     />
     <div class="row container columns no-padding">
       <div class="column-d-9">
-        <h2 role="status">
-          {{ t(`gegevens.foundResults`, { n: totalCountUnderlying }) }}
+        <h2>
+          <span role="status">
+            {{ t(`gegevens.foundResults`, { n: totalCountUnderlying }) }}
+          </span>
         </h2>
         <div v-if="ggResults.length != 0" class="row no-padding">
           <div class="column-d-6">
@@ -30,7 +32,6 @@
                 :description="gg.omschrijving_uitgebreid || t('ontbreekt')"
                 :content="extractContent(gg)"
                 :loading="loading"
-                :chips="[]"
                 @focus-has-been-set="() => (newFocusIsRequested = false)"
               >
               </GegevenCard>
@@ -74,7 +75,6 @@ import type { UrlQuery } from '~/types/filter'
 import type { GgContent } from '@/components/gegeven/GegevenCard.vue'
 
 const { t } = useI18n()
-const { p } = usePreditor()
 const router = useRouter()
 
 const query = computed(() => {
@@ -93,10 +93,12 @@ let { data } = await ggService.getGgFiltered(query.value)
 const loading = ref(false)
 
 watch(query, async () => {
-  loading.value = true
-  const response = await ggService.getGgFiltered(query.value)
-  loading.value = false
-  data = response.data
+  if (window.location.hash !== '#content') {
+    loading.value = true
+    const response = await ggService.getGgFiltered(query.value)
+    loading.value = false
+    data = response.data
+  }
 })
 
 const page = computed(() => query.value.page)
@@ -114,7 +116,7 @@ const setPage = (newPage: number) => {
   scrollToCards()
 }
 
-// default value is true, so that when we search from the homepage the focus is always placed correctly.
+// default value is false, so that when we search from the homepage the focus is always placed correctly.
 const newFocusIsRequested = ref<boolean>(false)
 
 const doSearch = (searchtext: string) => {

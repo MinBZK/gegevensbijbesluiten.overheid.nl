@@ -29,6 +29,7 @@ async def get_search_suggestion(
     oe_suggestions = crud.oe.get_search_suggestion(db=db, search_query=search_query)
 
     # Combine results
-    return schemas.common.SearchSuggestionsAllEntities(
+    result = schemas.common.SearchSuggestionsAllEntities(
         gg=gg_suggestions.gg, evtp=evtp_suggestions.evtp, oe=oe_suggestions.oe
     )
+    return result

@@ -1,3 +1,7 @@
+import type { OndTree } from '@/types/Ond'
+import type { OeComTypeTree } from '@/types/Oe'
+import type { Omg } from '@/types/EvtpVersion'
+
 const evtpCd = (record) => {
   return record['evtp_cd']
 }
@@ -6,11 +10,22 @@ const versieNr = (record) => {
   return record['versie_nr']
 }
 
+const evtpGst = (record) => {
+  try {
+    const evtp_gst = record.entities_evtp_gst.map((evtp_gst) => ({
+      evtp_gst_cd: evtp_gst.evtp_gst_cd,
+      sort_key: evtp_gst.sort_key || 1000
+    }))
+    return evtp_gst
+  } catch {
+    return null
+  }
+}
+
 const gst = (record) => {
   try {
     const gst = record.entities_evtp_gst.map((evtp_gst) => evtp_gst.entity_gst)
     gst.map((gst, index) => (gst['evtp_gst_cd'] = record.entities_evtp_gst[index].evtp_gst_cd))
-    gst.map((gst, index) => (gst['conditie'] = record.entities_evtp_gst[index].conditie))
     gst.map(
       (gst, index) => (gst['entities_gst_gstt'] = record.entities_evtp_gst[index].entities_gst_gstt)
     )
@@ -23,17 +38,17 @@ const gst = (record) => {
   }
 }
 
-const ond = (record) => {
+const ond = (record): OndTree[] => {
   try {
     const ond = record.entities_evtp_ond.map((item) => item.entity_ond)
     ond.map((ond, index) => (ond['evtp_ond_cd'] = record.entities_evtp_ond[index].evtp_ond_cd))
     return ond
   } catch {
-    return null
+    return []
   }
 }
 
-const oeComType = (record) => {
+const oeComType = (record): OeComTypeTree[] => {
   try {
     const oeComType = record.entities_evtp_oe_com_type.map((item) => item.entity_oe_com_type)
     oeComType.map(
@@ -43,7 +58,16 @@ const oeComType = (record) => {
     )
     return oeComType
   } catch {
-    return null
+    return []
+  }
+}
+
+const omg = (record): Omg | '' => {
+  try {
+    const omg = record.entity_omg
+    return omg
+  } catch {
+    return ''
   }
 }
 
@@ -67,7 +91,7 @@ const gstGgCd = (record) => {
   }
 }
 
-const gstGsttype = (record) => {
+const gstGstType = (record) => {
   try {
     const evtpGst = record.entities_evtp_gst.map((evtp_gst) =>
       evtp_gst.entities_gst_gstt.map((gst_gstt) => gst_gstt.entity_gst_type)
@@ -83,11 +107,11 @@ const gstGsttype = (record) => {
     )
     return evtpGst
   } catch (error) {
-    return null
+    return []
   }
 }
 
-const orgEenheidBron = (record) => {
+const oeBron = (record) => {
   try {
     const orgEenheidBron = record.entities_evtp_gst.map(
       (evtp_gst) => evtp_gst.entity_gst.entity_oe_bron
@@ -98,7 +122,7 @@ const orgEenheidBron = (record) => {
   }
 }
 
-const orgEenheidBest = (record) => {
+const oeBest = (record) => {
   try {
     const orgEenheidBest = record.entities_evtp_gst.map(
       (evtp_gst) => evtp_gst.entity_gst.entity_oe_best
@@ -109,86 +133,18 @@ const orgEenheidBest = (record) => {
   }
 }
 
-const ibronOrgEenheidBest = (record) => {
+const ibron = (record) => {
   try {
-    const ibronOrgEenheidBest = record.entities_evtp_gst
-      .filter((evtp_gst) => evtp_gst.entity_gst.entity_oe_best.ibron)
-      .map((evtp_gst) => evtp_gst.entity_gst.entity_oe_best.ibron.Oe)
-    return ibronOrgEenheidBest
-  } catch {
-    return null
-  }
-}
-
-const ibronOrgEenheidBron = (record) => {
-  try {
-    const ibronOrgEenheidBron = record.entities_evtp_gst
-      .filter((evtp_gst) => evtp_gst.entity_gst.entity_oe_bron.ibron)
-      .map((evtp_gst) => evtp_gst.entity_gst.entity_oe_bron.ibron.Oe)
-    return ibronOrgEenheidBron
-  } catch {
-    return null
-  }
-}
-
-const ibronGstOrgEenheid = (record) => {
-  try {
-    const ibronGstOrgEenheid = record.entities_evtp_gst
-      .filter((evtp_gst) => evtp_gst.entity_gst.ibron)
-      .map((evtp_gst) => evtp_gst.entity_gst.ibron.Oe)
+    const ibronGstOrgEenheid = record.entities_evtp_gst.map(
+      (evtp_gst) => evtp_gst.entity_gst.entity_ibron
+    )
     return ibronGstOrgEenheid
   } catch {
     return null
   }
 }
 
-const ibronGstGgOrgEenheid = (record) => {
-  try {
-    const ibronGstGgOrgEenheid = record.entities_evtp_gst
-      .filter((evtp_gst) => evtp_gst.entity_gst.ibron)
-      .map((evtp_gst) => evtp_gst.entity_gst.entities_gst_gg.map((gst_gg) => gst_gg.ibron.Oe))
-    return ibronGstGgOrgEenheid
-  } catch {
-    return null
-  }
-}
-
-const ibronRgeOrgEenheid = (record) => {
-  try {
-    const ibronRgeOrgEenheid = record.entities_evtp_gst.map((evtp_gst) =>
-      evtp_gst.entities_gst_gg.map((gst_gg) => gst_gg.entity_rge.ibron.Oe)
-    )
-    return ibronRgeOrgEenheid
-  } catch {
-    return null
-  }
-}
-
-const ibronGgHogerOrgEenheid = (record) => {
-  try {
-    const ibronGgHogerOrgEenheid = record.entities_evtp_gst.map((evtp_gst) =>
-      evtp_gst.NTITIES_gst_gg.entity_gg.parent_entities.map((parent_entities) =>
-        parent_entities.parent_entity.ibron ? parent_entities.parent_entity.ibron.Oe : null
-      )
-    )
-    return ibronGgHogerOrgEenheid
-  } catch {
-    return null
-  }
-}
-
-const ibronGgOrgEenheid = (record) => {
-  try {
-    const ibronGgOrgEenheid = record.entities_evtp_gst.map((evtp_gst) =>
-      evtp_gst.entities_gst_gg.entity_gg.ibron ? evtp_gst.entities_gst_gg.entity_gg.ibron.Oe : null
-    )
-    return ibronGgOrgEenheid
-  } catch {
-    return null
-  }
-}
-
-const gg = (record) => {
+const ggChild = (record) => {
   try {
     record.entities_evtp_gst.forEach((evtp_gst) =>
       evtp_gst.entities_gst_gg.forEach((gst_gg) => {
@@ -200,6 +156,16 @@ const gg = (record) => {
     const gg = record.entities_evtp_gst.map((evtp_gst) =>
       evtp_gst.entities_gst_gg.map((gst_gg) => gst_gg.entity_gg)
     )
+
+    gg.forEach((ggList) => {
+      ggList.sort((a, b) => {
+        if (a.sort_key === b.sort_key) {
+          return a.omschrijving.localeCompare(b.omschrijving)
+        }
+        return a.sort_key - b.sort_key
+      })
+    })
+
     return gg
   } catch {
     return null
@@ -240,6 +206,15 @@ const rge = (record) => {
       })
     )
 
+    rge.forEach((ggList) => {
+      ggList.sort((a, b) => {
+        if (a.sort_key === b.sort_key) {
+          return a.titel.localeCompare(b.titel)
+        }
+        return a.sort_key - b.sort_key
+      })
+    })
+
     return rge
   } catch {
     return null
@@ -247,24 +222,20 @@ const rge = (record) => {
 }
 
 export {
-  gstGsttype,
+  gstGstType,
   ond,
   oeComType,
+  omg,
   evtpCd,
   versieNr,
   gst,
-  orgEenheidBron,
-  orgEenheidBest,
-  gg,
+  oeBron,
+  oeBest,
+  ggChild,
   rge,
   ggParent,
-  ibronGstOrgEenheid,
-  ibronOrgEenheidBest,
-  ibronOrgEenheidBron,
-  ibronGstGgOrgEenheid,
-  ibronRgeOrgEenheid,
-  ibronGgHogerOrgEenheid,
-  ibronGgOrgEenheid,
+  ibron,
   gstCd,
-  gstGgCd
+  gstGgCd,
+  evtpGst
 }

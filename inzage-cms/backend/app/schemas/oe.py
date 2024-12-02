@@ -25,6 +25,7 @@ class Oe(BaseModel):
     provincie: str | None
     telefoon: str | None
     internet_domein: HttpUrl | None
+    toelichting: str | None
     user_nm: str
     ts_mut: datetime
 
@@ -60,6 +61,7 @@ class OeIn(BaseModel):
     provincie: str | None = None
     straat: str | None = None
     telefoon: str | None = None
+    toelichting: str | None = None
 
     _validate_re_link = field_validator("internet_domein")(validate_url)
 

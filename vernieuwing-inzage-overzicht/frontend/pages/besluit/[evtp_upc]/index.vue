@@ -66,38 +66,44 @@
           <h3 class="h3-sentence">{{ ggParent }}</h3>
           <NuxtIcon :name="getIconAccordion(ggParent)" />
         </div>
-        <div class="gst-card">
-          <div
-            v-for="gst in ggParentObject"
-            v-show="isAccordionActive(ggParent)"
-            :key="gst"
-            class="accordion-body-gg"
-          >
-            <div class="source-card">
-              <p class="no-margin">
-                {{ t('gegevensgroepen.sourceOrganisation') }}
-              </p>
-              <p class="strong no-margin">{{ gst['oe_best_naamspraakgbr'] }}</p>
-              <div class="source-card-bottom">
-                <br />
-                <ul class="no-list">
-                  <li v-for="ggChild in gst['gg_child']" :key="ggChild">
-                    {{ ggChild }}
-                  </li>
-                </ul>
+        <div>
+          <ul class="gst-card no-margin">
+            <div
+              v-for="gst in ggParentObject"
+              v-show="isAccordionActive(ggParent)"
+              :key="gst"
+              class="accordion-body-gg"
+            >
+              <div class="source-card">
+                <p class="no-margin">
+                  {{ t('gegevensgroepen.sourceOrganisation') }}
+                </p>
+                <p class="strong no-margin">{{ gst['oe_best_naamspraakgbr'] }}</p>
+                <div class="source-card-bottom">
+                  <br />
+                  <ul class="no-margin">
+                    <li v-for="ggChild in gst['gg_child']" :key="ggChild">
+                      {{ ggChild }}
+                    </li>
+                  </ul>
+                </div>
+                <FormOverheidButton
+                  class="button--align-to-search-field"
+                  label="Meer details"
+                  :aria-label="`Meer details van ${ggParent.toLowerCase()} afkomstig van ${
+                    gst['oe_best_naamspraakgbr']
+                  }`"
+                  :hidden-text="` van ${ggParent} afkomstig van ${gst['oe_best_naamspraakgbr']}`"
+                  :role-link="'link'"
+                  icon="material-symbols:chevron-right"
+                  :to="
+                    getLink(`/besluit/${evtpGg.besluit.evtp_upc}/${gst.gst_upc}`, evtpVersionNr)
+                      .value
+                  "
+                />
               </div>
-              <FormOverheidButton
-                class="button--align-to-search-field"
-                label="Meer details"
-                :hidden-text="` van ${ggParent} afkomstig van ${gst['oe_best_naamspraakgbr']}`"
-                :role-link="'link'"
-                icon="material-symbols:chevron-right"
-                :to="
-                  getLink(`/besluit/${evtpGg.besluit.evtp_upc}/${gst.gst_upc}`, evtpVersionNr).value
-                "
-              />
             </div>
-          </div>
+          </ul>
         </div>
       </div>
       <div class="formoverheid-padding">
@@ -233,7 +239,7 @@
           class="accordion-body"
         >
           <span v-if="evtpGg.besluit_communicatie.overige_informatie">
-            <p class="white-card lowercase">
+            <p class="white-card">
               {{ evtpGg.besluit_communicatie.overige_informatie }}
             </p>
           </span>
@@ -430,7 +436,7 @@ p:first-letter {
   margin-bottom: 3.25em;
 }
 
-ul.no-list {
+ul.no-margin {
   margin: 0;
   list-style-type: none;
   padding: 0em;
@@ -464,7 +470,7 @@ ul.no-list {
     grid-template-columns: 50% 50%;
   }
 
-  .gst-card > .accordion-body-gg > .source-card {
+  .source-card {
     background-color: $white;
     margin-left: 1.35em;
     margin-right: 1.35em;

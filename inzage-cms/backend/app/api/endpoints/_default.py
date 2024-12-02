@@ -306,7 +306,7 @@ def get_child_gg(router: APIRouter, base_model: Type[Base], model_name: str) -> 
     async def get_list(
         *,
         db: AsyncSession = Depends(get_async_session),
-    ) -> ScalarResult[Base]:
+    ):
         return await crud.gg.get_all_sub(db)
 
 
@@ -318,5 +318,18 @@ def get_parent_gg(router: APIRouter, base_model: Type[Base], model_name: str) ->
     async def get_list(
         *,
         db: AsyncSession = Depends(get_async_session),
-    ) -> ScalarResult[Base]:
+    ):
         return await crud.gg.get_all_sup(db)
+
+
+def get_child_gg_filtered(router: APIRouter, base_model: Type[Base], model_name: str) -> None:
+    schema_module = importlib.import_module(f"app.schemas.{model_name}")
+    schema_minimal_list = f"{camelize(model_name)}MinimalList"
+
+    @router.get("/gg-sub-filtered-{gg_cd_sup}-list/", response_model=list[getattr(schema_module, schema_minimal_list)])
+    async def get_list(
+        *,
+        gg_cd_sup: int,
+        db: AsyncSession = Depends(get_async_session),
+    ):
+        return await crud.gg.get_all_sub_filtered(db=db, gg_cd_sup=gg_cd_sup)

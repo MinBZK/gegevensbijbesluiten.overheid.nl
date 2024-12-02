@@ -4,40 +4,17 @@
       {{ t('footer.paths.privacyverklaringPage.h1') }}
     </h1>
 
-    <p class="mb-2">
-      {{ t('footer.paths.privacyverklaringPage.p1') }}
-    </p>
-    <ul class="bullet ml-4">
-      <li>
-        {{ t('footer.paths.privacyverklaringPage.li1_1') }}
-      </li>
-      <li>
-        {{ t('footer.paths.privacyverklaringPage.li1_2') }}
-      </li>
-      <li>
-        {{ t('footer.paths.privacyverklaringPage.li1_3') }}
-      </li>
-      <li>
-        {{ t('footer.paths.privacyverklaringPage.li1_4') }}
-      </li>
-    </ul>
+    <p>{{ t('footer.paths.privacyverklaringPage.p1') }}</p>
 
-    <p class="mb-4 mt-4">
-      {{ t('footer.paths.privacyverklaringPage.p2') }}
-    </p>
+    <h2>{{ t('footer.paths.privacyverklaringPage.h2') }}</h2>
+    <p>{{ t('footer.paths.privacyverklaringPage.p2') }}</p>
 
-    <h2>
-      {{ t('footer.paths.privacyverklaringPage.h2') }}
-    </h2>
-    <p class="p-margin-bottom-footer">
-      {{ t('footer.paths.privacyverklaringPage.p3') }}
-    </p>
+    <h2>{{ t('footer.paths.privacyverklaringPage.h3') }}</h2>
+    <p>{{ t('footer.paths.privacyverklaringPage.p3') }}</p>
 
-    <h2>
-      {{ t('footer.paths.privacyverklaringPage.h3') }}
-    </h2>
     <p class="p-margin-bottom-footer">
       {{ t('footer.paths.privacyverklaringPage.p4') }}
+      <a href="mailto:algemeneinzage@ictu.nl"> algemeneinzage@ictu.nl</a>.
     </p>
   </div>
 </template>

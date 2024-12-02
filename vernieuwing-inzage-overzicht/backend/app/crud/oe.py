@@ -222,7 +222,7 @@ def get_paginated_parents(
     return parents
 
 
-def get_search_suggestion(db: Session, search_query: str):
+def get_search_suggestion(db: Session, search_query: str, limit: int = 1000):
     model_oe = models.oe.Oe
     query_filters = []
 
@@ -249,7 +249,7 @@ def get_search_suggestion(db: Session, search_query: str):
             .order_by(desc(similarity_score))
         )
 
-        query_oe = db.execute(query).scalars().all()
+        query_oe = db.execute(query.limit(limit)).scalars().all()
 
         if not query_oe:
             logger.info("Suggestion search - ilike did not give any results for child organisaties")
@@ -262,7 +262,7 @@ def get_search_suggestion(db: Session, search_query: str):
                 .where(and_(*query_filters, model_oe.oe_cd.in_(valid_oes)))
                 .order_by(desc(similarity_score))
             )
-            query_oe = db.execute(query).scalars().all()
+            query_oe = db.execute(query.limit(limit)).scalars().all()
             if query_oe:
                 logging.info(f"Suggestion-search - Similarity search query for child organisaties for: {search_query}")
             else:
@@ -273,7 +273,7 @@ def get_search_suggestion(db: Session, search_query: str):
             )
     else:
         query = select(model_oe).where(and_(*query_filters))
-        query_oe = db.execute(query).scalars().all()
+        query_oe = db.execute(query.limit(limit)).scalars().all()
 
     return schemas.common.SearchSuggestionsAllEntities(
         gg=[],

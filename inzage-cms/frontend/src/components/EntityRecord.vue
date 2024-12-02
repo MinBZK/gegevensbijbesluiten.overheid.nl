@@ -1,6 +1,6 @@
 <template>
   <v-row v-if="disableEvtp">
-    <v-alert type="warning" dismissible elevation="2" class="mt-2">
+    <v-alert type="warning" class="mt-2">
       <strong>Let op!</strong> Dit besluit is inmiddels gepubliceerd of verouderd en kan niet meer
       worden gewijzigd.
     </v-alert>
@@ -9,6 +9,8 @@
     <v-col>
       <v-card-subtitle class="text-h7">
         <strong>{{ title }}</strong>
+        <strong v-if="isNewGSTRelation"> {{ record['evtp_nm'] }}</strong>
+        <strong v-if="isNewGGRelation"> {{ record['omschrijving'] }}</strong>
         <br /><br />
         <v-select
           v-if="isEvtp"
@@ -59,20 +61,16 @@
       :struct-cd="structCd"
       :struct-relation="structRelation"
       :versie-nr="versieNr"
+      :oe-best-cd="oeBestCd"
+      :gg-cd-parent="ggCdParent"
       :disable-evtp="disableEvtp"
       @close="() => $emit('close')"
       @confirm="(payload, files) => upsert(record[primaryKey], payload, files)"
     />
-  </template>
-  <template v-else-if="table && table.label == 'Besluiten'">
-    <EvtpStructureOverview
-      :evtp-cd="id"
-      :record="record"
-      :record-loaded="recordLoaded"
-      :resource="resource"
-      :versie-nr="selectedVersion"
-      :disable-evtp="disableEvtp"
-    />
+    <v-row v-else class="justify-center align-center ma-10">
+      <v-progress-circular indeterminate color="primary" class="mr-1" />
+      <span>Ophalen van data...</span>
+    </v-row>
   </template>
   <template v-else-if="selectedTab && selectedTab.show">
     <EntityRecordRelations
@@ -93,7 +91,6 @@ import { defineComponent } from 'vue'
 import axios from 'axios'
 import { TableModel, Table } from '@/types/Tables'
 import EntityRecordRelations from '@/components/EntityRecordRelations.vue'
-import EvtpStructureOverview from '@/components/EvtpStructure/EvtpStructureOverview.vue'
 import EntityRecordData from '@/components/EntityRecordData.vue'
 import store from '@/store/index'
 import { getPrimaryKey } from '@/util/misc'
@@ -103,7 +100,6 @@ export default defineComponent({
   name: 'EntityRecord',
   components: {
     EntityRecordRelations,
-    EvtpStructureOverview,
     EntityRecordData
   },
   props: {
@@ -142,6 +138,16 @@ export default defineComponent({
       required: false
     },
     versieNr: {
+      type: String,
+      default: null,
+      required: false
+    },
+    oeBestCd: {
+      type: String,
+      default: null,
+      required: false
+    },
+    ggCdParent: {
       type: String,
       default: null,
       required: false
@@ -213,9 +219,9 @@ export default defineComponent({
     },
     title() {
       if (this.isNewGSTRelation) {
-        return `Toevoegen nieuwe relatie onder besluit: ${this.record['evtp_nm']}`
+        return `Toevoegen nieuwe relatie onder besluit:`
       } else if (this.isNewGGRelation) {
-        return `Toevoegen nieuwe relatie gst: ${this.record['omschrijving']}`
+        return `Toevoegen nieuwe relatie aan gegevensstroom:`
       } else if (this.isDuplicateEvtpVersion) {
         return `Duplicaat van dit besluit aanmaken`
       } else if (
@@ -308,9 +314,8 @@ export default defineComponent({
       await this.getRecordVersion(this.id, this.versieNr)
     } else if (!this.isNewRow || this.tab == 'relations') {
       await this.getRecord(this.id, this.resource, true)
-    } else {
-      this.recordLoaded = true
     }
+    this.recordLoaded = true
     this.getTableModel()
   },
   methods: {
@@ -341,6 +346,7 @@ export default defineComponent({
       if (this.resource == 'evtp-version' && relationRow && this.tab == 'relations') {
         await this.fetchRelations(inputResource, primaryKey, this.versieNr)
         await this.getVersions(Number(this.id))
+        this.recordLoaded = true
       } else if (this.resource == 'evtp-version' && Number(this.versieNr) && !this.isNewVersion) {
         const endpoint = `${store.state.APIurl}/${this.resource}/${primaryKey}/${this.versieNr}`
         const { data } = await axios.get(endpoint)
@@ -488,7 +494,6 @@ export default defineComponent({
             })
           }
         }
-      } catch (error: any) {
       } catch (error: any) {
         this.$emit('error', error)
         if (error.response.status == 409) {

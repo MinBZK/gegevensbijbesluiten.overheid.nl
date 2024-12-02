@@ -2,7 +2,7 @@
   <div>
     <div class="container row">
       <NuxtLink class="link cta__backwards" :to="{ name: 'gegeven' }">
-        {{ p('gegevens.goBack') }}
+        {{ t('pages.gegevens.goBack') }}
       </NuxtLink>
     </div>
     <div class="container row container--centered">
@@ -39,13 +39,13 @@
           @keydown.space.prevent="() => openCloseAccordion(GgHeader.h1, accordionHeader1)"
         >
           <h2 class="h2-sentence accordion-header-with-chevron">
-            {{ p('gegevens.h1') }}
+            {{ t('pages.gegevens.h1') }}
           </h2>
           <NuxtIcon :name="getIconAccordion(GgHeader.h1)" />
         </div>
         <div v-show="isAccordionActive(GgHeader.h1)" :id="GgHeader.h1" class="accordion-body">
-          <p>{{ p('gegevens.p1') }}</p>
-          <AccordionModalEvtp :evtp="ggEvtp" :title="p('gegevens.p1')"> </AccordionModalEvtp>
+          <p>{{ t('pages.gegevens.p1') }}</p>
+          <AccordionModalEvtp :evtp="ggEvtp" :title="t('pages.gegevens.p1')"> </AccordionModalEvtp>
         </div>
       </div>
 
@@ -61,14 +61,14 @@
           @keydown.space.prevent="() => openCloseAccordion(GgHeader.h2, accordionHeader2)"
         >
           <h3 class="h3-sentence accordion-header-with-chevron">
-            {{ p('gegevens.h2') }}
+            {{ t('pages.gegevens.h2') }}
           </h3>
           <NuxtIcon :name="getIconAccordion(GgHeader.h2)" />
         </div>
         <div v-show="isAccordionActive(GgHeader.h2)" :id="GgHeader.h2" class="accordion-body">
           <div>
-            <p>{{ p('gegevens.p2') }}</p>
-            <AccordionModalOe :oe="oeBron" :title="p('gegevens.h1')"> </AccordionModalOe>
+            <p>{{ t('pages.gegevens.p2') }}</p>
+            <AccordionModalOe :oe="oeBron" :title="t('pages.gegevens.h1')"> </AccordionModalOe>
           </div>
         </div>
       </div>
@@ -85,13 +85,13 @@
           @keydown.space.prevent="() => openCloseAccordion(GgHeader.h3, accordionHeader3)"
         >
           <h3 class="h3-sentence accordion-header-with-chevron">
-            {{ p('gegevens.h3') }}
+            {{ t('pages.gegevens.h3') }}
           </h3>
           <NuxtIcon :name="getIconAccordion(GgHeader.h3)" />
         </div>
         <div v-show="isAccordionActive(GgHeader.h3)" :id="GgHeader.h3" class="accordion-body">
-          <p>{{ p('gegevens.p3') }}</p>
-          <AccordionModalOe :oe="oeShared" :title="p('gegevens.h3')"> </AccordionModalOe>
+          <p>{{ t('pages.gegevens.p3') }}</p>
+          <AccordionModalOe :oe="oeShared" :title="t('pages.gegevens.h3')"> </AccordionModalOe>
         </div>
       </div>
       <div class="formoverheid-padding">
@@ -122,7 +122,7 @@ import {
   activeItem
 } from '@/utils/index'
 
-const { p } = usePreditor()
+const { t } = useI18n()
 
 resetAccordion()
 const GgHeader = {

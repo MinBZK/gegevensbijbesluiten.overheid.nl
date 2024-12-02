@@ -1,9 +1,9 @@
 <template>
-  <div class="chips-container">
-    <span v-for="(chip, index) in props.chips" :key="index" class="chip">
+  <ul class="chips-container">
+    <li v-for="(chip, index) in props.chips" :key="index" class="chip">
       <span class="chip-text">{{ chip }}</span>
-    </span>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script setup lang="ts">
@@ -20,6 +20,7 @@ const props = defineProps({
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  padding-left: 0px;
 }
 .chip {
   border: 1px solid $primary-dark;

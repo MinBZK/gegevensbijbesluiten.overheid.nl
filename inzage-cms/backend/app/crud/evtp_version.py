@@ -22,7 +22,7 @@ subquery_evtp = (
     select(
         BASE_MODEL.evtp_cd,
         func.max(BASE_MODEL.versie_nr)
-        .filter(BASE_MODEL.id_publicatiestatus != MappingPublicatiestatus.ARCHIVED.value[0])
+        .filter(BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.code)
         .label("latest_version"),
     )
     .group_by(BASE_MODEL.evtp_cd)
@@ -47,7 +47,7 @@ async def get_all(db: AsyncSession) -> Sequence[BASE_MODEL]:
                 BASE_MODEL.versie_nr == subquery_evtp.c.latest_version,
             ),
         )
-        .filter(BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.value[0])
+        .filter(BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.code)
         .order_by(BASE_MODEL.ts_mut.desc())
         .limit(LIMIT_RESULTS_QUERY)
     )
@@ -68,7 +68,7 @@ async def get_list(db: AsyncSession) -> Sequence[BASE_MODEL]:
                 BASE_MODEL.versie_nr == subquery_evtp.c.latest_version,
             ),
         )
-        .filter(BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.value[0])
+        .filter(BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.code)
         .order_by(BASE_MODEL.ts_mut.desc())
     )
     return result.scalars().unique().all()
@@ -120,7 +120,7 @@ async def get_filtered(
         )
         .join(verantwoordelijke_oe_rel)
         .where(or_(*conditions))
-        .filter(BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.value[0])
+        .filter(BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.code)
         .order_by(BASE_MODEL.ts_mut.desc())
         .limit(LIMIT_RESULTS_QUERY)
     )
@@ -265,21 +265,25 @@ async def update_id_pub(
         **body.model_dump(exclude_unset=True),
         "ts_mut": current_date,
         "user_nm": gebruiker,
-        "huidige_versie": True if body.id_publicatiestatus == 3 else False,
+        "huidige_versie": True if body.id_publicatiestatus == MappingPublicatiestatus.PUBLISHED.code else False,
         "ts_publ": (
-            evtp_ts_publ if evtp_ts_publ is not None else current_date if body.id_publicatiestatus == 3 else None
+            evtp_ts_publ
+            if evtp_ts_publ is not None
+            else current_date
+            if body.id_publicatiestatus == MappingPublicatiestatus.PUBLISHED.code
+            else None
         ),
     }
 
     # Set huidige_versie to False for all other versions when id_publicatiestatus is 3
-    if body.id_publicatiestatus == 3:
+    if body.id_publicatiestatus == MappingPublicatiestatus.PUBLISHED.code:
         await db.execute(
             update(model)
             .where(
                 and_(
                     model.evtp_cd == evtp_cd,
                     model.versie_nr != versie_nr,
-                    model.id_publicatiestatus == 3,
+                    model.id_publicatiestatus == MappingPublicatiestatus.PUBLISHED.code,
                 )
             )
             .values(
@@ -291,7 +295,7 @@ async def update_id_pub(
         )
 
     # Set id_publicatiestatus to 4 for all versions if evtp is archived
-    elif body.id_publicatiestatus == MappingPublicatiestatus.ARCHIVED.value[0]:
+    elif body.id_publicatiestatus == MappingPublicatiestatus.ARCHIVED.code:
         await db.execute(
             update(model)
             .where(
@@ -302,7 +306,7 @@ async def update_id_pub(
             .values(
                 {
                     "huidige_versie": False,
-                    "id_publicatiestatus": MappingPublicatiestatus.ARCHIVED.value[0],
+                    "id_publicatiestatus": MappingPublicatiestatus.ARCHIVED.code,
                 }
             )
         )
@@ -380,7 +384,7 @@ async def get_all_versions(db: AsyncSession, evtp_cd: int) -> Sequence[int]:
         select(BASE_MODEL.versie_nr)
         .where(
             and_(
-                BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.value[0],
+                BASE_MODEL.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.code,
                 BASE_MODEL.evtp_cd == evtp_cd,
             )
         )
@@ -678,7 +682,6 @@ async def create_related_models(
             gst_cd=new_gst_cd,
             sort_key=evtp_gst.sort_key,
             notitie=evtp_gst.notitie,
-            conditie=evtp_gst.conditie,
             user_nm=gebruiker,
             ts_mut=current_date,
             ts_start=current_date,
@@ -821,9 +824,9 @@ async def get_by_publicatiestatus_evtp(db: AsyncSession) -> Dict[str, Callable[[
 
     sorted_status_count = sorted(
         status_count,
-        key=lambda row: [member.value[1] for member in MappingPublicatiestatus].index(
+        key=lambda row: [member.description for member in MappingPublicatiestatus].index(
             next(
-                (member.value[1] for member in MappingPublicatiestatus if member.value[0] == row.id_publicatiestatus),
+                (member.description for member in MappingPublicatiestatus if member.code == row.id_publicatiestatus),
                 "Onbekend",
             )
         ),
@@ -831,7 +834,7 @@ async def get_by_publicatiestatus_evtp(db: AsyncSession) -> Dict[str, Callable[[
 
     return {
         next(
-            (member.value[1] for member in MappingPublicatiestatus if member.value[0] == row.id_publicatiestatus),
+            (member.description for member in MappingPublicatiestatus if member.code == row.id_publicatiestatus),
             "Onbekend",
         ): row.count
         for row in sorted_status_count
@@ -872,10 +875,10 @@ async def get_by_publicatiestatus_oe(db: AsyncSession, top: int = 20):
 
     df = pd.DataFrame(data, columns=["id_publicatiestatus", "naam_officieel", "count"])
     df["id_publicatiestatus"] = df["id_publicatiestatus"].map(
-        lambda x: next((member.value[1] for member in MappingPublicatiestatus if member.value[0] == x), "Onbekend")
+        lambda x: next((member.description for member in MappingPublicatiestatus if member.code == x), "Onbekend")
     )
 
-    desired_order = [member.value[1] for member in MappingPublicatiestatus]
+    desired_order = [member.description for member in MappingPublicatiestatus]
     present_statuses = [status for status in desired_order if status in df["id_publicatiestatus"].unique()] + ["Totaal"]
     pivot_table = df.pivot_table(
         index="naam_officieel",

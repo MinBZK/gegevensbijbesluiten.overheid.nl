@@ -6,7 +6,7 @@
     <AppHeader />
     <AppBreadcrumb />
     <AppPageBanner />
-    <div id="content">
+    <div>
       <slot />
     </div>
     <AppFooter>

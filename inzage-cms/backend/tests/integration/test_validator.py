@@ -3,15 +3,19 @@ from random import randint
 
 import app.models as models
 import pytest
-from app.config.resource import TableResource
+from app.config.resource import MappingPublicatiestatus, TableResource
 from sqlalchemy import select
 
 logging = logging.getLogger(__name__)
 
 
 @pytest.fixture()
-def randomised_urls(db) -> list[str]:
-    evtp_list = db.scalars(select(models.evtp.Evtp.evtp_cd)).all()
+def randomised_urls(db_sync) -> list[str]:
+    evtp_list = db_sync.scalars(
+        select(models.evtp.EvtpVersion.evtp_cd).filter(
+            models.evtp.EvtpVersion.id_publicatiestatus < MappingPublicatiestatus.ARCHIVED.code
+        )
+    ).all()
     urls = []
     for _ in range(5):
         evtp_index = randint(0, len(evtp_list) - 1)
@@ -27,7 +31,3 @@ class TestAPI:
         for url in urls:
             response = client.get(url)
             assert response.status_code == 200, "Get request has failed"
-
-
-if __name__ == "__main__":
-    pytest.main()

@@ -292,7 +292,7 @@ def get_paginated_parents(
     return parents
 
 
-def get_search_suggestion(db: Session, search_query: str):
+def get_search_suggestion(db: Session, search_query: str, limit: int = 1000):
     model_gg = models.gg.Gg
     query_filters = []
 
@@ -327,7 +327,7 @@ def get_search_suggestion(db: Session, search_query: str):
             .order_by(desc(similarity_score))
         )
 
-        query_gg = db.execute(query).scalars().all()
+        query_gg = db.execute(query.limit(limit)).scalars().all()
 
         if not query_gg:
             logging.info("Suggestion search - ilike did not give any results for child gegevens")
@@ -340,7 +340,7 @@ def get_search_suggestion(db: Session, search_query: str):
                 .where(and_(*query_filters, model_gg.gg_cd.in_(valid_child_gg_cds)))
                 .order_by(desc(similarity_score))
             )
-            query_gg = db.execute(query).scalars().all()
+            query_gg = db.execute(query.limit(limit)).scalars().all()
             if query_gg:
                 logging.info(f"Suggestion-search - Similarity search query for gegevens for: {search_query}")
             else:
@@ -351,7 +351,7 @@ def get_search_suggestion(db: Session, search_query: str):
             )
     else:
         query = select(model_gg).where(and_(*query_filters))
-        query_gg = db.execute(query).scalars().all()
+        query_gg = db.execute(query.limit(limit)).scalars().all()
 
     return schemas.common.SearchSuggestionsAllEntities(
         gg=[

@@ -64,7 +64,6 @@ class ResourcePayloads:
 
 def populate_payloads(resource_pks: ResourcePks, resource_payloads: ResourcePayloads):
     resource_payloads.evtp_version.oe_best = resource_pks.oe.database_pk
-    resource_payloads.evtp_version.evtp_cd_sup = resource_pks.evtp_version.database_pk
     resource_payloads.evtp_acc.evtp_cd = resource_pks.evtp_version.database_pk
     resource_payloads.evtp_acc.oe_cd = resource_pks.oe.database_pk
     resource_payloads.evtp_gst.evtp_cd = resource_pks.evtp_version.database_pk
@@ -91,27 +90,27 @@ def populate_payloads(resource_pks: ResourcePks, resource_payloads: ResourcePayl
 
 
 @pytest.fixture()
-def resource_pks(db):
+def resource_pks(db_sync):
     pks = ResourcePks(
-        evtp_version=PrimaryKeys(db.scalars(select(models.evtp.Evtp.evtp_cd)).first(), None),
-        evtp_acc=PrimaryKeys(db.scalars(select(models.evtp_acc.EvtpAcc.evtp_acc_cd)).first(), None),
-        evtp_gst=PrimaryKeys(db.scalars(select(models.evtp.EvtpGst.evtp_gst_cd)).first(), None),
-        evtp_oe_com_type=PrimaryKeys(db.scalars(select(models.evtp.EvtpOeComType.evtp_cd)).first(), None),
-        gg=PrimaryKeys(db.scalars(select(models.gg.Gg.gg_cd)).first(), None),
-        gg_struct=PrimaryKeys(db.scalars(select(models.gg.GgStruct.gg_cd_sub)).first(), None),
-        gst_gg=PrimaryKeys(db.scalars(select(models.gst.GstGg.gst_gg_cd)).first(), None),
-        gst_type=PrimaryKeys(db.scalars(select(models.gst.GstType.gstt_cd)).first(), None),
-        gst_gstt=PrimaryKeys(db.scalars(select(models.gst.GstGstt.gst_gstt_cd)).first(), None),
-        gst=PrimaryKeys(db.scalars(select(models.gst.Gst.gst_cd)).first(), None),
-        ibron=PrimaryKeys(db.scalars(select(models.ibron.Ibron.ibron_cd)).first(), None),
-        oe_com_type=PrimaryKeys(db.scalars(select(models.oe.OeComType.oe_com_type_cd)).first(), None),
-        oe_koepel_oe=PrimaryKeys(db.scalars(select(models.oe.OeKoepelOe.oe_koepel_oe_cd)).first(), None),
-        oe_koepel=PrimaryKeys(db.scalars(select(models.oe.OeKoepel.oe_koepel_cd)).first(), None),
-        oe=PrimaryKeys(db.scalars(select(models.oe.Oe.oe_cd)).first(), None),
-        rge=PrimaryKeys(db.scalars(select(models.rge.Rge.rge_cd)).first(), None),
-        ond=PrimaryKeys(db.scalars(select(models.ond.Ond.ond_cd)).first(), None),
-        evtp_ond=PrimaryKeys(db.scalars(select(models.ond.EvtpOnd.evtp_ond_cd)).first(), None),
-        gg_evtp_sort=PrimaryKeys(db.scalars(select(models.gg.GgEvtpSort.gg_evtp_sort_cd)).first(), None),
+        evtp_version=PrimaryKeys(db_sync.scalars(select(models.evtp.Evtp.evtp_cd)).first(), None),
+        evtp_acc=PrimaryKeys(db_sync.scalars(select(models.evtp_acc.EvtpAcc.evtp_acc_cd)).first(), None),
+        evtp_gst=PrimaryKeys(db_sync.scalars(select(models.evtp.EvtpGst.evtp_gst_cd)).first(), None),
+        evtp_oe_com_type=PrimaryKeys(db_sync.scalars(select(models.evtp.EvtpOeComType.evtp_cd)).first(), None),
+        gg=PrimaryKeys(db_sync.scalars(select(models.gg.Gg.gg_cd)).first(), None),
+        gg_struct=PrimaryKeys(db_sync.scalars(select(models.gg.GgStruct.gg_cd_sub)).first(), None),
+        gst_gg=PrimaryKeys(db_sync.scalars(select(models.gst.GstGg.gst_gg_cd)).first(), None),
+        gst_type=PrimaryKeys(db_sync.scalars(select(models.gst.GstType.gstt_cd)).first(), None),
+        gst_gstt=PrimaryKeys(db_sync.scalars(select(models.gst.GstGstt.gst_gstt_cd)).first(), None),
+        gst=PrimaryKeys(db_sync.scalars(select(models.gst.Gst.gst_cd)).first(), None),
+        ibron=PrimaryKeys(db_sync.scalars(select(models.ibron.Ibron.ibron_cd)).first(), None),
+        oe_com_type=PrimaryKeys(db_sync.scalars(select(models.oe.OeComType.oe_com_type_cd)).first(), None),
+        oe_koepel_oe=PrimaryKeys(db_sync.scalars(select(models.oe.OeKoepelOe.oe_koepel_oe_cd)).first(), None),
+        oe_koepel=PrimaryKeys(db_sync.scalars(select(models.oe.OeKoepel.oe_koepel_cd)).first(), None),
+        oe=PrimaryKeys(db_sync.scalars(select(models.oe.Oe.oe_cd)).first(), None),
+        rge=PrimaryKeys(db_sync.scalars(select(models.rge.Rge.rge_cd)).first(), None),
+        ond=PrimaryKeys(db_sync.scalars(select(models.ond.Ond.ond_cd)).first(), None),
+        evtp_ond=PrimaryKeys(db_sync.scalars(select(models.ond.EvtpOnd.evtp_ond_cd)).first(), None),
+        gg_evtp_sort=PrimaryKeys(db_sync.scalars(select(models.gg.GgEvtpSort.gg_evtp_sort_cd)).first(), None),
     )
     return pks
 
@@ -124,7 +123,6 @@ def resource_payloads(resource_pks):
     payloads = ResourcePayloads(
         evtp_version=schemas.evtp_version.EvtpNewVersionIn(
             aanleiding=standard_text,
-            evtp_cd_sup=standard_value,
             evtp_nm=standard_text,
             gebr_dl=standard_text,
             notitie=standard_text,
@@ -145,7 +143,6 @@ def resource_payloads(resource_pks):
             volg_nr=standard_value,
         ),
         evtp_gst=schemas.evtp_gst.EvtpGstIn(
-            conditie=standard_text,
             evtp_cd=standard_value,
             versie_nr=standard_value,
             gst_cd=standard_value,
@@ -247,12 +244,6 @@ def resource_payloads(resource_pks):
 
 
 class TestAPI:
-    def setup_method(self) -> None:
-        self.headers: dict = {
-            "accept": "application/json",
-            "Authorization": "Bearer mock_token",
-        }
-
     @pytest.mark.parametrize(
         "path, expected_content",
         [
@@ -262,15 +253,15 @@ class TestAPI:
             # (f"/api/{TableResource.evtp_oe_com_type.value}/", schemas.evtp_oe_com_type.EvtpOeComTypeWithRelations),
             # (f"/api/{TableResource.oe.value}/", schemas.oe.OeWithRelations),
             # (f"/api/{TableResource.oe_com_type.value}/", schemas.oe_com_type.OeComType),
-            # (f"/api/{TableResource.gg_koepel.value}/", schemas.gg.GgWithRelations),
-            # (f"/api/{TableResource.gg.value}/", schemas.gg.GgWithRelations),
+            (f"/api/{TableResource.gg_koepel.value}/", schemas.gg.GgWithRelations),
+            (f"/api/{TableResource.gg.value}/", schemas.gg.GgWithRelations),
             (f"/api/{TableResource.gg_struct.value}/", schemas.gg_struct.GgStructWithRelations),
             # (f"/api/{TableResource.gg_evtp_sort.value}/", schemas.gg_evtp_sort.GgEvtpSortWithRelations),
-            # (f"/api/{TableResource.gst.value}/", schemas.gst.GstWithRelations),
+            (f"/api/{TableResource.gst.value}/", schemas.gst.GstWithRelations),
             (f"/api/{TableResource.rge.value}/", schemas.rge.Rge),
             # (f"/api/{TableResource.oe_struct.value}/", schemas.oe_struct.OeStructWithRelations),
             # (f"/api/{TableResource.ibron.value}/", schemas.ibron.IbronWithRelations),
-            # (f"/api/{TableResource.gst_gg.value}/", schemas.gst_gg.GstGgWithRelations),
+            (f"/api/{TableResource.gst_gg.value}/", schemas.gst_gg.GstGgWithRelations),
             (f"/api/{TableResource.gst_type.value}/", schemas.gst_type.GstType),
             # (f"/api/{TableResource.gst_gstt.value}/", schemas.gst_gstt.GstGsttWithRelations),
             (f"/api/{TableResource.ond.value}/", schemas.ond.Ond),
@@ -279,7 +270,7 @@ class TestAPI:
     )
     def test_get_requests(self, client, path, expected_content, monkeypatch):
         # Send a GET request without authorization
-        response = client.get(path, headers=self.headers)
+        response = client.get(path)
         assert response.status_code == 200, "Get request has failed"
 
         response_json = response.json()
@@ -308,16 +299,16 @@ class TestAPI:
             # (f"/api/{TableResource.oe_com_type.value}/", schemas.oe_com_type.OeComType),
             # (f"/api/{TableResource.gg.value}/", schemas.gg.Gg),
             # (f"/api/{TableResource.gg_struct.value}/", schemas.gg_struct.GgStruct),
-            # (f"/api/{TableResource.gg_evtp_sort.value}/", schemas.gg_evtp_sort.GgEvtpSort),
+            (f"/api/{TableResource.gg_evtp_sort.value}/", schemas.gg_evtp_sort.GgEvtpSort),
             (f"/api/{TableResource.gst.value}/", schemas.gst.Gst),
             # (f"/api/{TableResource.rge.value}/", schemas.rge.Rge),
-            # (f"/api/{TableResource.oe_struct.value}/", schemas.oe_struct.OeStruct),
-            # (f"/api/{TableResource.ibron.value}/", schemas.ibron.Ibron),
-            # (f"/api/{TableResource.gst_gg.value}/", schemas.gst_gg.GstGg),
-            # (f"/api/{TableResource.gst_type.value}/", schemas.gst_type.GstType),
+            (f"/api/{TableResource.oe_koepel.value}/", schemas.oe_koepel.OeKoepel),
+            (f"/api/{TableResource.ibron.value}/", schemas.ibron.Ibron),
+            (f"/api/{TableResource.gst_gg.value}/", schemas.gst_gg.GstGg),
+            (f"/api/{TableResource.gst_type.value}/", schemas.gst_type.GstType),
             # (f"/api/{TableResource.gst_gstt.value}/", schemas.gst_gstt.GstGstt),
-            # (f"/api/{TableResource.ond.value}/", schemas.ond.Ond),
-            # (f"/api/{TableResource.evtp_ond.value}/", schemas.evtp_ond.EvtpOnd),
+            (f"/api/{TableResource.ond.value}/", schemas.ond.Ond),
+            (f"/api/{TableResource.evtp_ond.value}/", schemas.evtp_ond.EvtpOnd),
         ],
     )
     def test_post_requests(self, client, path, expected_content, resource_payloads, monkeypatch):
@@ -325,7 +316,7 @@ class TestAPI:
         payload_key = path.split("/")[-2].replace("-", "_")
         payload = resource_payloads.__dict__.get(payload_key, {})
         payload_json = payload.model_dump()
-        response = client.post(path, json=payload_json, headers=self.headers)
+        response = client.post(path, json=payload_json)
         assert response.status_code == 200, "Post request has failed"
 
         # Assert that the response content is not empty
@@ -352,7 +343,7 @@ class TestAPI:
             # (f"/api/{TableResource.gg_evtp_sort.value}/", schemas.gg_evtp_sort.GgEvtpSort),
             # (f"/api/{TableResource.gst.value}/", 3),
             # (f"/api/{TableResource.rge.value}/", schemas.rge.Rge),
-            # (f"/api/{TableResource.oe_struct.value}/", schemas.oe_struct.OeStruct),
+            # (f"/api/{TableResource.oe_koepel.value}/", schemas.oe_koepel.OeKoepel),
             # (f"/api/{TableResource.ibron.value}/", schemas.ibron.Ibron),
             (f"/api/{TableResource.gst_gg.value}/", 2),
             # (f"/api/{TableResource.gst_type.value}/", schemas.gst_type.GstType),
@@ -363,10 +354,5 @@ class TestAPI:
     )
     def test_delete_requests(self, client, path, pk, resource_pks, monkeypatch):
         # Send a DELETE request
-        # TODO
-        response = client.delete(f"{path}{pk}", headers=self.headers)
+        response = client.delete(f"{path}{pk}")
         assert response.status_code == 200, "Delete request has failed"
-
-
-if __name__ == "__main__":
-    pytest.main()

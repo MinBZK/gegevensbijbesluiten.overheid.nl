@@ -16,7 +16,8 @@
       :new-relationevtp="evtpTree"
       :data-type="getDataType(originalFieldKeys[fieldKey])"
       :disable-evtp="disableEvtp"
-      @update="(v) => updateRecord(fieldKey, v)"
+      :gg-cd-parent="ggCdParent"
+      @update="(foreignKeyObject) => updateRecord(fieldKey, foreignKeyObject)"
     />
     <template v-if="table.resource == 'evtp-acc'">
       <v-row>
@@ -150,6 +151,16 @@ export default defineComponent({
       default: null,
       required: false
     },
+    oeBestCd: {
+      type: String,
+      default: null,
+      required: false
+    },
+    ggCdParent: {
+      type: String,
+      default: null,
+      required: false
+    },
     disableEvtp: {
       type: Boolean,
       default: false,
@@ -201,7 +212,6 @@ export default defineComponent({
       handler() {
         this.inputValue = this.record
         // prefill evtp in evtp-ond
-
         if (
           this.evtpCd &&
           (this.table.resource == 'evtp-ond' || this.table.resource == 'evtp-oe-com-type')
@@ -214,6 +224,12 @@ export default defineComponent({
           this.tableModelUpdated.foreign_key_mapping['versie_nr'] = ''
           this.adjustedRecord['evtp_cd'] = this.evtpCd
           this.adjustedRecord['versie_nr'] = this.versieNr
+        } else if (this.evtpCd && this.oeBestCd) {
+          this.inputValue = {}
+          this.inputValue['oe_best'] = this.oeBestCd
+          this.tableModelUpdated.fields['oe_best']['readonly'] = true
+          this.tableModelUpdated.foreign_key_mapping['oe_best'] = ''
+          this.adjustedRecord['oe_best'] = this.oeBestCd
         } else if (this.evtpCd) {
           this.inputValue = ''
           this.evtpTree = true
@@ -263,10 +279,6 @@ export default defineComponent({
           this.inputFields.forEach((f) => {
             this.adjustedRecord[f] = this.inputValue[f] || null
           })
-          if (this.table.resource == 'evtp-acc') {
-            this.tableModelUpdated.fields['oe_cd']['readonly'] = true
-            this.tableModelUpdated.foreign_key_mapping['oe_cd'] = ''
-          }
           if (this.table.resource == 'evtp-acc') {
             this.tableModelUpdated.fields['oe_cd']['readonly'] = true
             this.tableModelUpdated.foreign_key_mapping['oe_cd'] = ''
@@ -343,35 +355,39 @@ export default defineComponent({
       )
       return mappedFields[0]
     },
-    updateRecord(fieldKey: string, v: any) {
+    updateRecord(fieldKey: string, foreignKeyObject: any) {
       // update foreign key column if the key is a related column
       const mappedFields = Object.values(this.tableModelUpdated.foreign_key_mapping)
       const isMappedField = mappedFields.includes(fieldKey)
       if (isMappedField) {
         const originalKey = this.mapForeignKeyToOriginalKey(fieldKey)
         const foreignKey = this.getForeignKey(fieldKey)
-        if (foreignKey?.foreign_resource == 'omg' && !v) {
+        if (foreignKey?.foreign_resource == 'omg' && !foreignKeyObject) {
           // field omg may have null values
           this.adjustedRecord[originalKey] = null
         }
-        if (foreignKey && v) {
-          const foreignId = v ? v[foreignKey.foreign_table.primary_key] : null
+        if (foreignKey && foreignKeyObject) {
+          const foreignId = foreignKeyObject
+            ? foreignKeyObject[foreignKey.foreign_table.primary_key]
+            : null
           this.adjustedRecord[originalKey] = foreignId
           if (
             foreignKey.foreign_resource == 'evtp-version' ||
             (foreignKey.foreign_resource == 'gst' && this.tableModel.resource != 'evtp-gst')
           ) {
-            this.adjustedRecord['versie_nr'] = v.versie_nr
+            this.adjustedRecord['versie_nr'] = foreignKeyObject.versie_nr
           }
           if (
             foreignKey.foreign_resource == 'evtp-version' &&
             this.tableModel.resource == 'evtp-acc'
           ) {
-            this.adjustedRecord['oe_cd'] = v.verantwoordelijke_oe.oe_cd
+            this.adjustedRecord['oe_cd'] = foreignKeyObject.verantwoordelijke_oe.oe_cd
           }
+        } else if (foreignKey && !foreignKeyObject) {
+          this.adjustedRecord[originalKey] = null
         }
       } else {
-        this.adjustedRecord[fieldKey] = v
+        this.adjustedRecord[fieldKey] = foreignKeyObject
       }
     },
     getDataType(fieldKey: string) {

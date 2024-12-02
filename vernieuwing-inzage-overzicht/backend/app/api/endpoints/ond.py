@@ -8,7 +8,7 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 import app.crud as crud
-from app import models, schemas
+from app import schemas
 from app.database.database import (
     get_sync_session,
 )
@@ -27,7 +27,7 @@ router = APIRouter()
 async def get_populated(
     db: Session = Depends(get_sync_session),
     limit: int = Query(default=3, ge=1),
-) -> list[models.ond.Ond]:
+):
     return crud.ond.get_populated(db=db, limit=limit)
 
 

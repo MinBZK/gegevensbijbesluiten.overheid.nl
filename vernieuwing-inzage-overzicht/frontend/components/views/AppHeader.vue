@@ -15,7 +15,10 @@
         </button>
         <div class="logo">
           <NuxtLink :to="{ name: 'index' }" tabindex="2">
-            <img src="@/assets/images/logo.svg" alt="Logo Overheid.nl, ga naar de startpagina" />
+            <img
+              src="@/assets/images/logo.svg"
+              :alt="`Logo Overheid.nl, ga naar de startpagina ${url}`"
+            />
           </NuxtLink>
           <div class="logo__you-are-here">
             <p class="visually-hidden">U bent nu hier:</p>
@@ -41,7 +44,7 @@
               :to="{ name: item.routeName }"
               class="focus-border"
               @click="menuExpanded = false"
-              >{{ p(`${item.label}`) }}</NuxtLink
+              >{{ t(`${item.label}`) }}</NuxtLink
             >
           </li>
         </ul>
@@ -53,10 +56,11 @@
 <script setup lang="ts">
 import { navigationHeaders } from '@/config/navigation'
 const { t } = useI18n()
-const { p } = usePreditor()
 
 const currentRoute = useRoute()
 const menuExpanded = ref<boolean>(false)
+const url = (process.env.NUXT_PUBLIC_API_BASE_URL?.replace('/api', '') ||
+  'gegevensbijbesluiten.overheid.nl') as string
 
 // set expanded to false after route change
 watch(currentRoute, () => (menuExpanded.value = false))

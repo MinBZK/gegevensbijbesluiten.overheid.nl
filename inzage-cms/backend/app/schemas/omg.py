@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator
 
 from app.schemas.oe import OeMinimalList
@@ -12,6 +14,9 @@ class Omg(BaseModel):
     oe_cd: int
     lidw: str | None
     link: HttpUrl
+    notitie: str | None
+    ts_mut: datetime
+    user_nm: str
 
 
 class OmgMinimalList(BaseModel):

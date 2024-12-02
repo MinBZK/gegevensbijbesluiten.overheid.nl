@@ -3,9 +3,12 @@
     <div class="columns">
       <div class="column column-d-5">
         <div class="form__row">
-          <label id="search-label" class="form__label form__label--accent">{{
-            searchExplanation
-          }}</label>
+          <label
+            for="input-text-98789"
+            class="form__label form__label--accent"
+            label="input-label"
+            >{{ searchExplanation }}</label
+          >
 
           <div class="wrapper-searchbar">
             <input
@@ -15,30 +18,60 @@
               type="text"
               name="98789"
               class="input input-text"
-              aria-invalid="false"
-              aria-labelledby="search-label"
               autocomplete="off"
               :placeholder="searchHint"
-              :aria-expanded="showSuggestions"
+              aria-controls="search-results"
+              aria-autocomplete="list"
+              spellcheck="false"
               @keyup.enter="getPage !== 'index' && doSearch()"
               @keydown.esc="hideSuggestions"
+              @keydown="handleArrowNavigation"
               @focus="handleInputFocus"
             />
           </div>
-          <div v-if="showSuggestions" class="suggestions-wrapper">
-            <div v-if="getPage === 'index'" class="suggestions-index">
-              <template v-for="entityType in ['evtp', 'gg', 'oe']" :key="entityType">
-                <b class="entity-title">{{
-                  `${getEntityTitle(entityType)} (${getTotalSuggestions(entityType)})`
-                }}</b>
-                <div v-if="getTotalSuggestions(entityType) > 0" class="entity-suggestions">
-                  <ul class="suggestion-list">
+          <div v-if="showSuggestions" id="announce" aria-live="polite" class="sr-only">
+            {{
+              `${getTotalSuggestions() ?? 0} suggesties gevonden voor de zoekterm '${searchValue}'`
+            }}
+          </div>
+          <div
+            v-if="showSuggestions"
+            id="search-results"
+            class="suggestions-wrapper"
+            role="listbox"
+            aria-labelledby="Search suggestions"
+          >
+            <div v-if="getPage === 'index'" class="suggestions-index" role="combobox">
+              <d v-for="(entityType, entityIndex) in ['evtp', 'gg', 'oe']" :key="entityType">
+                <h4 class="entity-title">
+                  {{
+                    `${getEntityTitle(entityType)} (${getTotalSuggestionsPerEntity(entityType)})`
+                  }}
+                </h4>
+                <div
+                  v-if="getTotalSuggestionsPerEntity(entityType) > 0"
+                  class="entity-suggestions"
+                  role="listbox"
+                >
+                  <ul
+                    id="search-results"
+                    class="suggestion-list"
+                    :aria-label="`${getEntityTitle(entityType)} (${getTotalSuggestionsPerEntity(
+                      entityType
+                    )})`"
+                  >
                     <li
-                      v-for="suggestion in getLimitedSuggestions(entityType)"
+                      v-for="(suggestion, itemIndex) in getLimitedSuggestions(entityType)"
+                      v-bind="getItemProps(entityIndex, itemIndex)"
+                      :id="`search-result-${entityIndex}-${itemIndex}`"
                       :key="suggestion.upc"
-                      class="suggestion-item"
+                      :aria-selected="
+                        activeEntityIndex === entityIndex && activeItemIndex === itemIndex
+                      "
+                      role="option"
                     >
                       <NuxtLink
+                        tabindex="1"
                         :to="
                           getLink(
                             `/${getEntityPath(entityType)}/${suggestion.upc}`,
@@ -53,8 +86,21 @@
                   </ul>
                   <div
                     v-if="getSuggestionsHiddenCount(entityType) > 0"
+                    v-bind="getItemProps(entityIndex, getLimitedSuggestions(entityType).length)"
                     class="suggestion-footer"
+                    role="option"
+                    tabindex="-1"
+                    :aria-selected="
+                      activeEntityIndex === entityIndex &&
+                      activeItemIndex === getLimitedSuggestions(entityType).length
+                    "
+                    :class="{
+                      active:
+                        activeEntityIndex === entityIndex &&
+                        activeItemIndex === getLimitedSuggestions(entityType).length
+                    }"
                     @click="showAllSuggestions(entityType)"
+                    @keydown.enter="showAllSuggestions(entityType)"
                   >
                     {{ getSuggestionHiddenText(entityType) }}
                   </div>
@@ -66,17 +112,19 @@
                   {{ t('noResultsSuggestionsList') }}
                 </div>
                 <SearchSkeleton v-else :skeleton-item="3" />
-              </template>
+              </d>
             </div>
             <div v-else class="suggestions-single-entity">
-              <div v-if="getTotalSuggestions(entity) > 0">
+              <div v-if="getTotalSuggestionsPerEntity(entity) > 0">
                 <ul class="suggestion-list">
                   <li
-                    v-for="suggestion in getLimitedSuggestions(entity)"
+                    v-for="(suggestion, itemIndex) in getLimitedSuggestions(entity)"
                     :key="suggestion.upc"
-                    class="suggestion-item"
+                    :class="getItemClass(0, itemIndex)"
+                    role="option"
                   >
                     <NuxtLink
+                      tabindex="1"
                       :to="
                         getLink(`/${getEntityPath(entity)}/${suggestion.upc}`, suggestion.version)
                           .value
@@ -102,6 +150,7 @@
           </div>
           <div
             v-else-if="showNoResultsMessage"
+            id="search-resdults"
             class="suggestions-wrapper suggestion-item-notfound-single-entity"
           >
             {{ t('noResultsSuggestionsListAll') }}
@@ -162,6 +211,10 @@ const isLoading = ref(false)
 const shouldShowNoResults = ref(false)
 const entitiesWithNoResults = ref<Set<string>>(new Set())
 
+// New refs for keyboard navigation
+const activeEntityIndex = ref<number>(-1)
+const activeItemIndex = ref<number>(-1)
+
 const startNoResultsTimeout = () => {
   shouldShowNoResults.value = false
   setTimeout(() => {
@@ -171,7 +224,7 @@ const startNoResultsTimeout = () => {
 
 const startNoResultsTimeoutForEntity = (entityType: string) => {
   setTimeout(() => {
-    if (getTotalSuggestions(entityType) === 0) {
+    if (getTotalSuggestionsPerEntity(entityType) === 0) {
       entitiesWithNoResults.value.add(entityType)
     }
   }, 100)
@@ -205,7 +258,7 @@ const getSuggestionHiddenText = (entityType: string) => {
 const getEntityTitle = (entityType: string) => {
   switch (entityType) {
     case 'evtp':
-      return t('pages.besluiten.title')
+      return t('pages.besluiten.titleSuggestionBar')
     case 'gg':
       return t('pages.gegevens.title')
     case 'oe':
@@ -252,15 +305,21 @@ const getSuggestionsHiddenCount = (entityType: string) => {
   }
 }
 
-const getTotalSuggestions = (entityType: string) => {
+const getTotalSuggestionsPerEntity = (entityType: string) => {
   if (getPage === 'index') {
     return suggestionsResultsAllEntities.value?.[entityType]?.length || 0
   } else {
     return suggestionsResultsEntity.value.length
   }
 }
+
+const getTotalSuggestions = () => {
+  return suggestionsResultsAllEntities.value?.['total_count']
+}
+
 const hideSuggestions = () => {
   showSuggestions.value = false
+  resetActiveIndexes()
   resetContainerPadding()
 }
 
@@ -276,6 +335,9 @@ const handleClickOutside = (event: MouseEvent) => {
   if (blockSearch.value && !blockSearch.value.contains(target)) {
     hideSuggestions()
     showTopSuggestions()
+    Object.keys(showingAllSuggestionsPerEntity.value).forEach((key) => {
+      showingAllSuggestionsPerEntity.value[key] = false
+    })
   }
 }
 
@@ -327,7 +389,7 @@ const fetchSearchSuggestions = async () => {
     showSuggestionsAndAdjustPadding()
     if (getPage === 'index') {
       ;['evtp', 'gg', 'oe'].forEach((entityType) => {
-        if (getTotalSuggestions(entityType) === 0) {
+        if (getTotalSuggestionsPerEntity(entityType) === 0) {
           startNoResultsTimeoutForEntity(entityType)
         }
       })
@@ -353,20 +415,16 @@ const showAllSuggestions = (entityType: string) => {
     adjustContainerPadding()
   })
 }
+
 const checkIfSuggestionsAreNull = computed((): boolean => {
   const suggestions = suggestionsResultsAllEntities.value
-
   if (!suggestions) {
     return false
   }
-
-  const { evtp, gg, oe, ...otherKeys } = suggestions
-
+  const { evtp, gg, oe } = suggestions
   const areSpecificKeysEmpty = evtp.length === 0 && gg.length === 0 && oe.length === 0
 
-  const areOtherKeysEmpty = Object.values(otherKeys).every((arr) => arr.length === 0)
-
-  return areSpecificKeysEmpty && areOtherKeysEmpty
+  return areSpecificKeysEmpty
 })
 
 const showNoResultsMessage = computed(() => {
@@ -416,20 +474,163 @@ const handleInputFocus = () => {
   }
 }
 
-watchDebounced(
-  searchValue,
-  async () => {
-    if (searchValue.value.length > 2) {
-      showSuggestionsAndAdjustPadding()
-      await fetchSearchSuggestions()
+watchDebounced(searchValue, async () => {
+  if (searchValue.value.length > 2) {
+    showSuggestionsAndAdjustPadding()
+    await fetchSearchSuggestions()
+  } else {
+    suggestionsResultsEntity.value = []
+    suggestionsResultsAllEntities.value = { evtp: [], gg: [], oe: [] }
+    hideSuggestions()
+  }
+})
+
+const handleArrowNavigation = (event: KeyboardEvent) => {
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    event.preventDefault()
+  }
+
+  if (!showSuggestions.value) return
+
+  const entityTypes = getPage === 'index' ? ['evtp', 'gg', 'oe'] : [entity.value]
+  const entityItemCounts = entityTypes.map((entityType) => getLimitedSuggestions(entityType).length)
+
+  const announceCategory = (entityIndex: number) => {
+    const entityType = entityTypes[entityIndex]
+    const categoryTitle = getEntityTitle(entityType)
+    const announcement = `Categorie ${categoryTitle}: ${getTotalSuggestionsPerEntity(
+      entityType
+    )} suggesties`
+    announceToScreenReader(announcement)
+  }
+
+  const moveDown = () => {
+    if (activeEntityIndex.value === -1 && activeItemIndex.value === -1) {
+      // First time navigating down
+      activeEntityIndex.value = 0
+      activeItemIndex.value = 0
+      announceCategory(activeEntityIndex.value)
     } else {
-      suggestionsResultsEntity.value = []
-      suggestionsResultsAllEntities.value = { evtp: [], gg: [], oe: [] }
-      hideSuggestions()
+      activeItemIndex.value++
+
+      // Check if we've gone past items in current entity
+      if (activeItemIndex.value > entityItemCounts[activeEntityIndex.value]) {
+        activeEntityIndex.value++
+        activeItemIndex.value = 0
+
+        // Announce new category if we've moved to a new entity
+        if (activeEntityIndex.value < entityTypes.length) {
+          announceCategory(activeEntityIndex.value)
+        }
+      }
+
+      // Loop back to first entity if we've gone past all entities
+      if (activeEntityIndex.value >= entityTypes.length) {
+        activeEntityIndex.value = 0
+        activeItemIndex.value = 0
+        announceCategory(activeEntityIndex.value)
+      }
     }
   }
-  // { debounce: 300 }
-)
+
+  const moveUp = () => {
+    if (activeEntityIndex.value === -1 && activeItemIndex.value === -1) {
+      // First time navigating up, go to last item
+      activeEntityIndex.value = entityTypes.length - 1
+      activeItemIndex.value = entityItemCounts[activeEntityIndex.value]
+      announceCategory(activeEntityIndex.value)
+    } else {
+      activeItemIndex.value--
+
+      // Check if we need to move to previous entity
+      if (activeItemIndex.value < 0) {
+        activeEntityIndex.value--
+
+        // If we've gone past the first entity, loop to last
+        if (activeEntityIndex.value < 0) {
+          activeEntityIndex.value = entityTypes.length - 1
+          activeItemIndex.value = entityItemCounts[activeEntityIndex.value]
+        } else {
+          // Move to last item of previous entity
+          activeItemIndex.value = entityItemCounts[activeEntityIndex.value]
+        }
+
+        // Announce new category
+        announceCategory(activeEntityIndex.value)
+      }
+    }
+  }
+
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault()
+      moveDown()
+      break
+    case 'ArrowUp':
+      event.preventDefault()
+      moveUp()
+      break
+    case 'Enter':
+      if (activeEntityIndex.value !== -1 && activeItemIndex.value !== -1) {
+        event.preventDefault()
+        const entityType = entityTypes[activeEntityIndex.value]
+        if (activeItemIndex.value === entityItemCounts[activeEntityIndex.value]) {
+          // "Show more" div is selected
+          showAllSuggestions(entityType)
+        } else {
+          const suggestion = getLimitedSuggestions(entityType)[activeItemIndex.value]
+          if (suggestion) {
+            const router = useRouter()
+            router.push(
+              getLink(`/${getEntityPath(entityType)}/${suggestion.upc}`, suggestion.version).value
+            )
+          }
+        }
+      } else {
+        doSearch()
+      }
+      break
+  }
+}
+
+// Helper function to announce text to screen readers
+const announceToScreenReader = (text: string) => {
+  const announceElement = document.getElementById('announce')
+  if (announceElement) {
+    announceElement.textContent = text
+  }
+}
+
+// Method to get the CSS class for active item
+const getItemClass = (entityIndex: number, itemIndex: number) => {
+  return {
+    'suggestion-item': true,
+    active: activeEntityIndex.value === entityIndex && activeItemIndex.value === itemIndex
+  }
+}
+
+const getItemProps = (entityIndex: number, itemIndex: number) => {
+  const entityType = getPage === 'index' ? ['evtp', 'gg', 'oe'][entityIndex] : entity.value
+  const isActive =
+    activeEntityIndex.value === entityIndex &&
+    (activeItemIndex.value === itemIndex ||
+      (itemIndex === getLimitedSuggestions(entityType).length &&
+        activeItemIndex.value === getLimitedSuggestions(entityType).length))
+
+  return {
+    class: {
+      'suggestion-item': true,
+      active: isActive
+    },
+    'aria-selected': isActive
+  }
+}
+
+// Reset active indexes when suggestions change or hide
+const resetActiveIndexes = () => {
+  activeEntityIndex.value = -1
+  activeItemIndex.value = -1
+}
 
 onMounted(() => {
   document.addEventListener('mousedown', handleClickOutside)
@@ -610,6 +811,24 @@ onUnmounted(() => {
 
   &:hover {
     background-color: darken(#f5f5f5, 5%);
+  }
+
+  &.active {
+    background-color: $tertiary;
+  }
+}
+
+.suggestion-item {
+  padding: 0.6em;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.active {
+    background-color: $tertiary;
   }
 }
 </style>

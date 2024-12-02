@@ -57,8 +57,9 @@ providePageTitle({
   }
 }
 .faq-section {
-  padding-top: 2em;
-  padding-bottom: 2.5em;
+  // padding-top: 2em;
+  // padding-bottom: 2.5em;
+  padding: 2.5em 1em 2.5em 1em;
   row-gap: 0em;
 }
 .actueel-section {

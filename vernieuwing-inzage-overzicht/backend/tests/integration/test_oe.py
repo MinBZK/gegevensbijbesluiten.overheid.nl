@@ -27,7 +27,7 @@ def randomised_urls(db) -> list[str]:
     for _ in range(10):
         oes_ind = randint(0, len(oe_list) - 1)
         oe_upc = oe_list[oes_ind].oe_upc
-        urls.append(f"/api/oe/{oe_upc}/")
+        urls.append(f"/api/oe/{oe_upc}")
     return urls
 
 
@@ -39,8 +39,8 @@ def filters():
     ]
 
 
-class TestAPI:
-    def test_detail_page(self, client, randomised_urls):
+class TestOe:
+    def test_get_requests(self, client, randomised_urls):
         """Test a random set of oe endpoints"""
         for url in randomised_urls:
             response = client.get(url)
@@ -63,7 +63,3 @@ class TestAPI:
     #         assert len(response_object["results"]) > 0, "Response content is empty"
     #         results.append(len(response_object["results"]))
     #     assert results[0] > results[1]
-
-
-if __name__ == "__main__":
-    pytest.main()

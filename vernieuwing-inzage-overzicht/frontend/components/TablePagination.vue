@@ -5,58 +5,65 @@
       aria-label="Paginering navigatie"
       :class="isMobile && paginationForArchive && 'pagination-mobile'"
     >
-      <div
-        class="pagenumber noselect"
-        :tabindex="currentPage == 1 ? -1 : 0"
-        :class="currentPage == 1 && 'disabled'"
-        role="button"
-        :aria-label="currentPage !== 1 ? t('pagination.goToPreviousPage') : ''"
-        @click="navigate(-1)"
-        @keydown.enter="navigate(-1)"
-        @keydown.space.prevent="navigate(-1)"
-      >
-        <NuxtIcon name="mdi:chevron-left" />
-      </div>
-      <template v-for="(pageNumber, index) in range" :key="pageNumber">
-        <div v-if="index == 1 && pageNumber != 2" class="pagenumber-elipsis noselect">...</div>
-        <NuxtLink
-          :to="
-            localePath({
-              path: route.path?.toString(),
-              query: { page: pageNumber.toString() }
-            })
-          "
-          :class="pageNumber == currentPage && 'current-page'"
-          :aria-label="t('pagination.goTo', { n: pageNumber })"
-          :tabindex="currentPage == pageNumber ? -1 : 0"
-          :aria-current="pageNumber == currentPage && `true`"
-          role="button"
-          class="pagenumber noselect"
-          @click=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
-          @keydown.enter=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
-          @keydown.space.prevent=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
-        >
-          {{ pageNumber }}
-        </NuxtLink>
-        <div
-          v-if="index == range.length - 2 && pageNumber != pageLength - 1"
-          class="pagenumber-elipsis noselect"
-        >
-          ...
-        </div>
-      </template>
-      <div
-        class="pagenumber noselect"
-        :tabindex="props.currentPage == props.pageLength ? -1 : 0"
-        :aria-label="props.currentPage !== props.pageLength ? t('pagination.goToNextPage') : ``"
-        role="button"
-        :class="props.currentPage == props.pageLength && 'disabled'"
-        @click="() => navigate(1)"
-        @keydown.enter="() => navigate(1)"
-        @keydown.space.prevent="() => navigate(1)"
-      >
-        <NuxtIcon name="mdi:chevron-right" />
-      </div>
+      <ul class="pagination-list">
+        <li>
+          <div
+            class="pagenumber noselect"
+            role="button"
+            :tabindex="currentPage == 1 ? -1 : 0"
+            :class="currentPage == 1 && 'disabled'"
+            :aria-label="t('pagination.goToPreviousPage')"
+            @click="navigate(-1)"
+            @keydown.enter="navigate(-1)"
+            @keydown.space.prevent="navigate(-1)"
+          >
+            <NuxtIcon name="mdi:chevron-left" class="height-chevron" />
+          </div>
+        </li>
+        <li v-for="(pageNumber, index) in range" :key="pageNumber" class="pagination-item">
+          <div v-if="index == 1 && pageNumber != 2" class="pagenumber-elipsis noselect">...</div>
+          <NuxtLink
+            :to="
+              localePath({
+                path: route.path?.toString(),
+                query: { page: pageNumber.toString() }
+              })
+            "
+            :class="pageNumber == currentPage && 'current-page'"
+            :aria-label="t('pagination.goTo', { n: pageNumber })"
+            :tabindex="currentPage == pageNumber ? -1 : 0"
+            :aria-current="pageNumber == currentPage && `true`"
+            role="button"
+            inactive-class
+            class="pagenumber noselect"
+            @click=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
+            @keydown.enter=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
+            @keydown.space.prevent=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
+          >
+            {{ pageNumber }}
+          </NuxtLink>
+          <div
+            v-if="index == range.length - 2 && pageNumber != pageLength - 1"
+            class="pagenumber-elipsis noselect"
+          >
+            ...
+          </div>
+        </li>
+        <li>
+          <div
+            class="pagenumber noselect"
+            :tabindex="props.currentPage == props.pageLength ? -1 : 0"
+            :aria-label="t('pagination.goToNextPage')"
+            role="button"
+            :class="props.currentPage == props.pageLength && 'disabled'"
+            @click="() => navigate(1)"
+            @keydown.enter="() => navigate(1)"
+            @keydown.space.prevent="() => navigate(1)"
+          >
+            <NuxtIcon name="mdi:chevron-right" class="height-chevron" />
+          </div>
+        </li>
+      </ul>
     </nav>
     <div class="visually-hidden" disabled aria-live="polite">
       {{ pageAnnouncer }}
@@ -128,6 +135,12 @@ nav {
   display: inline-block;
 }
 
+.pagination-list {
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
 .pagenumber {
   padding: 0.5em;
   margin: 0.5em;
@@ -140,6 +153,7 @@ nav {
 
 .pagenumber:hover:not(.current-page, .disabled) {
   background-color: $secondary;
+  color: white;
 }
 
 .current-page {
@@ -162,5 +176,12 @@ nav {
   justify-content: center;
   align-items: center;
   font-size: 0.85em;
+}
+.pagination-item {
+  display: flex;
+  align-items: center;
+}
+.height-chevron {
+  height: 1.7em;
 }
 </style>

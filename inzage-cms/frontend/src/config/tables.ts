@@ -12,6 +12,7 @@ const tables: Array<Table> = [
     columns: {
       evtp_cd: 'Code Besluit',
       evtp_nm: 'Naam Besluit',
+      evtp_upc: 'UPC Besluit',
       oe_best: 'Besluitnemende Oe',
       omg_cd: 'Omgeving',
       versie_nr: 'Versie nummer',
@@ -20,7 +21,6 @@ const tables: Array<Table> = [
       ts_mut: 'Tijdstip laatste mutatie',
       ts_publ: 'Publicatiedatum',
       notitie: 'Notitieveld',
-      evtp_cd_sup: 'Code Besluit Hoger',
       omschrijving: 'Omschrijving Besluit',
       overige_informatie: 'Overige informatie',
       overige_informatie_link: 'Link overige informatie',
@@ -42,8 +42,8 @@ const tables: Array<Table> = [
     ],
     fieldOrder: [
       'evtp_cd',
+      'evtp_upc',
       'huidige_versie',
-      'evtp_cd_sup',
       'evtp_nm',
       'omschrijving',
       'uri',
@@ -135,7 +135,6 @@ const tables: Array<Table> = [
       gst_cd: 'Gegevensstroom',
       versie_nr: 'Besluit versie',
       notitie: 'Notitieveld',
-      conditie: 'Conditie',
       user_nm: 'ID Redacteur',
       ts_mut: 'Tijdstip laatste mutatie',
       sort_key: 'Sorteer sleutel'
@@ -147,7 +146,6 @@ const tables: Array<Table> = [
       'versie_nr',
       'gst_cd',
       'notitie',
-      'conditie',
       'user_nm',
       'ts_mut',
       'sort_key'
@@ -187,19 +185,21 @@ const tables: Array<Table> = [
       omschrijving: 'Omschrijving gegevensstroom',
       oe_bron: 'Bron Oe',
       oe_best: 'Afnemende Oe',
+      conditie: 'Conditie',
       ext_lnk_aut: 'Link naar autorisatiepagina',
       ibron_cd: 'Ibron',
       notitie: 'Notitieveld',
       user_nm: 'ID Redacteur',
       ts_mut: 'Tijdstip laatste mutatie'
     },
-    hiddenColumns: ['ext_lnk_aut', 'ibron_cd', 'ts_mut'],
+    hiddenColumns: ['ext_lnk_aut', 'ts_mut'],
     fieldOrder: [
       'gst_cd',
       'gst_upc',
       'omschrijving',
       'oe_bron',
       'oe_best',
+      'conditie',
       'ext_lnk_aut',
       'ibron_cd',
       'notitie',
@@ -425,7 +425,7 @@ const tables: Array<Table> = [
       naam_spraakgbr: 'Korte naam',
       afko: 'Afkorting OE',
       lidw_sgebr: 'Lidwoord OE',
-      notitie: 'Toelichting',
+      toelichting: 'Toelichting',
       straat: 'Straatnaam/postbus',
       huisnummer: 'Huisnummer',
       huisnummer_toev: 'Toevoeging huisnummer',
@@ -434,6 +434,7 @@ const tables: Array<Table> = [
       provincie: 'Provincie',
       telefoon: 'Telefoonnummer',
       internet_domein: 'Domeinnaam internet',
+      notitie: 'Notitieveld',
       user_nm: 'ID redacteur',
       ts_mut: 'Tijdstip laatste mutatie'
     },
@@ -444,7 +445,7 @@ const tables: Array<Table> = [
       'naam_spraakgbr',
       'afko',
       'lidw_sgebr',
-      'notitie',
+      'toelichting',
       'straat',
       'huisnummer',
       'huisnummer_toev',
@@ -453,6 +454,7 @@ const tables: Array<Table> = [
       'provincie',
       'telefoon',
       'internet_domein',
+      'notitie',
       'user_nm',
       'ts_mut'
     ],
@@ -542,7 +544,7 @@ const tables: Array<Table> = [
       ts_mut: 'Tijdstip laatste mutatie'
     },
     hiddenColumns: [],
-    fieldOrder: ['omg_cd', 'titel', 'oe_cd', 'link', 'lidw', 'notitie', 'ts_mut']
+    fieldOrder: ['omg_cd', 'titel', 'oe_cd', 'link', 'lidw', 'notitie', 'user_nm', 'ts_mut']
   },
   {
     label: 'Communicatiekanalen',

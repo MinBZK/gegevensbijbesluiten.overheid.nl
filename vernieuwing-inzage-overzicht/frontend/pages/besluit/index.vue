@@ -2,7 +2,7 @@
   <div class="container">
     <SearchBar
       ref="searchbar"
-      :search-explanation="t('pages.besluiten.searchText')"
+      :search-explanation="t('pages.onderwerpen.searchText')"
       :suggestions-hidden="`pages.besluiten.suggestionsHidden`"
       @do-search="(searchtext) => doSearch(searchtext)"
     />
@@ -14,8 +14,10 @@
         />
       </div>
       <div class="column-d-9">
-        <h2 role="status">
-          {{ t(`besluiten.foundResults`, { n: totalCount }) }}
+        <h2>
+          <span role="status">
+            {{ t(`besluiten.foundResults`, { n: totalCount }) }}
+          </span>
         </h2>
         <div v-if="evtps.length != 0" class="row no-padding">
           <div class="column-d-6">
@@ -109,11 +111,13 @@ let { data } = await evtpService.getEvtpFiltered(query.value)
 const loading = ref<boolean>(false)
 
 watch(query, async () => {
-  loading.value = true
-  const response = await evtpService.getEvtpFiltered(query.value)
-  loading.value = false
-  data = response.data
-  newFocusIsRequested.value = true
+  if (window.location.hash !== '#content') {
+    loading.value = true
+    const response = await evtpService.getEvtpFiltered(query.value)
+    loading.value = false
+    data = response.data
+    newFocusIsRequested.value = true
+  }
 })
 
 const page = computed(() => query.value.page)
@@ -129,8 +133,6 @@ const setPage = (newPage: number) => {
   router.push({ query: { ...query.value, page: newPage } })
   scrollToCards()
 }
-
-// default value is true, so that when we search from the homepage the focus is always placed correctly.
 const newFocusIsRequested = ref<boolean>(false)
 
 const doSearch = (searchtext: string) => {
@@ -144,7 +146,6 @@ const doSearch = (searchtext: string) => {
 }
 
 const extractContent = (evtp: Evtp) => {
-  // turn the evtp into a list of content
   const content = summaryTiles.map((sT) => ({
     title: t(`evtpProperties.${sT}.label`),
     description: (evtp[sT as keyof Evtp] ||

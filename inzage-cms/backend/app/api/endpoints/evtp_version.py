@@ -162,7 +162,7 @@ async def duplicate(
         body: The data for the new version.
         current_gebruiker: The current user.
 
-    Returns: The duplicated EvtpVersion version, or None if duplication fails.
+    Returns: The duplicated EvtpVersion, or None if duplication fails.
     """
     return await crud.evtp_version.duplicate(db=db, evtp_cd=evtp_cd, body=body, gebruiker="current_gebruiker.name")
 

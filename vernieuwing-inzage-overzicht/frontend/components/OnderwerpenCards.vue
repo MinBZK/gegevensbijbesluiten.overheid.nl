@@ -5,16 +5,17 @@
       v-for="(ond, index) in onds"
       :key="ond.ond_cd"
       class="ond-card"
-      :role="isMobile ? 'button' : ''"
       :tabindex="isMobile ? 0 : ''"
+      :aria-label="isMobile ? t('pages.onderwerpen.referenceToEvtp', { ondName: ond.titel }) : ''"
       @click.prevent="showModal(ond, index)"
       @keydown.enter.prevent="showModal(ond, index)"
       @keydown.space.prevent="showModal(ond, index)"
     >
-      <div>
+      <div :role="isMobile ? 'button' : ''">
         <div class="card-header">
-          <img class="card-icon" :alt="ond.titel" :src="`${getIcon(ond.titel)}`" />
-          <h3 :id="'onderwerpenTitle-' + index">{{ ond.titel }}</h3>
+          <img class="card-icon" alt="" :src="`${getIcon(ond.titel)}`" />
+          <h3 v-if="!isMobile" :id="'onderwerpenTitle-' + index">{{ ond.titel }}</h3>
+          <b v-else>{{ ond.titel }}</b>
         </div>
         <p class="mobile-description">{{ ond.omschrijving }}</p>
       </div>
@@ -36,21 +37,13 @@
         >
           {{
             t('pages.onderwerpen.referenceToEvtp', {
-              evtpName: ond.titel
+              ondName: ond.titel
             })
           }}</a
         >
       </div>
     </li>
-    <ModalShell
-      v-model="isModalVisible"
-      width="500px"
-      height="80%"
-      :index-modal-title="Number(lastAnchorItem)"
-      modal-title="Besluiten"
-      aria-labelledby="selectedOnd"
-      aria-describedby="selectedOnd"
-    >
+    <ModalShell v-model="isModalVisible" width="500px" height="80%" aria-labelledby="ond-title">
       <BesluitModal v-if="!!selectedOnd" :ond="selectedOnd" />
     </ModalShell>
   </ul>
@@ -142,7 +135,7 @@ watch(isModalVisible, (newValue) => {
   }
 }
 
-@media (max-width: 50em) {
+@media (max-width: 60em) {
   .ond-card-container {
     grid-template-columns: repeat(2, 1fr);
     width: 100%;
@@ -153,7 +146,7 @@ watch(isModalVisible, (newValue) => {
   }
 }
 
-@media (max-width: 50em) {
+@media (max-width: 60em) {
   .ond-card {
     padding: 1em;
 

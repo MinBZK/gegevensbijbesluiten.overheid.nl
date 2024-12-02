@@ -89,7 +89,8 @@
           </v-toolbar>
           <v-card-item v-if="loading">
             <div class="centered">
-              <v-progress-circular indeterminate color="primary" />
+              <v-progress-circular indeterminate color="primary" class="mr-2" />
+              <span>Regels toepassen...</span>
             </div>
           </v-card-item>
           <v-card-item>
