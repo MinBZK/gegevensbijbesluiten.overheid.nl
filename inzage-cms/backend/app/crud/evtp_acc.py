@@ -268,6 +268,21 @@ async def get_files(file_path: str) -> FileResponse:
     return FileResponse(os.path.join(PATH_MNT, file_path))
 
 
+async def get_all_files() -> list[FileResponse]:
+    """
+    Retrieve all files inside the PATH_MNT directory.
+
+    Returns: A list of FileResponse objects for each file in the directory.
+    """
+    if not os.path.exists(PATH_MNT):
+        os.makedirs(PATH_MNT)
+
+    files_list = [
+        FileResponse(os.path.join(PATH_MNT, file)) for file in listdir(PATH_MNT) if isfile(join(PATH_MNT, file))
+    ]
+    return files_list
+
+
 async def delete_files(file_path: str) -> Literal["DELETED"]:
     os.remove(os.path.join(PATH_MNT, file_path))
     return "DELETED"
