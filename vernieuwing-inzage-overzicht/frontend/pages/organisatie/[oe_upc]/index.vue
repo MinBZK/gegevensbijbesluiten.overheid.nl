@@ -2,7 +2,7 @@
   <div>
     <div class="container row">
       <NuxtLink class="link cta__backwards" :to="{ name: 'organisatie' }">
-        {{ p('organisaties.goBack') }}
+        {{ t('pages.organisaties.goBack') }}
       </NuxtLink>
     </div>
     <div class="container row container--centered">
@@ -41,21 +41,21 @@
           @keydown.space.prevent="() => openCloseAccordion(GgHeader.h1, accordionHeader1)"
         >
           <h2 class="h2-sentence accordion-header-with-chevron">
-            {{ p('organisaties.h1') }}
+            {{ t('pages.organisaties.h1') }}
           </h2>
           <NuxtIcon :name="getIconAccordion(GgHeader.h1)" />
         </div>
         <div v-show="isAccordionActive(GgHeader.h1)" :id="GgHeader.h1" class="accordion-body">
           <div v-if="evtpManaged.length > 0">
-            <p>{{ p('organisaties.p1') }}</p>
-            <AccordionModalEvtp :evtp="evtpManaged" :title="p('organisaties.p1')">
+            <p>{{ t('pages.organisaties.p1') }}</p>
+            <AccordionModalEvtp :evtp="evtpManaged" :title="t('pages.organisaties.p1')">
             </AccordionModalEvtp>
           </div>
           <div v-else>
-            <p>{{ p('organisaties.p1-empty') }}</p>
+            <p>{{ t('pages.organisaties.p1-empty') }}</p>
             <NuxtLink :to="{ name: 'organisatie' }">
               <span class="underline">
-                {{ p('organisaties.goBack') }}
+                {{ t('pages.organisaties.goBack') }}
               </span>
             </NuxtLink>
           </div>
@@ -89,7 +89,7 @@ import {
   activeItem
 } from '@/utils/index'
 
-const { p } = usePreditor()
+const { t } = useI18n()
 
 resetAccordion()
 const GgHeader = {

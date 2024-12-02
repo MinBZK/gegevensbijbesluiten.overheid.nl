@@ -1,9 +1,9 @@
 <template>
   <th style="white-space: nowrap">
     {{ header }}
-    <v-icon class="th-icon" :class="{ 'th-icon-filter': !!selectedFilters }" @click="dialog = true">
+    <!-- <v-icon class="th-icon" :class="{ 'th-icon-filter': !!selectedFilters }" @click="dialog = true">
       mdi-filter
-    </v-icon>
+    </v-icon> -->
   </th>
   <v-dialog v-model="dialog" scrollable max-width="600">
     <v-card>

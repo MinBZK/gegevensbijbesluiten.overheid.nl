@@ -145,6 +145,12 @@ export default defineComponent({
           current: this.$route.name == 'Publiceren'
         },
         {
+          text: 'Beheer',
+          to: '/beheer',
+          enabled: store.state.user.isAuthenticated,
+          current: this.$route.name == 'beheer'
+        },
+        {
           text: 'Uitloggen',
           to: '/logout',
           enabled: store.state.user.isAuthenticated,

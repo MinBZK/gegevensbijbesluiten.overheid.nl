@@ -3,6 +3,29 @@
     <li v-for="(question, index) in questions" :key="index" class="faq-component">
       <div class="questions faq-card">
         <button
+          v-if="isMobile"
+          ref="questionsItems"
+          :key="index"
+          :class="{ question: true, desktop: !isMobile }"
+          :data-selected="question.question === selectedQuestion?.question"
+          aria-haspopup="dialog"
+          role="button"
+          @click="
+            () => [selectQuestion(index), openCloseAccordionMutuallyExclusive(question.question)]
+          "
+        >
+          <p :id="`faq-${question.question_nr}`" class="column left">{{ t(question.question) }}</p>
+          <NuxtIcon
+            :name="
+              isMobile && !allCollapsedForArchive
+                ? 'fa-chevron-right'
+                : getIconAccordion(question.question)
+            "
+            class="column right chevron"
+          />
+        </button>
+        <button
+          v-if="!isMobile"
           ref="questionsItems"
           :key="index"
           :class="{ question: true, desktop: !isMobile }"
@@ -36,7 +59,7 @@
       :width="isSmallScreen ? '100%' : '800px'"
       max-height="90%"
       height="350px"
-      modal-title="Veelgestelde Vragen"
+      :aria-labelledby="`faq-${selectedQuestion?.question_nr}`"
     >
       <FrequentlyAskedAnswers :question="selectedQuestion" />
     </ModalShell>
@@ -95,14 +118,55 @@ activeItem.value.forEach((item) => {
 watch(isModalVisible, (newValue) => {
   if (!newValue) {
     questionsItems.value[questionIndex.value as number].focus()
+  } else {
+    // Move focus to the first focusable element in the modal
+    nextTick(() => {
+      const modal = document.querySelector('.modal-view')
+      const focusableElements = modal?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      const firstFocusableElement = focusableElements?.[0] as HTMLElement
+      firstFocusableElement?.focus()
+    })
   }
 })
+
+const trapFocus = (event: KeyboardEvent) => {
+  if (!isModalVisible.value) return
+
+  const modal = document.querySelector('.modal-view')
+  const focusableElements = modal?.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  )
+  const firstFocusableElement = focusableElements?.[0] as HTMLElement
+  const lastFocusableElement = focusableElements?.[focusableElements.length - 1] as HTMLElement
+
+  if (event.key === 'Tab') {
+    if (event.shiftKey) {
+      // Shift + Tab
+      if (document.activeElement === firstFocusableElement) {
+        event.preventDefault()
+        lastFocusableElement?.focus()
+      }
+      // Tab
+    } else if (document.activeElement === lastFocusableElement) {
+      event.preventDefault()
+      firstFocusableElement?.focus()
+    }
+  }
+}
 
 onMounted(() => {
   activeItem.value.forEach((item) => {
     item.active = false
   })
   allCollapsedForArchive.value = false
+
+  window.addEventListener('keydown', trapFocus)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', trapFocus)
 })
 </script>
 
@@ -127,10 +191,6 @@ onMounted(() => {
   box-shadow: 0 0 6px rgb(128, 157, 179);
 }
 
-.faq-box {
-  border-radius: 4px;
-  box-shadow: 0 0 6px rgb(128, 157, 179);
-}
 .faq-card {
   display: flex;
   width: 50%;

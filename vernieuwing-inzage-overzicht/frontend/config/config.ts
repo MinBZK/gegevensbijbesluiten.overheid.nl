@@ -56,6 +56,14 @@ const navigationItems = [
   {
     localeName: 'navigation.kwetsbaarheid',
     routeName: 'kwetsbaarheid-melden'
+  },
+  {
+    localeName: 'navigation.cookies',
+    routeName: 'cookies'
+  },
+  {
+    localeName: 'navigation.copyright',
+    routeName: 'copyright'
   }
 ]
 

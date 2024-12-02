@@ -1,18 +1,22 @@
 <template>
   <div class="container">
-    <div>
-      <h1 class="h1 margin-top">{{ t(`footer.paths.contactPage.h1`) }}</h1>
-      <p>
-        {{ t(`footer.paths.contactPage.p1_1`) }}
-      </p>
-      <p>
-        {{ t(`footer.paths.contactPage.p1_2`) }}
-      </p>
-      <p class="p-margin-bottom-footer extra-margin-bottom">
-        {{ t(`footer.paths.contactPage.p1_3`) }}
-        <a href="mailto:test@test.nl"> test@test.nl</a>.
-      </p>
-    </div>
+    <h1 class="h1 margin-top">{{ t('footer.paths.contactPage.h1') }}</h1>
+    <p>{{ t('footer.paths.contactPage.p1') }}</p>
+
+    <h2>{{ t('footer.paths.contactPage.h2') }}</h2>
+    <p>
+      {{ t('footer.paths.contactPage.p2') }}
+      <a href="mailto:test@test.nl"> test@test.nl</a>.
+    </p>
+
+    <p>
+      {{ t('footer.paths.contactPage.p3_1') }}
+      <NuxtLink :to="'/footer/privacyverklaring'">
+        {{ t('footer.paths.contactPage.p3_2') }} </NuxtLink
+      >.
+    </p>
+
+    <p class="p-margin-bottom-footer extra-margin-bottom">{{ t('footer.paths.contactPage.p4') }}</p>
   </div>
 </template>
 
@@ -36,10 +40,12 @@ providePageTitle({ title: 'footer.paths.contact', labelType: 'locale-index' })
     margin-bottom: 35%;
   }
 }
+
 .green-color {
   background-color: #f0f8e8;
   margin-bottom: 0px !important;
 }
+
 .no-bottom-padding {
   padding-bottom: 0px !important;
   margin-bottom: 100px !important;

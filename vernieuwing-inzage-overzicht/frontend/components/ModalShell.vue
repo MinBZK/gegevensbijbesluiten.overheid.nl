@@ -26,15 +26,11 @@ const props = withDefaults(
     height?: string
     width?: string
     maxHeight?: string
-    modalTitle?: string
-    indexModalTitle?: number
   }>(),
   {
     width: 'auto',
     height: 'auto',
-    maxHeight: 'auto',
-    modalTitle: '',
-    indexModalTitle: 0
+    maxHeight: 'auto'
   }
 )
 
@@ -53,44 +49,51 @@ onMounted(() => {
     window.removeEventListener('keydown', escListener)
   })
 })
+const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-const unfocus = (modelValue: boolean) => {
-  const focusableElements = document.querySelectorAll(`
-      a:not(.modal-view):not(.modal-view *),
-      div:not(.modal-view):not(.modal-view *),
-      input:not(.modal-view):not(.modal-view *),
-      button:not(.modal-view):not(.modal-view *)
-      `)
-  if (modelValue) {
-    document.body.style.overflow = 'hidden'
-    focusableElements.forEach((el) => {
-      if (el.hasAttribute('tabindex')) {
-        // temporary store tabindex
-        el.setAttribute('data-original-tabindex', el.getAttribute('tabindex') as string)
-      }
-    })
-    focusableElements.forEach((el) => el.setAttribute('tabindex', '-2'))
+const handleFocus = (e: KeyboardEvent) => {
+  const isTabPressed = e.key === 'Tab'
+
+  if (!isTabPressed) return
+  const modal = document.querySelector('.modal-view')
+  const firstFocusableElement = modal?.querySelectorAll(focusableElements)[0]
+  const focusableContent = modal?.querySelectorAll(focusableElements)
+  const lastFocusableElement = focusableContent?.[focusableContent.length - 1]
+
+  if (!modal || !firstFocusableElement || !lastFocusableElement) return
+
+  if (e.shiftKey) {
+    if (document.activeElement === firstFocusableElement) {
+      ;(lastFocusableElement as HTMLElement)?.focus()
+      e.preventDefault()
+    }
+  } else if (document.activeElement === lastFocusableElement) {
+    ;(firstFocusableElement as HTMLElement)?.focus()
+    e.preventDefault()
+  }
+}
+
+const trapFocus = (enable: boolean) => {
+  if (enable) {
+    document.addEventListener('keydown', handleFocus)
+    const modal = document.querySelector('.modal-view')
+    const firstFocusableElement = modal?.querySelectorAll(focusableElements)[0]
+    if (firstFocusableElement) {
+      ;(firstFocusableElement as HTMLElement)?.focus()
+    }
   } else {
-    document.body.style.overflow = ''
-    focusableElements.forEach((el) => el.removeAttribute('tabindex'))
-
-    focusableElements.forEach((el) => {
-      // reset tabindex
-      if (el.hasAttribute('data-original-tabindex')) {
-        el.setAttribute('tabindex', el.getAttribute('data-original-tabindex') as string)
-      }
-    })
+    document.removeEventListener('keydown', handleFocus)
   }
 }
 
 onBeforeUnmount(() => {
-  unfocus(false)
+  trapFocus(false)
 })
 
 watch(
   () => props.modelValue,
   (modelValue) => {
-    unfocus(modelValue)
+    trapFocus(modelValue)
   }
 )
 

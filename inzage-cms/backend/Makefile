@@ -3,7 +3,7 @@ dev:
 migration_head:
 	poetry run alembic -c alembic/alembic.ini upgrade head
 test:
-	poetry run coverage run -m pytest && poetry run coverage report
+	poetry run coverage run -m pytest && poetry run coverage report -m
 type_fix:
 	poetry run ruff format app
 	poetry run ruff format alembic

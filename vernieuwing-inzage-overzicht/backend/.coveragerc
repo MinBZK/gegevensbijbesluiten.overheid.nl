@@ -5,7 +5,8 @@ omit =
     */__init__.py
     **/deprecated/*.py
     **/models/*.py
-    **/schemas/*.py
+    **/schemas/*.py'
+    main.py
 [report]
 exclude_lines =
     import

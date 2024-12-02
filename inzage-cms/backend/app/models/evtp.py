@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import HttpUrl
 from sqlalchemy import VARCHAR, Boolean, DateTime, ForeignKey, Integer, text
-from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.associationproxy import AssociationProxy, association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -38,9 +38,6 @@ class EvtpVersion(Base, DefaultColumns):
 
     evtp_cd: Mapped[int] = mapped_column(Integer, ForeignKey("evtp.evtp_cd"), primary_key=True, comment="Besluit code")
     versie_nr: Mapped[int] = mapped_column(Integer, primary_key=True, comment="Versie nummer van het besluit")
-    evtp_cd_sup: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("evtp_version.evtp_cd"), comment="Koepelbesluit"
-    )
     evtp_nm: Mapped[str] = mapped_column(VARCHAR(200), comment="Naam van besluit")
     omschrijving: Mapped[str | None] = mapped_column(VARCHAR(2000), comment="Omschrijving het besluit")
 
@@ -75,18 +72,13 @@ class EvtpVersion(Base, DefaultColumns):
     ts_publ: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), comment="Tijdstip publicatie")
 
     # Association proxy
-    evtp_upc = association_proxy("entity_evtp_version", "evtp_upc")
+    evtp_upc: AssociationProxy[int] = association_proxy("entity_evtp", "evtp_upc")
 
     # Relationships
+    entity_evtp: Mapped["Evtp"] = relationship("Evtp", foreign_keys=[evtp_cd], lazy="selectin")
     verantwoordelijke_oe: Mapped["Oe"] = relationship("Oe", foreign_keys=[oe_best], lazy="selectin")  # type: ignore # type: ignore # noqa: F821
     entity_omg: Mapped[Optional["Omg"]] = relationship("Omg", foreign_keys=[omg_cd])  # type: ignore # noqa: F821
 
-    parent_evtp: Mapped["EvtpVersion"] = relationship(
-        "EvtpVersion",
-        primaryjoin="and_(EvtpVersion.evtp_cd_sup == remote(EvtpVersion.evtp_cd), remote(EvtpVersion.ts_start) < func.now(), remote(EvtpVersion.ts_end) > func.now())",
-        remote_side=[evtp_cd],
-        viewonly=True,
-    )
     entities_evtp_gst: Mapped[list["EvtpGst"]] = relationship(
         "EvtpGst",
         primaryjoin="and_(EvtpVersion.evtp_cd == EvtpGst.evtp_cd, EvtpVersion.id_publicatiestatus < 4, EvtpVersion.ts_start < EvtpGst.ts_end, EvtpVersion.ts_end > EvtpGst.ts_start)",
@@ -120,10 +112,6 @@ class EvtpGst(Base, DefaultColumns):
     evtp_cd: Mapped[int] = mapped_column(Integer, ForeignKey("evtp_version.evtp_cd"), comment="Besluit code")
     gst_cd: Mapped[int] = mapped_column(Integer, ForeignKey("gst.gst_cd"), comment="Gegevensstroom code")
     versie_nr: Mapped[int] = mapped_column(Integer, comment="Versie nummer van de besluit gegevensstroom koppeling ")
-    conditie: Mapped[str | None] = mapped_column(
-        VARCHAR(4000),
-        comment="Toelichting van een conditie waaronder de gegevensstroom plaatsvindt, bijvoorbeeld ziek worden, wel of geen werk hebben, etc.",
-    )
     sort_key: Mapped[int | None] = mapped_column(
         Integer,
         comment="Sorteersleutel om de gegevensstromen blokken te ordenen binnen een koepelgegeven van een besluit",

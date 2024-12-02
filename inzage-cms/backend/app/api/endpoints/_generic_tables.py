@@ -4,6 +4,7 @@ from app.api.endpoints._default import (
     delete_relation_parent_child,
     generate_router,
     get_child_gg,
+    get_child_gg_filtered,
     get_parent_gg,
 )
 from app.config.resource import TableResource
@@ -26,7 +27,7 @@ gg_router = generate_router(
     model_name=TableResource.gg.name,
     base_model=models.gg.Gg,
     filter_by_default={"koepel": False},
-    additional_routes=[get_parent_gg],
+    additional_routes=[get_parent_gg, get_child_gg_filtered],
 )
 gg_koepel_router = generate_router(
     model_name=TableResource.gg.name,

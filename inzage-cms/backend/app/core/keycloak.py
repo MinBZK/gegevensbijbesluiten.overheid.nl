@@ -3,16 +3,18 @@ import os
 import time
 
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from jwt.exceptions import ExpiredSignatureError
 from keycloak import KeycloakOpenID
 
+from app.api.exceptions import UserUnauthorizedException
+
 logger = logging.getLogger(__name__)
 
-URI = os.getenv("KEYCLOAK_URI", "https://test.nl")
+URI = os.getenv("KEYCLOAK_URI", "https://s07.i8s.nl")
 CLIENT = os.getenv("KEYCLOAK_CLIENT", "test")
-REALM = os.getenv("KEYCLOAK_REALM", "test")
+REALM = os.getenv("KEYCLOAK_REALM", "rog_inzage_acc")
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=f"{URI}/realms/{REALM}/protocol/openid-connect/auth",
@@ -20,15 +22,6 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 )
 
 cache = dict()
-
-
-class UserUnauthorizedException(HTTPException):
-    def __init__(self):
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Inloggegevens konden niet succesvol worden gevalideerd.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
 
 
 def _update_public_key(keycloak_openid: KeycloakOpenID, update_interval=30):

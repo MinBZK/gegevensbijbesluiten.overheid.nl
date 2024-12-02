@@ -43,13 +43,12 @@ import { getLink, capitaliseFirstLetter } from '~/common/common-functions'
 const error = useError()
 
 const { t } = useI18n()
-const { p } = usePreditor()
 
 const currentRoute = useRoute()
 
 const navigationItemsTranslated = computed(() =>
   navigationItems.map((item) => {
-    return { label: p(item.localeName), routeName: item.routeName }
+    return { label: t(item.localeName), routeName: item.routeName }
   })
 )
 

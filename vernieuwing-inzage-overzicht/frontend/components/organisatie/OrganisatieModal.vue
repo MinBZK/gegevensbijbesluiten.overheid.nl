@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="card-header">
-      <h1 class="h1--small no-margin modal-title-padding">{{ props.title }}</h1>
+      <h1 id="organisaties-card-title" class="h1--small no-margin modal-title-padding">
+        {{ props.title }}
+      </h1>
     </div>
     <p>
       <ModalSearchBar
-        :search-explanation="p('pages: organisaties.searchText')"
+        :search-explanation="t('pages.organisaties.searchText')"
         @do-search="handleSearch"
       />
     </p>
@@ -24,7 +26,7 @@
       </div>
     </template>
     <template v-else>
-      <p v-if="searchPerformed">{{ p('searchbar.OeNoResults') }}</p>
+      <p v-if="searchPerformed">{{ t('organisaties.noResults') }}</p>
     </template>
   </div>
 </template>
@@ -33,7 +35,6 @@
 import type { OeContent } from '@/components/organisatie/OrganisatieCard.vue'
 import { capitaliseFirstLetter } from '@/common/common-functions'
 
-const { p } = usePreditor()
 const { t } = useI18n()
 
 const props = defineProps<{

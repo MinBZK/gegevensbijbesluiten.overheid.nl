@@ -160,6 +160,7 @@ class GstTreeStructure(BaseModel):
     oe_bron: int
     oe_best: int
     omschrijving: str
+    conditie: str | None
 
     entity_oe_best: OeWithNestedRelations | None
     entity_oe_bron: OeWithNestedRelations | None
@@ -173,7 +174,7 @@ class EvtpGstTreeStructure(BaseModel):
     evtp_cd: int
     gst_cd: int
     notitie: str | None
-    conditie: str | None
+    sort_key: int | None
 
     entity_gst: GstTreeStructure | None
     entities_gst_gstt: list[GstGsttBase] | None
@@ -186,7 +187,6 @@ class EvtpGstTreeStructure(BaseModel):
 # Event type structure (with parent and optional child entities)
 class EvtpStructure(BaseModel):
     evtp_cd: int
-    parent_evtp: EvtpStructure | None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -203,7 +203,6 @@ class EvtpTreeStructure(BaseModel):
     omschrijving: str
 
     verantwoordelijke_oe: OeWithNestedRelations
-    parent_evtp: EvtpStructure | None
     entities_evtp_gst: list[EvtpGstTreeStructure] | None
     entities_evtp_oe_com_type: list[EvtpOeComType] | None
     entities_evtp_ond: list[EvtpOndBase] | None

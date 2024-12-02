@@ -25,15 +25,6 @@ def create_upc() -> int:
     return int(upc_id.join(rl))
 
 
-def upc_check(upc_code: str) -> bool:
-    r = []
-    r[:] = upc_code
-    e = int(r[0]) + int(r[2]) + int(r[4]) + int(r[6])
-    o = int(r[1]) + int(r[3]) + int(r[5])
-    c = (e * 3 + o) % 10
-    return True if c == int(r[7]) else False
-
-
 def validate_url(value: str | None):
     """
     Validates if the given value is a valid URL.

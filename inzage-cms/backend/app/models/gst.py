@@ -28,6 +28,10 @@ class Gst(Base, DefaultColumns):
     oe_best: Mapped[int] = mapped_column(Integer, ForeignKey("oe.oe_cd"), comment="Organisatorische eenheid bestemming")
     ibron_cd: Mapped[int | None] = mapped_column(Integer, ForeignKey("ibron.ibron_cd"))
     ext_lnk_aut: Mapped[str | None] = mapped_column(VARCHAR(2000), comment="Hyperlink naar autorisatie")
+    conditie: Mapped[str | None] = mapped_column(
+        VARCHAR(4000),
+        comment="Toelichting van een conditie waaronder de gegevensstroom plaatsvindt, bijvoorbeeld ziek worden, wel of geen werk hebben, etc.",
+    )
 
     # Relationships
     entity_oe_best: Mapped["Oe"] = relationship(  # type: ignore # noqa: F821

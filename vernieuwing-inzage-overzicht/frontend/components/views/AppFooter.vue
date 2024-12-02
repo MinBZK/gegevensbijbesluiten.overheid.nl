@@ -6,10 +6,13 @@
         <NuxtLink :to="{ name: 'footer-contact' }"> {{ t('footer.text_2') }}</NuxtLink>
       </div>
       <div class="footer-links">
-        <div v-for="footerKey in footerKeys" :key="footerKey">
+        <div v-for="footerKey in footerKeys" :key="footerKey" class="ml-2">
           <ul class="list list--linked">
             <li v-for="page in footer[footerKey]" :key="page.label" class="list__item">
-              <NuxtLink v-if="footerKey != 'external'" :to="`/footer${page.path}`">
+              <NuxtLink v-if="footerKey == 'internal_service'" :to="`/footer${page.path}`">
+                {{ t(`footer.paths.${page.key}`) }}
+              </NuxtLink>
+              <NuxtLink v-if="footerKey == 'internal_about'" :to="`/footer${page.path}`">
                 {{ t(`footer.paths.${page.key}`) }}
               </NuxtLink>
               <ExternalLink v-if="footerKey == 'external'" :href="page.path">{{
@@ -35,7 +38,7 @@ const footerKeys = Object.keys(footer)
   border-top: 0.7em solid $secondary;
   padding: 1.5em 0em;
   background-color: $tertiary;
-  height: 13.1em !important;
+  height: 13em !important;
 }
 
 .footer-content {
@@ -64,6 +67,11 @@ const footerKeys = Object.keys(footer)
   }
   .footer-links {
     flex-direction: column;
+  }
+}
+@media (min-width: 65em) {
+  .ml-2 {
+    margin-left: 30px;
   }
 }
 </style>

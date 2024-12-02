@@ -2,14 +2,16 @@
   <div class="container">
     <SearchBar
       ref="searchbar"
-      :search-explanation="p('pages: organisaties.searchText')"
+      :search-explanation="t('pages.organisaties.searchText')"
       :suggestions-hidden="`pages.organisaties.suggestionsHidden`"
       @do-search="(searchtext) => doSearch(searchtext)"
     />
     <div class="row container columns no-padding">
       <div class="column-d-9">
-        <h2 role="status">
-          {{ t(`organisaties.foundResults`, { n: totalCountUnderlying }) }}
+        <h2>
+          <span role="status">
+            {{ t(`organisaties.foundResults`, { n: totalCountUnderlying }) }}
+          </span>
         </h2>
         <div v-if="oeResults.length != 0" class="row no-padding">
           <div class="column-d-6">
@@ -30,7 +32,6 @@
                 :description="Koepel.omschrijving"
                 :content="extractContent(Koepel)"
                 :loading="loading"
-                :chips="[]"
                 @focus-has-been-set="() => (newFocusIsRequested = false)"
               >
               </OrganisatieCard>
@@ -74,7 +75,6 @@ import type { UrlQuery } from '~/types/filter'
 import type { OeContent } from '@/components/organisatie/OrganisatieCard.vue'
 
 const { t } = useI18n()
-const { p } = usePreditor()
 const router = useRouter()
 
 const query = computed(() => {
@@ -93,10 +93,12 @@ let { data } = await oeService.getOeFiltered(query.value)
 const loading = ref(false)
 
 watch(query, async () => {
-  loading.value = true
-  const response = await oeService.getOeFiltered(query.value)
-  loading.value = false
-  data = response.data
+  if (window.location.hash !== '#content') {
+    loading.value = true
+    const response = await oeService.getOeFiltered(query.value)
+    loading.value = false
+    data = response.data
+  }
 })
 
 const page = computed(() => query.value.page)

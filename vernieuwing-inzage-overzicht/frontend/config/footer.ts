@@ -1,7 +1,7 @@
 import type { FooterColumn } from '~~/types/footer'
 
 const footer: FooterColumn = {
-  internal: [
+  internal_about: [
     {
       key: 'over',
       path: '/over'
@@ -9,18 +9,28 @@ const footer: FooterColumn = {
     {
       key: 'contact',
       path: '/contact'
-    },
+    }
+  ],
+  internal_service: [
     {
       key: 'privacyverklaring',
       path: '/privacyverklaring'
     },
     {
-      key: 'toegankelijkheid',
-      path: '/toegankelijkheid'
-    },
-    {
       key: 'archief',
       path: '/archief'
+    },
+    {
+      key: 'cookies',
+      path: '/cookies'
+    },
+    {
+      key: 'copyright',
+      path: '/copyright'
+    },
+    {
+      key: 'toegankelijkheid',
+      path: '/toegankelijkheid'
     },
     {
       key: 'kwetsbaarheid',

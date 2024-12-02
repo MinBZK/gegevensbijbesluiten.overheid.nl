@@ -9,6 +9,7 @@ from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import Session
 
 import app.config as config
+from app.config.resource import TableResource
 from app.database.database import Base
 
 # Setup logger
@@ -114,6 +115,10 @@ class TableMeta:
             related_model = r.mapper.class_
             foreign_model = related_model
 
+            # Skip processing if the table name is 'evtp'
+            if foreign_model.__tablename__ == "evtp":
+                continue
+
             foreign_model_meta = TableMeta(
                 table_name=foreign_model.__tablename__,
                 db=self._db,
@@ -181,6 +186,14 @@ class TableMeta:
                 "data_type": sql_column["data_type"] if sql_column is not None else -1,
             }
 
+        # Manually add a field
+        fields["evtp_upc"] = {
+            "required": False,
+            "optional": False,
+            "readonly": True,
+            "max_length": 11,
+            "data_type": "integer",
+        }
         return fields
 
     @property
@@ -195,8 +208,8 @@ class TableMeta:
         }
 
 
-def get_model(resource: str, db: Session) -> dict:
-    table_name = config.resource.MAPPING_RESOURCE_TO_TABLE.get(resource)
+def get_model(resource: TableResource, db: Session) -> dict:
+    table_name = config.resource.MAPPING_RESOURCE_TO_TABLE.get_table_name(resource)
 
     if table_name is not None:
         table_meta = TableMeta(table_name=table_name, db=db, resource=resource)

@@ -49,7 +49,7 @@
       "title": "Onderwerpen",
       "description_1": "Wij hebben de besluiten ondergebracht in verschillende onderwerpen. Zo vindt u snel uw weg naar het thema dat u interesseert. Vervolgens ziet u de besluiten die de overheid neemt, met de gegevens die organisaties gebruiken en delen.",
       "description_2": "Kies een onderwerp waar u meer over wilt weten.",
-      "referenceToEvtp": "Bekijk de besluiten bij {evtpName}",
+      "referenceToEvtp": "Bekijk de besluiten bij {ondName}",
       "searchText": "Zoek naar een besluit"
     },
     "pages: besluiten": {
@@ -88,7 +88,9 @@
       "gegevens": "Gegevens",
       "organisaties": "Organisaties",
       "archief": "Archief",
-      "kwetsbaarheid": "Kwetsbaarheid melden"
+      "kwetsbaarheid": "Kwetsbaarheid melden",
+      "cookies": "Cookies",
+      "copyright": "Copyright"
     }
   }
 }

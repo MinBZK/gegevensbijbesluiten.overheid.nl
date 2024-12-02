@@ -117,7 +117,7 @@ type GegevensgroepGrondslag = {
   gg_parent: string
   gg_omschrijvinguitgebreid: string[]
   evtp_aanleiding: string
-  evtp_gst_conditie: string
+  gst_conditie: string
   oe_best_lidwsgebr: string
   oe_best_naampraakgebr: string
   evtp_gebrdl: string

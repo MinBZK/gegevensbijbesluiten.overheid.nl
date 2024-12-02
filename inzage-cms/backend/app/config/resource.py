@@ -4,6 +4,7 @@ from typing import Dict, Type
 
 import app.models as models
 import app.schemas as schemas
+from app.database.database import Base
 
 PATH_MNT = "../mnt/accorderingen"
 LIMIT_RESULTS_QUERY = 100
@@ -35,41 +36,69 @@ class TableResource(str, Enum):
     ond = "ond"
 
 
-MAPPING_RESOURCE_TO_TABLE = {
-    TableResource.evtp_version.value: models.evtp.EvtpVersion.__tablename__,
-    TableResource.evtp_acc.value: models.evtp_acc.EvtpAcc.__tablename__,
-    TableResource.evtp_gst.value: models.evtp.EvtpGst.__tablename__,
-    TableResource.evtp_oe_com_type.value: models.evtp.EvtpOeComType.__tablename__,
-    TableResource.oe.value: models.oe.Oe.__tablename__,
-    TableResource.oe_com_type.value: models.oe.OeComType.__tablename__,
-    TableResource.omg.value: models.evtp.Omg.__tablename__,
-    TableResource.gg.value: models.gg.Gg.__tablename__,
-    TableResource.gg_koepel.value: models.gg.Gg.__tablename__,
-    TableResource.gg_struct.value: models.gg.GgStruct.__tablename__,
-    TableResource.gg_evtp_sort.value: models.gg.GgEvtpSort.__tablename__,
-    TableResource.gst.value: models.gst.Gst.__tablename__,
-    TableResource.rge.value: models.rge.Rge.__tablename__,
-    TableResource.oe_koepel_oe.value: models.oe.OeKoepelOe.__tablename__,
-    TableResource.oe_koepel.value: models.oe.OeKoepel.__tablename__,
-    TableResource.ibron.value: models.ibron.Ibron.__tablename__,
-    TableResource.gst_gg.value: models.gst.GstGg.__tablename__,
-    TableResource.gst_rge.value: models.gst.GstRge.__tablename__,
-    TableResource.gst_type.value: models.gst.GstType.__tablename__,
-    TableResource.gst_gstt.value: models.gst.GstGstt.__tablename__,
-    TableResource.bestand_acc.value: models.evtp_acc.BestandAcc.__tablename__,
-    TableResource.ond.value: models.ond.Ond.__tablename__,
-    TableResource.evtp_ond.value: models.ond.EvtpOnd.__tablename__,
-}
+@dataclass
+class ResourceTableMapping:
+    mapping: Dict[str, Type[Base]]
+
+    def get_model(self, resource: str):
+        return self.mapping[resource]
+
+    def get_table_name(self, resource: TableResource) -> str:
+        return self.mapping[resource].__tablename__
 
 
-class MappingPublicatiestatus(tuple, Enum):
-    NEW = (1, "Nieuw")
-    READY = (2, "Gereed voor controle")
-    PUBLISHED = (3, "Gepubliceerd")
-    ARCHIVED = (4, "Gearchiveerd")
+# Create the mapping
+MAPPING_RESOURCE_TO_TABLE = ResourceTableMapping(
+    {
+        TableResource.evtp_version: models.evtp.EvtpVersion,
+        TableResource.evtp_acc: models.evtp_acc.EvtpAcc,
+        TableResource.evtp_gst: models.evtp.EvtpGst,
+        TableResource.evtp_oe_com_type: models.evtp.EvtpOeComType,
+        TableResource.oe: models.oe.Oe,
+        TableResource.oe_com_type: models.oe.OeComType,
+        TableResource.omg: models.evtp.Omg,
+        TableResource.gg: models.gg.Gg,
+        TableResource.gg_koepel: models.gg.Gg,
+        TableResource.gg_struct: models.gg.GgStruct,
+        TableResource.gg_evtp_sort: models.gg.GgEvtpSort,
+        TableResource.gst: models.gst.Gst,
+        TableResource.rge: models.rge.Rge,
+        TableResource.oe_koepel_oe: models.oe.OeKoepelOe,
+        TableResource.oe_koepel: models.oe.OeKoepel,
+        TableResource.ibron: models.ibron.Ibron,
+        TableResource.gst_gg: models.gst.GstGg,
+        TableResource.gst_rge: models.gst.GstRge,
+        TableResource.gst_type: models.gst.GstType,
+        TableResource.gst_gstt: models.gst.GstGstt,
+        TableResource.bestand_acc: models.evtp_acc.BestandAcc,
+        TableResource.ond: models.ond.Ond,
+        TableResource.evtp_ond: models.ond.EvtpOnd,
+    }
+)
 
 
-EXCEPTIONS_REQUIRED_FIELDS = {
+@dataclass
+class Status:
+    code: int
+    description: str
+
+
+class MappingPublicatiestatus(Enum):
+    NEW = Status(1, "Nieuw")
+    READY = Status(2, "Gereed voor controle")
+    PUBLISHED = Status(3, "Gepubliceerd")
+    ARCHIVED = Status(4, "Gearchiveerd")
+
+    @property
+    def code(self) -> int:
+        return self.value.code
+
+    @property
+    def description(self):
+        return self.value.description
+
+
+EXCEPTIONS_REQUIRED_FIELDS: Dict[str, list] = {
     TableResource.evtp_version.value: ["oe_best"],
     TableResource.evtp_gst.value: [],
     TableResource.evtp_acc.value: [],
@@ -93,6 +122,30 @@ EXCEPTIONS_REQUIRED_FIELDS = {
     TableResource.evtp_ond.value: [],
 }
 
+URL_PER_RESOURCE: Dict[str, list] = {
+    TableResource.evtp_version: ["overige_informatie_link", "uri"],
+    TableResource.evtp_gst: [],
+    TableResource.evtp_acc: [],
+    TableResource.evtp_oe_com_type: ["link"],
+    TableResource.omg: ["link"],
+    TableResource.oe: [],
+    TableResource.oe_com_type: [],
+    TableResource.gg: [],
+    TableResource.gg_struct: [],
+    TableResource.gg_evtp_sort: [],
+    TableResource.gst: [],
+    TableResource.rge: ["re_link"],
+    TableResource.oe_koepel_oe: [],
+    TableResource.oe_koepel: [],
+    TableResource.ibron: ["link"],
+    TableResource.gst_gg: [],
+    TableResource.gst_type: [],
+    TableResource.gst_gstt: [],
+    TableResource.bestand_acc: [],
+    TableResource.ond: [],
+    TableResource.evtp_ond: [],
+}
+
 
 @dataclass
 class TableToResourceMapping:
@@ -103,7 +156,7 @@ class TableToResourceMapping:
     input_schema: Type | None
 
 
-MAPPING_TABLE_TO_RESOURCE = {
+MAPPING_TABLE_TO_RESOURCE: Dict[str, TableToResourceMapping] = {
     models.oe.Oe.__tablename__: TableToResourceMapping(
         resource=TableResource.oe,
         description_key=models.oe.Oe.naam_officieel.name,
@@ -182,7 +235,6 @@ MAPPING_TABLE_TO_RESOURCE = {
         primary_key=models.evtp.EvtpVersion.evtp_cd.name,
         foreign_key_mapping={
             "oe_best": "verantwoordelijke_oe",
-            "evtp_cd_sup": "parent_evtp",
             "omg_cd": "entity_omg",
         },
         input_schema=schemas.evtp_version.EvtpVersionIn,

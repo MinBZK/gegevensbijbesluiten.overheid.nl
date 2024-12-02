@@ -17,7 +17,7 @@
     <template v-else>
       <div class="mobile-filters">
         <FilterMobileFilter>
-          <h1>Filters</h1>
+          <h1 id="filter-title">{{ t('filters') }}</h1>
           <FilterSelectedFilters
             v-if="selectedFilters.length"
             :selected-filters="selectedFilters"
@@ -40,6 +40,8 @@
 <script setup lang="ts">
 import type { BesluitFilterData, SelectedFilter } from '@/types/filter'
 import { useMobileBreakpoint } from '~~/composables/mobile'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   selectedFilters?: SelectedFilter[]

@@ -11,17 +11,13 @@
         </NuxtLink>
       </li>
     </ul>
-    <div
-      v-if="evtp.length > maxListItemsInModal"
-      class="show-more capitalise-first underline"
-      aria-haspopup="dialog"
-      aria-expanded="false"
-    >
+    <div v-if="evtp.length > maxListItemsInModal" class="show-more capitalise-first underline">
       <img src="assets/images/icons/icon-hamburger.svg" alt="" height="12" />
       <a
         class="linked-content"
         href="#"
         role="button"
+        aria-haspopup="dialog"
         @click.prevent="showModal()"
         @keydown.enter.prevent="showModal()"
         @keydown.space.prevent="showModal()"
@@ -36,24 +32,26 @@
       width="500px"
       :height="isMobile ? '100%' : '80%'"
       :subject-title="props.title"
-      modal-title="Besluiten"
+      aria-labelledby="gegevens-h1-modal"
     >
-      <h1 class="h1--small no-margin">{{ p('gegevens.h1Modal') }}</h1>
+      <h1 id="gegevens-h1-modal" class="h1--small no-margin">
+        {{ t('pages.besluiten.relatedEvtp') }}
+      </h1>
       <p>
         <ModalSearchBar
-          :search-explanation="p('searchbar.EvtpSearchText')"
+          :search-explanation="t('pages.besluiten.searchSingleText')"
           @do-search="handleSearch"
         />
       </p>
       <p>
-        <b>{{ p('searchbar.EvtpSelect') }}</b>
+        <b>{{ t('besluiten.foundEvtp') }}</b>
       </p>
       <div v-if="evtpList.length == 0">
-        <p v-if="searchPerformed">{{ p('searchbar.EvtpNoResults') }}</p>
+        <p v-if="searchPerformed">{{ t('besluiten.noResults') }}</p>
       </div>
       <div aria-live="polite" aria-atomic="true" class="sr-only">
         <p v-if="evtpList.length == 0 && searchPerformed">
-          {{ p('searchbar.EvtpNoResults') }}
+          {{ t('besluiten.noResults') }}
         </p>
       </div>
       <ul>
@@ -77,7 +75,6 @@ import { getMaxListItems } from '@/config/config'
 
 const isMobile = useMobileBreakpoint().medium
 const { t } = useI18n()
-const { p } = usePreditor()
 
 const props = defineProps<{
   evtp: Evtp[]

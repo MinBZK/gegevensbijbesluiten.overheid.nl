@@ -6,6 +6,7 @@ omit =
     **/deprecated/*.py
     **/models/*.py
     **/schemas/*.py
+    main.py
 [report]
 exclude_lines =
     import

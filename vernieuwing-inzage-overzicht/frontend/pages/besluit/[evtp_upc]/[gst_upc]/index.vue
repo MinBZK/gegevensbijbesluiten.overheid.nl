@@ -34,8 +34,8 @@
               () => openCloseAccordion(EvtpGstHeader.bron_organisatie, gstAccordionHeader1)
             "
           >
-            <span class="timeline-dots van"> </span>
             <h3 class="psentence capitalise-first accordion-header-with-chevron">
+              <span class="timeline-dots van"></span>
               {{ gst.bron_organisatie.header_oe_bron_naamofficieel }}
             </h3>
             <NuxtIcon :name="getIconAccordion(EvtpGstHeader.bron_organisatie)" />
@@ -139,8 +139,8 @@
               () => openCloseAccordion(EvtpGstHeader.gegevensgroep_grondslag, gstAccordionHeader2)
             "
           >
-            <span class="timeline-dots naar"> </span>
             <h3 class="psentence capitalise-first accordion-header-with-chevron">
+              <span class="timeline-dots naar" aria-hidden="true"> </span>
               {{ gst.gegevensgroep_grondslag.header_oe_best_naamofficieel }}
             </h3>
             <NuxtIcon :name="getIconAccordion(EvtpGstHeader.gegevensgroep_grondslag)" />
@@ -164,11 +164,7 @@
                 :key="gg.gg_cd"
                 class="white-card-list"
               >
-                <NuxtLink
-                  :to="getLink(`/gegeven/${gg.gg_upc}`).value"
-                  :aria-label="`Lees meer over ${gg.omschrijving}`"
-                  class="linked-content"
-                >
+                <NuxtLink :to="getLink(`/gegeven/${gg.gg_upc}`).value" class="linked-content">
                   <span class="underline"> {{ gg.omschrijving }} </span>
                 </NuxtLink>
                 <img
@@ -200,8 +196,8 @@
               }}
             </p>
             <ParseUrl>
-              <p v-if="gst.gegevensgroep_grondslag.evtp_gst_conditie" class="white-card">
-                {{ `${gst.gegevensgroep_grondslag.evtp_gst_conditie}` }}
+              <p v-if="gst.gegevensgroep_grondslag.gst_conditie" class="white-card">
+                {{ `${gst.gegevensgroep_grondslag.gst_conditie}` }}
               </p>
               <p v-else class="white-card">
                 {{ `${gst.gegevensgroep_grondslag.evtp_aanleiding}` }}
@@ -349,20 +345,22 @@ onMounted(() => {
   position: relative;
   margin-left: 1em;
 }
-
 .timeline-dots::after {
   content: '';
-  font-size: 1.4em;
-  text-align: center;
+  font-size: 1em;
+  font-weight: normal;
   color: $white;
   position: absolute;
   width: 2.8em;
   height: 1.5em;
-  left: -4.35em;
-  top: -0.65em;
+  left: -4.5em;
+  top: -0.05em;
   background-color: $primary-dark;
   border-radius: 1em;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .timeline-dots.van::after {
@@ -406,7 +404,7 @@ a {
   position: relative;
 }
 
-@media (max-width: 65em) {
+@media (max-width: 60em) {
   .timeline {
     position: relative;
     margin-left: 2.5em;
@@ -414,26 +412,25 @@ a {
 
   .timeline::after {
     content: '';
-    position: absolute;
     width: 0.3em;
     background-color: $primary-dark;
-    top: 0;
-    bottom: 0;
     left: -2.1em;
   }
 
   .timeline-dots::after {
     content: '';
-    font-size: 1em;
+    font-size: 0.8em;
     text-align: center;
     color: $white;
-    position: absolute;
-    width: 2.8em;
-    left: -4.7em;
-    top: -0.65em;
+    left: -5em;
     background-color: $primary-dark;
     border-radius: 1em;
     z-index: 1;
+  }
+}
+@media (min-width: 60em) and (max-width: 65em) {
+  .timeline-dots::after {
+    left: -4.5em;
   }
 }
 

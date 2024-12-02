@@ -64,7 +64,7 @@ interface Props {
   link: any
   version?: number
   chips: string[]
-  setFocus?: boolean
+  setFocus: boolean
   loading: boolean
 }
 
@@ -75,13 +75,9 @@ const props = withDefaults(defineProps<Props>(), {
   link: undefined,
   version: 0,
   chips: undefined,
-  setFocus: false,
+  setFocus: true,
   loading: false
 })
-
-const emit = defineEmits<{
-  (e: 'focusHasBeenSet'): void
-}>()
 
 const { t } = useI18n()
 const htmlLink = ref<HTMLAnchorElement>()
@@ -90,7 +86,6 @@ const focusCardLink = () => {
   if (props.setFocus) {
     setTimeout(() => {
       ;(htmlLink.value?.firstChild as HTMLElement)?.focus()
-      emit('focusHasBeenSet')
     }, 300) // Adjust delay as needed
   }
 }

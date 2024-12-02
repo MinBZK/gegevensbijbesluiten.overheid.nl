@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.endpoints import _generic_tables, config, evtp_acc, evtp_version, table
+from app.api.endpoints import _generic_tables, config, evtp_acc, evtp_version, maintainance, table
 
 router = APIRouter()
 
@@ -150,4 +150,11 @@ router.include_router(
     _generic_tables.evtp_ond_router,
     prefix="/evtp-ond",
     tags=["Besluit onderwerp"],
+)
+
+# ----------------------------------------------- Other -----------------------------------------------
+router.include_router(
+    maintainance.router,
+    prefix="/maintainance",
+    tags=["Beheer"],
 )

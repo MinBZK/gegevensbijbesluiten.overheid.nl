@@ -27,7 +27,7 @@
             class="table-pagination"
           />
         </v-col>
-        <v-col cols="3" justify="center">
+        <v-col cols="auto" justify="center">
           <v-btn
             elevation="0"
             tile
@@ -43,6 +43,17 @@
           >
             <v-icon> mdi-plus-box-outline </v-icon>
             Toevoegen
+          </v-btn>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn
+            v-if="checkIfPreviousRouteIsEvtpTree()"
+            elevation="0"
+            tile
+            color="secondary"
+            @click="goBack"
+          >
+            Ga terug
           </v-btn>
         </v-col>
       </v-row>
@@ -65,7 +76,8 @@
       <tbody v-if="loading">
         <tr>
           <td :colspan="includedFields.length + 1" class="centered">
-            <v-progress-circular indeterminate color="primary" />
+            <v-progress-circular indeterminate color="primary" class="mr-2" />
+            <span>Ophalen van alle rijen...</span>
           </td>
         </tr>
       </tbody>
@@ -99,12 +111,13 @@
       </v-card>
     </v-dialog>
   </v-container>
-  <router-view @record-updated=";[getTableData()]" />
+  <router-view @record-updated=";[getTableData(), resetSearchFieldText()]" />
 </template>
 
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 import store from '@/store/index'
 import { Table, TableModel } from '@/types/Tables'
 import { tables } from '@/config/tables'
@@ -137,6 +150,7 @@ export default defineComponent({
     const error: string = ''
     const searchQuery: string = ''
     const searchFieldText: string = ''
+    const router = useRouter()
     const initTableModel: TableModel = {
       primary_key: '',
       foreign_keys: [],
@@ -160,6 +174,7 @@ export default defineComponent({
       searchFieldText,
       initTableModel,
       tableModel: initTableModel,
+      router,
       tableModelLoaded: false
     }
   },
@@ -232,6 +247,12 @@ export default defineComponent({
     }
   },
   methods: {
+    checkIfPreviousRouteIsEvtpTree() {
+      return this.router.options.history.state['back']?.toString().includes('evtpTree')
+    },
+    goBack() {
+      return this.$router.go(-1)
+    },
     onSearchClick() {
       this.searchFieldText = this.searchFieldText
         .toString()

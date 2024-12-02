@@ -35,12 +35,7 @@
             </NuxtLink>
           </li>
         </ul>
-        <div
-          v-if="props.content.length > maxListItemsInModal"
-          class="card-sub-content"
-          aria-haspopup="dialog"
-          aria-expanded="false"
-        >
+        <div v-if="props.content.length > maxListItemsInModal" class="card-sub-content">
           <img
             src="assets/images/icons/icon-hamburger.svg"
             aria-hidden
@@ -60,19 +55,13 @@
           </a>
         </div>
       </div>
-      <div class="card-footer">
-        <div class="text-align-left">
-          <ChipsOnderwerp :chips="props.chips"></ChipsOnderwerp>
-        </div>
-      </div>
     </template>
 
     <ModalShell
       v-model="isModalVisible"
       width="500px"
       :height="isMobile ? '100%' : '80%'"
-      :subject-title="props.title"
-      modal-title="Organisaties"
+      aria-labelledby="organisaties-card-title"
       @click.stop
     >
       <OrganisatieModal
@@ -102,7 +91,6 @@ interface Props {
   title: string
   description: string
   content: OeContent[]
-  chips: string[]
   setFocus: boolean
   loading: boolean
 }
@@ -111,7 +99,6 @@ const props = withDefaults(defineProps<Props>(), {
   title: '',
   description: '',
   content: undefined,
-  chips: undefined,
   setFocus: false,
   loading: false
 })

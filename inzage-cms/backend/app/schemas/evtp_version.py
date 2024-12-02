@@ -20,7 +20,6 @@ class Evtp(BaseModel):
 class EvtpVersion(BaseModel):
     evtp_cd: int
     versie_nr: int
-    evtp_cd_sup: int | None
     evtp_nm: str
     omschrijving: str | None
     aanleiding: str | None
@@ -38,6 +37,7 @@ class EvtpVersion(BaseModel):
     overige_informatie_link: HttpUrl | None = None
     user_nm: str
     ts_mut: datetime
+    evtp_upc: int
 
     @field_validator("huidige_versie", mode="after")
     def replace_boolean_with_string(cls, value) -> Literal["Ja"] | Literal["Nee"]:
@@ -69,13 +69,12 @@ class EvtpMinimalListIncludingVersions(BaseModel):
 
 class EvtpVersionWithRelations(EvtpVersion):
     verantwoordelijke_oe: OeMinimalList | None
-    parent_evtp: ParentEvtp | None
     entity_omg: Omg | None
 
 
 class EvtpVersionIn(BaseModel):
     versie_nr: int | None = Field(..., exclude=True)
-    evtp_cd_sup: int | None = None
+    evtp_upc: int | None = None
     evtp_nm: str
     omschrijving: str
     overige_informatie: str | None = None
@@ -94,7 +93,6 @@ class EvtpVersionIn(BaseModel):
 
 class EvtpNewVersionIn(BaseModel):
     versie_nr: int
-    evtp_cd_sup: int | None = None
     evtp_nm: str
     omschrijving: str
     uri: str | None = None
@@ -107,6 +105,8 @@ class EvtpNewVersionIn(BaseModel):
     overige_informatie: str | None = None
     overige_informatie_link: str | None = None
     omg_cd: int | None = None
+
+    _validate_re_link = field_validator("overige_informatie_link", "uri")(validate_url)
 
 
 class EvtpVersionStatus(BaseModel):

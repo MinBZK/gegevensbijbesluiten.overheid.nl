@@ -35,6 +35,7 @@ class Oe(Base, DefaultColumns):
     provincie: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Provincie")
     straat: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Straatnaam")
     telefoon: Mapped[str | None] = mapped_column(VARCHAR(30), comment="Telefoonnummer")
+    toelichting: Mapped[str | None] = mapped_column(VARCHAR(4000), comment="Toelichting")
 
     # Relationships
     parent_entities: Mapped[list["OeKoepelOe"]] = relationship(

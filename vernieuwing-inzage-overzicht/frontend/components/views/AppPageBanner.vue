@@ -11,26 +11,26 @@
       }"
     >
       <div class="introduction">
-        <h1 class="page-title">
-          {{ p(`${pageData[0].pageTitle}`) }}
+        <h1 id="content" class="page-title">
+          {{ t(`${pageData[0].pageTitle}`) }}
         </h1>
         <p>
-          {{ p(`${pageData[0].pageDescriptionParagraph_1}`) }}
+          {{ t(`${pageData[0].pageDescriptionParagraph_1}`) }}
         </p>
         <p v-if="pageData[0].pageDescriptionParagraph_2" class="no-margin">
-          {{ p(`${pageData[0].pageDescriptionParagraph_2}`) }}
+          {{ t(`${pageData[0].pageDescriptionParagraph_2}`) }}
           <span v-if="pageData[0].pageLink_1" class="no-margin">
             <NuxtLink :to="{ name: 'onderwerp' }">
-              {{ p(`${pageData[0].pageLink_1}`) }}
+              {{ t(`${pageData[0].pageLink_1}`) }}
             </NuxtLink>
-            {{ p(`${pageData[0].pageDescriptionParagraph_2_2}`) }}
+            {{ t(`${pageData[0].pageDescriptionParagraph_2_2}`) }}
           </span>
         </p>
         <p v-if="pageData[0].pageDescriptionParagraph_3" class="no-margin-description">
-          {{ p(`${pageData[0].pageDescriptionParagraph_3}`) }}
+          {{ t(`${pageData[0].pageDescriptionParagraph_3}`) }}
         </p>
         <p v-if="pageData[0].pageDescriptionItalics">
-          <i> {{ p(`${pageData[0].pageDescriptionItalics}`) }}</i>
+          <i> {{ t(`${pageData[0].pageDescriptionItalics}`) }}</i>
         </p>
         <FormOverheidButton
           v-if="pageData[0].routeName === 'index'"
@@ -39,7 +39,7 @@
         />
       </div>
       <div :class="{ hero: true, 'is-homepage': isHomepage }">
-        <img :src="pageData[0].bannerImage" :alt="t('getHeroExplanation')" />
+        <img :src="pageData[0].bannerImage" alt="" />
       </div>
     </div>
   </div>
@@ -50,7 +50,6 @@ import { navigationItems } from '@/config/config'
 import { navigationHeaders } from '@/config/navigation'
 
 const { t } = useI18n()
-const { p } = usePreditor()
 const currentRoute = useRoute()
 const isHomepage = computed(() => currentRoute.path === '/')
 const isMobile = useMobileBreakpoint().small
@@ -59,7 +58,7 @@ const navigationItemsTranslated = computed(() =>
   navigationItems.map((item) => {
     const matchedHeader = navigationHeaders.find((header) => header.routeName === item.routeName)
     return {
-      label: p(item.localeName),
+      label: t(item.localeName),
       routeName: item.routeName,
       banner: matchedHeader ? matchedHeader.banner : '',
       pageTitle: matchedHeader ? matchedHeader.pageTitle : '',

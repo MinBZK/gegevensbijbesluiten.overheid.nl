@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Dict, List
+
 from pydantic import BaseModel
 
 
@@ -26,6 +28,18 @@ class TableModel(BaseModel):
     fields: dict
     foreign_key_mapping: dict
     foreign_keys: list[ForeignKey]
+
+
+class LinkStatus(BaseModel):
+    url: str
+    is_alive: bool
+    primary_key: int
+    description: str
+
+
+class ResourceLinkStatus(BaseModel):
+    resource: str
+    links: Dict[str, List[LinkStatus]]
 
 
 ForeignKey.model_rebuild()

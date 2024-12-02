@@ -42,6 +42,7 @@ def upgrade() -> None:
             "user_nm",
             sa.VARCHAR(30),
             nullable=False,
+            server_default="ICTU",
             comment="User identification",
         ),
         sa.Column(

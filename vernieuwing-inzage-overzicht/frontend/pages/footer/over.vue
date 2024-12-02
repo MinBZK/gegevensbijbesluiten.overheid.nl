@@ -8,25 +8,6 @@
       {{ t(`footer.paths.overPage.p0_2`) }}
       <a href="mailto:test@test.nl"> test@test.nl</a>.
     </p>
-    <h2>{{ t(`footer.paths.overPage.h1`) }}</h2>
-    <p>
-      {{ t(`footer.paths.overPage.p1_1`) }}
-    </p>
-    <p>
-      {{ t(`footer.paths.overPage.p1_2`) }}
-    </p>
-    <ul class="bullet ml-4">
-      <li>{{ t(`footer.paths.overPage.li1_1`) }}</li>
-      <li>
-        {{ t(`footer.paths.overPage.li1_2`) }}
-      </li>
-      <li>
-        {{ t(`footer.paths.overPage.li1_3`) }}
-      </li>
-      <li>
-        {{ t(`footer.paths.overPage.li1_4`) }}
-      </li>
-    </ul>
     <h2>{{ t(`footer.paths.overPage.h2`) }}</h2>
     <p>
       {{ t(`footer.paths.overPage.p2_1`) }}

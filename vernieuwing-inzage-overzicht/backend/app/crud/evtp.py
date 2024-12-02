@@ -6,7 +6,7 @@ from datetime import datetime
 import pandas as pd
 from fastapi.exceptions import HTTPException
 from fastapi.responses import StreamingResponse
-from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy import and_, desc, func, or_, select, true
 from sqlalchemy.orm import Session, joinedload
 
 import app.models as models
@@ -126,7 +126,7 @@ def get_filtered(db: Session, evtp_query: schemas.evtp.EvtpQuery) -> schemas.evt
     filters, selected_filters, filter_ilike, filter_synonyms, similarity_score = build_filters(
         evtp_query, model_evtp_version
     )
-    where_clause = and_(*filters, or_(*filter_ilike, *filter_synonyms))
+    where_clause = and_(*filters, or_(true(), *filter_ilike, *filter_synonyms))
 
     query_evtp = execute_query(db, where_clause, evtp_query, similarity_score)
     total_count = get_total_count(db, model_evtp_version, where_clause)
@@ -233,8 +233,7 @@ def get_evtp_gg(evtp_upc: int, db: Session, version_nr: int | None = None) -> sc
                 "gg_child": [
                     child.entity_gg_child.omschrijving
                     for child in sorted(
-                        gst.entities_gst_gg,
-                        key=lambda item: item.sort_key or 1000,
+                        gst.entities_gst_gg, key=lambda item: (item.sort_key or 1000, item.entity_gg_child.omschrijving)
                     )
                 ],
                 "oe_best_naamspraakgbr": gst.entity_gst.entity_oe_bron.naam_spraakgbr,
@@ -375,7 +374,7 @@ def get_evtp_gst(evtp_upc: int, gst_upc: int, db: Session, version_nr: int | Non
                 )
                 for gg_child in sorted(
                     query_object_evtp_gst.entities_gst_gg,
-                    key=lambda item: item.sort_key or 1000,
+                    key=lambda item: (item.sort_key or 1000, item.entity_gg_child.omschrijving),
                 )
             ],
             gg_parent=query_object_evtp_gst.entities_gst_gg[
@@ -385,13 +384,13 @@ def get_evtp_gst(evtp_upc: int, gst_upc: int, db: Session, version_nr: int | Non
                 gg_child.entity_gg_child.omschrijving_uitgebreid
                 for gg_child in sorted(
                     query_object_evtp_gst.entities_gst_gg,
-                    key=lambda item: item.sort_key or 1000,
+                    key=lambda item: (item.sort_key or 1000, item.entity_gg_child.omschrijving),
                 )
             ],
             oe_best_lidwsgebr=query_object_evtp_gst.entity_gst.entity_oe_best.lidw_sgebr or "",
             oe_best_naampraakgebr=query_object_evtp_gst.entity_gst.entity_oe_best.naam_spraakgbr,
             evtp_aanleiding=query_object_evtp_gst.entity_evtp_version.aanleiding,
-            evtp_gst_conditie=query_object_evtp_gst.conditie,
+            gst_conditie=query_object_evtp_gst.entity_gst.conditie,
             evtp_gebrdl=query_object_evtp_gst.entity_evtp_version.gebr_dl,
             rge=[
                 schemas.RgeShort(
@@ -400,7 +399,7 @@ def get_evtp_gst(evtp_upc: int, gst_upc: int, db: Session, version_nr: int | Non
                 )
                 for rge in sorted(
                     query_object_evtp_gst.entities_gst_rge,
-                    key=lambda item: item.sort_key or 1000,
+                    key=lambda item: (item.sort_key or 1000, item.entity_rge.titel),
                 )
             ],
         ),
@@ -462,7 +461,7 @@ def get_by_publicatiestatus_oe(db: Session):
         .where(
             and_(
                 models.evtp.EvtpVersion.id_publicatiestatus.in_(PUBLICATION_RANGE),
-                models.evtp.EvtpVersion.huidige_versie.is_(True),
+                models.evtp.EvtpVersion.huidige_versie.in_(CURRENT_VERSION),
             )
         )
         .group_by(models.oe.Oe.naam_officieel)
@@ -479,7 +478,7 @@ def get_by_publicatiestatus_oe(db: Session):
     return OeByEvtpTotal(oe_by_evtp_total=oe_by_evtp)
 
 
-def get_search_suggestion(db: Session, search_query: str):
+def get_search_suggestion(db: Session, search_query: str, limit: int = 100):
     model_evtp_version = models.evtp.EvtpVersion
     query_filters = get_base_query_filters()
 
@@ -494,7 +493,7 @@ def get_search_suggestion(db: Session, search_query: str):
             .order_by(desc(similarity_score))
         )
 
-        query_evtp = db.execute(query).scalars().all()
+        query_evtp = db.execute(query.limit(limit)).scalars().all()
 
         if not query_evtp:
             logger.info("Suggestion search - ilike did not give any results for besluiten")
@@ -507,7 +506,7 @@ def get_search_suggestion(db: Session, search_query: str):
                 .where(and_(*query_filters))
                 .order_by(desc(similarity_score))
             )
-            query_evtp = db.execute(query).scalars().all()
+            query_evtp = db.execute(query.limit(limit)).scalars().all()
             if query_evtp:
                 logging.info(f"Suggestion-search - Similarity search query for besluiten for: {search_query}")
             else:
@@ -516,7 +515,7 @@ def get_search_suggestion(db: Session, search_query: str):
             logging.info(f"Suggestion search - Ilike search with synonyms results for besluiten for: {search_query}")
     else:
         query = select(model_evtp_version).where(and_(*query_filters))
-        query_evtp = db.execute(query).scalars().all()
+        query_evtp = db.execute(query.limit(limit)).scalars().all()
 
     return schemas.common.SearchSuggestionsAllEntities(
         gg=[],

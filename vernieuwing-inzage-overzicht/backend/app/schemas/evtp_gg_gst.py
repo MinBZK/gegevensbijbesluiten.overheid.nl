@@ -25,7 +25,7 @@ class GegevensgroepGrondslag(BaseModel):
     oe_best_lidwsgebr: str | None
     oe_best_naampraakgebr: str
     evtp_aanleiding: str
-    evtp_gst_conditie: str | None
+    gst_conditie: str | None
     evtp_gebrdl: str
     rge: List[RgeShort]
 

@@ -10,6 +10,7 @@
         name="98789"
         class="input input-text"
         :placeholder="searchHint"
+        autocomplete="off"
         aria-invalid="false"
         aria-labelledby="search-label"
         @input="() => $emit('doSearch', searchValue)"
