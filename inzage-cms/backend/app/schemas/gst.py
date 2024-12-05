@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 from app.schemas.ibron import IbronMinimalList
 from app.schemas.oe import OeMinimalList
@@ -12,7 +12,7 @@ class Gst(BaseModel):
     gst_cd: int
     gst_upc: int
     versie_nr: int | None = None
-    ext_lnk_aut: str | None
+    ext_lnk_aut: HttpUrl | None
     ibron_cd: int | None
     notitie: str | None
     oe_best: int

@@ -262,7 +262,7 @@ export default defineComponent({
 
       this.loading = true
       try {
-        const response = await axios.get(`${store.state.APIurl}/maintainance/check_dead_links`, {
+        const response = await axios.get(`${store.state.APIurl}/maintainance/check-dead-links`, {
           params: { resource: this.selectedResource }
         })
         store.commit('setLinkStatus', response.data)

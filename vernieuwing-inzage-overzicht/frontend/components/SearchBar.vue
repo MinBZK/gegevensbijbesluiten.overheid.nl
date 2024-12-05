@@ -23,10 +23,10 @@
               aria-controls="search-results"
               aria-autocomplete="list"
               spellcheck="false"
-              @keyup.enter="getPage !== 'index' && doSearch()"
               @keydown.esc="hideSuggestions"
               @keydown="handleArrowNavigation"
               @focus="handleInputFocus"
+              @blur="handleInputBlur"
             />
           </div>
           <div v-if="showSuggestions" id="announce" aria-live="polite" class="sr-only">
@@ -37,25 +37,23 @@
           <div
             v-if="showSuggestions"
             id="search-results"
+            ref="suggestionsWrapper"
             class="suggestions-wrapper"
             role="listbox"
             aria-labelledby="Search suggestions"
           >
             <div v-if="getPage === 'index'" class="suggestions-index" role="combobox">
-              <d v-for="(entityType, entityIndex) in ['evtp', 'gg', 'oe']" :key="entityType">
+              <template v-for="(entityType, entityIndex) in ['evtp', 'gg', 'oe']" :key="entityType">
                 <h4 class="entity-title">
                   {{
                     `${getEntityTitle(entityType)} (${getTotalSuggestionsPerEntity(entityType)})`
                   }}
                 </h4>
-                <div
-                  v-if="getTotalSuggestionsPerEntity(entityType) > 0"
-                  class="entity-suggestions"
-                  role="listbox"
-                >
+                <div v-if="getTotalSuggestionsPerEntity(entityType) > 0" class="entity-suggestions">
                   <ul
                     id="search-results"
                     class="suggestion-list"
+                    role="listbox"
                     :aria-label="`${getEntityTitle(entityType)} (${getTotalSuggestionsPerEntity(
                       entityType
                     )})`"
@@ -112,15 +110,17 @@
                   {{ t('noResultsSuggestionsList') }}
                 </div>
                 <SearchSkeleton v-else :skeleton-item="3" />
-              </d>
+              </template>
             </div>
-            <div v-else class="suggestions-single-entity">
+            <div v-else class="suggestions-single-entity" role="combobox">
               <div v-if="getTotalSuggestionsPerEntity(entity) > 0">
-                <ul class="suggestion-list">
+                <ul class="suggestion-list" role="listbox">
                   <li
                     v-for="(suggestion, itemIndex) in getLimitedSuggestions(entity)"
+                    :id="`search-result-${itemIndex}`"
                     :key="suggestion.upc"
                     :class="getItemClass(0, itemIndex)"
+                    :aria-selected="activeEntityIndex === 0 && activeItemIndex === itemIndex"
                     role="option"
                   >
                     <NuxtLink
@@ -137,8 +137,16 @@
                 </ul>
                 <div
                   v-if="getSuggestionsHiddenCount(entity) > 0"
+                  v-bind="getItemProps(0, getLimitedSuggestions(entity).length)"
                   class="suggestion-footer"
+                  role="option"
+                  tabindex="-1"
+                  :aria-selected="
+                    activeEntityIndex === 0 &&
+                    activeItemIndex === getLimitedSuggestions(entity).length
+                  "
                   @click="showAllSuggestions(entity)"
+                  @keydown.enter="showAllSuggestions(entity)"
                 >
                   {{ getSuggestionHiddenText(entity) }}
                 </div>
@@ -210,6 +218,7 @@ const suggestionsResultsEntity = ref<SearchSuggestion[]>([])
 const isLoading = ref(false)
 const shouldShowNoResults = ref(false)
 const entitiesWithNoResults = ref<Set<string>>(new Set())
+const suggestionsWrapper = ref<HTMLElement | null>(null)
 
 // New refs for keyboard navigation
 const activeEntityIndex = ref<number>(-1)
@@ -373,7 +382,6 @@ const fetchSearchSuggestions = async () => {
   isLoading.value = true
   shouldShowNoResults.value = false
   entitiesWithNoResults.value.clear()
-  // await new Promise(resolve => setTimeout(resolve, 100)); // 500ms delay
   const response = await evtpService.getSearchSuggestion(entity.value, searchValue.value.toString())
   isLoading.value = false
   suggestionsResultsAllEntities.value = response.data.value || { evtp: [], gg: [], oe: [] }
@@ -471,6 +479,20 @@ const handleInputFocus = () => {
       Object.values(suggestionsResultsAllEntities.value || {}).some((arr) => arr.length > 0))
   ) {
     showSuggestionsAndAdjustPadding()
+    nextTick(() => {
+      const firstSuggestionItem = suggestionsWrapper.value?.querySelector('.suggestion-item')
+      if (firstSuggestionItem) {
+        ;(firstSuggestionItem as HTMLElement).focus()
+      }
+    })
+  }
+}
+
+const handleInputBlur = (event: FocusEvent) => {
+  const relatedTarget = event.relatedTarget as HTMLElement
+  if (!suggestionsWrapper.value?.contains(relatedTarget)) {
+    hideSuggestions()
+    showTopSuggestions()
   }
 }
 
@@ -575,7 +597,6 @@ const handleArrowNavigation = (event: KeyboardEvent) => {
         event.preventDefault()
         const entityType = entityTypes[activeEntityIndex.value]
         if (activeItemIndex.value === entityItemCounts[activeEntityIndex.value]) {
-          // "Show more" div is selected
           showAllSuggestions(entityType)
         } else {
           const suggestion = getLimitedSuggestions(entityType)[activeItemIndex.value]
@@ -620,6 +641,7 @@ const getItemProps = (entityIndex: number, itemIndex: number) => {
   return {
     class: {
       'suggestion-item': true,
+      'suggestion-footer': itemIndex === getLimitedSuggestions(entityType).length,
       active: isActive
     },
     'aria-selected': isActive
@@ -702,15 +724,19 @@ onUnmounted(() => {
 
 .suggestion-footer {
   padding: 0.6em;
-  background-color: #f5f5f5;
+  background-color: #f0efef94;
   border-top: 1px solid #eee;
   font-size: 0.9em;
-  color: #666;
   text-align: center;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &.active {
+    background-color: $tertiary;
+  }
 
   &:hover {
-    background-color: #e6e6e6;
+    background-color: $tertiary;
   }
 }
 
@@ -722,6 +748,10 @@ onUnmounted(() => {
   padding: 0.6em;
   border-bottom: 1px solid #eee;
   transition: background-color 0.2s ease;
+
+  &.active {
+    background-color: $tertiary;
+  }
 
   &:last-child {
     border-bottom: none;
@@ -797,38 +827,6 @@ onUnmounted(() => {
 
   &:hover {
     text-decoration: underline;
-  }
-}
-
-.suggestion-footer {
-  padding: 0.6em;
-  background-color: #f5f5f5;
-  font-size: 0.9em;
-  color: $primary;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: darken(#f5f5f5, 5%);
-  }
-
-  &.active {
-    background-color: $tertiary;
-  }
-}
-
-.suggestion-item {
-  padding: 0.6em;
-  border-bottom: 1px solid #eee;
-  transition: background-color 0.2s ease;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  &.active {
-    background-color: $tertiary;
   }
 }
 </style>

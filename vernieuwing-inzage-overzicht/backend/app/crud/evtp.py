@@ -6,7 +6,7 @@ from datetime import datetime
 import pandas as pd
 from fastapi.exceptions import HTTPException
 from fastapi.responses import StreamingResponse
-from sqlalchemy import and_, desc, func, or_, select, true
+from sqlalchemy import and_, desc, func, or_, select
 from sqlalchemy.orm import Session, joinedload
 
 import app.models as models
@@ -126,7 +126,7 @@ def get_filtered(db: Session, evtp_query: schemas.evtp.EvtpQuery) -> schemas.evt
     filters, selected_filters, filter_ilike, filter_synonyms, similarity_score = build_filters(
         evtp_query, model_evtp_version
     )
-    where_clause = and_(*filters, or_(true(), *filter_ilike, *filter_synonyms))
+    where_clause = and_(*filters, or_(*filter_ilike, *filter_synonyms))
 
     query_evtp = execute_query(db, where_clause, evtp_query, similarity_score)
     total_count = get_total_count(db, model_evtp_version, where_clause)

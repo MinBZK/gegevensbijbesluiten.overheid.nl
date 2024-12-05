@@ -19,7 +19,7 @@ async def check_link(client: httpx.AsyncClient, url: str, pk_value: int, desc_va
     try:
         response = await client.get(url, follow_redirects=True, timeout=30.0)
         is_alive = response.status_code < 400
-    except (httpx.HTTPError, asyncio.TimeoutError, ssl.SSLCertVerificationError, httpx.InvalidURL):
+    except (httpx.HTTPError, asyncio.TimeoutError, ssl.SSLCertVerificationError, httpx.InvalidURL, ValueError):
         is_alive = False
 
     return LinkStatus(
@@ -43,7 +43,7 @@ async def check_links_batch(client: httpx.AsyncClient, rows: List[Tuple]) -> Lis
     return await asyncio.gather(*tasks)
 
 
-@router.get("/check_dead_links", response_model=ResourceLinkStatus)
+@router.get("/check-dead-links", response_model=ResourceLinkStatus)
 async def check_dead_links(resource: TableResource, db: Session = Depends(get_sync_session)):
     """Check whether links are dead for a specific resource."""
     model = MAPPING_RESOURCE_TO_TABLE.get_model(resource.value)
