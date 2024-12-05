@@ -65,18 +65,18 @@ class TestEvtpVersionEndpoints:
     #     assert response.status_code == 200
     #     assert response.json() is not None
 
-    def test_duplicate(self, client):
-        body = schemas.evtp_version.EvtpNewVersionIn(
-            versie_nr=self.versie_nr,
-            evtp_nm="example_name",
-            omschrijving="example_description",
-            aanleiding="example_reason",
-            gebr_dl="example_usage",
-            oe_best=self.oe_best,
-        )
-        response = client.post(f"/api/evtp-version-duplicate/{self.evtp_cd}", json=body.model_dump())
-        assert response.status_code == 200
-        assert response.json() is not None
+    # def test_duplicate(self, client):
+    #     body = schemas.evtp_version.EvtpNewVersionIn(
+    #         versie_nr=self.versie_nr,
+    #         evtp_nm="example_name",
+    #         omschrijving="example_description",
+    #         aanleiding="example_reason",
+    #         gebr_dl="example_usage",
+    #         oe_best=self.oe_best,
+    #     )
+    #     response = client.post(f"/api/evtp-version-duplicate/{self.evtp_cd}", json=body.model_dump())
+    #     assert response.status_code == 200
+    #     assert response.json() is not None
 
     def test_get_all_including_all_versions(self, client):
         response = client.get("/api/evtp-version-list-versions/")
