@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container row">
-      <NuxtLink class="link cta__backwards" :to="{ name: 'besluit' }">
+      <NuxtLink id="content" class="link cta__backwards" :to="{ name: 'besluit' }">
         {{ t('goBack') }}
       </NuxtLink>
     </div>

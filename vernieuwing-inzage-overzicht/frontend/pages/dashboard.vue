@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="content" class="container">
     <h1 class="banner">Dashboard</h1>
     <h2>{{ totalCountText }}:&nbsp; {{ evtpCount }}</h2>
     <h2>{{ currentDate }}</h2>

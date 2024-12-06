@@ -29,7 +29,7 @@
               @blur="handleInputBlur"
             />
           </div>
-          <div v-if="showSuggestions" id="announce" aria-live="polite" class="sr-only">
+          <div v-if="searchValue.length > 2" id="announce" aria-live="polite" class="sr-only">
             {{
               `${getTotalSuggestions() ?? 0} suggesties gevonden voor de zoekterm '${searchValue}'`
             }}
@@ -44,11 +44,11 @@
           >
             <div v-if="getPage === 'index'" class="suggestions-index" role="combobox">
               <template v-for="(entityType, entityIndex) in ['evtp', 'gg', 'oe']" :key="entityType">
-                <h4 class="entity-title">
+                <b class="entity-title">
                   {{
                     `${getEntityTitle(entityType)} (${getTotalSuggestionsPerEntity(entityType)})`
                   }}
-                </h4>
+                </b>
                 <div v-if="getTotalSuggestionsPerEntity(entityType) > 0" class="entity-suggestions">
                   <ul
                     id="search-results"
@@ -520,9 +520,11 @@ const handleArrowNavigation = (event: KeyboardEvent) => {
   const announceCategory = (entityIndex: number) => {
     const entityType = entityTypes[entityIndex]
     const categoryTitle = getEntityTitle(entityType)
-    const announcement = `Categorie ${categoryTitle}: ${getTotalSuggestionsPerEntity(
-      entityType
-    )} suggesties`
+    const totalSuggestions = getTotalSuggestionsPerEntity(entityType)
+    const announcement =
+      totalSuggestions === 0
+        ? `${categoryTitle} (${totalSuggestions}) ${t('noResultsSuggestionsList')}`
+        : `${categoryTitle} (${totalSuggestions})`
     announceToScreenReader(announcement)
   }
 
@@ -531,7 +533,9 @@ const handleArrowNavigation = (event: KeyboardEvent) => {
       // First time navigating down
       activeEntityIndex.value = 0
       activeItemIndex.value = 0
-      announceCategory(activeEntityIndex.value)
+      if (getPage === 'index') {
+        announceCategory(activeEntityIndex.value)
+      }
     } else {
       activeItemIndex.value++
 

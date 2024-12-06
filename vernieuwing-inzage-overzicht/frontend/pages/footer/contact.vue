@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="content" class="container">
     <h1 class="h1 margin-top">{{ t('footer.paths.contactPage.h1') }}</h1>
     <p>{{ t('footer.paths.contactPage.p1') }}</p>
 

@@ -2,6 +2,7 @@
   <div>
     <div class="container row">
       <NuxtLink
+        id="content"
         class="link cta__backwards"
         :to="getLink(`/besluit/${gst.besluit.evtp_upc}`, evtpVersionNr).value"
       >
