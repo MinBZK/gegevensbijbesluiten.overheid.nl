@@ -110,10 +110,10 @@ let { data } = await evtpService.getEvtpFiltered(query.value)
 // Refresh data based on the URL query
 const loading = ref<boolean>(false)
 
-watch(query, async () => {
-  if (window.location.hash !== '#content') {
+watch(query, async (newQuery, oldQuery) => {
+  if (JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
     loading.value = true
-    const response = await evtpService.getEvtpFiltered(query.value)
+    const response = await evtpService.getEvtpFiltered(newQuery)
     loading.value = false
     data = response.data
     newFocusIsRequested.value = true

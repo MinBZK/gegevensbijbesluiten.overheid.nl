@@ -92,8 +92,8 @@ let { data } = await oeService.getOeFiltered(query.value)
 // Refresh data based on the URL query
 const loading = ref(false)
 
-watch(query, async () => {
-  if (window.location.hash !== '#content') {
+watch(query, async (newQuery, oldQuery) => {
+  if (JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
     loading.value = true
     const response = await oeService.getOeFiltered(query.value)
     loading.value = false

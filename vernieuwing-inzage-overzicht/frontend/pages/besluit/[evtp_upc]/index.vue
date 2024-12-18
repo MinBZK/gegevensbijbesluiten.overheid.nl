@@ -68,7 +68,7 @@
         </div>
         <div>
           <ul class="gst-card no-margin">
-            <div
+            <li
               v-for="gst in ggParentObject"
               v-show="isAccordionActive(ggParent)"
               :key="gst"
@@ -102,7 +102,7 @@
                   "
                 />
               </div>
-            </div>
+            </li>
           </ul>
         </div>
       </div>
