@@ -76,6 +76,7 @@ const handleFocus = (e: KeyboardEvent) => {
 const trapFocus = (enable: boolean) => {
   if (enable) {
     document.addEventListener('keydown', handleFocus)
+    document.addEventListener('focusin', handleFocusIn) // Add focusin listener
     const modal = document.querySelector('.modal-view')
     const firstFocusableElement = modal?.querySelectorAll(focusableElements)[0]
     if (firstFocusableElement) {
@@ -83,6 +84,18 @@ const trapFocus = (enable: boolean) => {
     }
   } else {
     document.removeEventListener('keydown', handleFocus)
+    document.removeEventListener('focusin', handleFocusIn) // Remove focusin listener
+  }
+}
+
+const handleFocusIn = (e: FocusEvent) => {
+  const modal = document.querySelector('.modal-view')
+  if (!modal || modal.contains(e.target as Node)) return
+
+  // If focus moves outside the modal, bring it back
+  const firstFocusableElement = modal.querySelectorAll(focusableElements)[0]
+  if (firstFocusableElement) {
+    ;(firstFocusableElement as HTMLElement)?.focus()
   }
 }
 
@@ -94,6 +107,7 @@ watch(
   () => props.modelValue,
   (modelValue) => {
     trapFocus(modelValue)
+    document.body.style.overflow = modelValue ? 'hidden' : ''
   }
 )
 

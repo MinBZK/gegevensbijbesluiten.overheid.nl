@@ -3,7 +3,7 @@
   "loremIpsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   "showMore": "Toon meer",
   "suggestionsList": "Suggesties",
-  "SearchAllEntities": "Zoek in alle besluiten, gegevens en organisaties",
+  "SearchAllEntities": "Zoek in alle besluiten, gegevens en organisaties (voer minimaal drie karakters in)",
   "noResultsSuggestionsList": "Geen resultaten gevonden",
   "noResultsSuggestionsListAll": "Geen resultaten gevonden, probeer een andere zoekterm.",
   "evtpIndex": {
@@ -83,7 +83,6 @@
     "additionalItemsHeader": "Aanvullende informatie voor dit besluit",
     "additionalInfoLink": "Bezoek deze website voor verdere informatie",
     "wantToKnowMore": "Meer weten?"
-
   },
   "gegevensstromen": {
     "dataStorage": "De gegevens staan opgeslagen in {article}",
@@ -102,7 +101,6 @@
     "multipleTypeMessages": "Via de post, de Berichtenbox op mijnoverheid.nl of een ander kanaal",
     "pleaseContact": "Neem contact op met {destination_organisation}",
     "portalLogin": "Bekijk de status van uw besluit en/of uw gegevens in {article} {destination_portal}"
-
   },
   "footer": {
     "text_1": "Deze website wordt periodiek herzien en aangevuld.",
@@ -143,12 +141,12 @@
       "toegankelijkheid": "Toegankelijkheid",
       "toegankelijkheidPage": {
         "p1": "Bij het ontwikkelen van deze website worden de wensen en eisen voor een toegankelijke website direct ingebouwd. De makers van deze website zijn getraind in digitale toegankelijkheid. Een onafhankelijke toegankelijkheidsexpert levert regelmatig advies.",
-        "p2": "Deze website moet voldoen aan WCAG 2.1 niveau AA, de Web Content Accesibility Guidelines. Dit betekent dat de website gebruikt kan worden door iedereen, inclusief mensen met een functiebeperking.",
+        "p2": "Deze website voldoet aan WCAG 2.1 niveau AA, de Web Content Accesibility Guidelines. Dit betekent dat de website gebruikt kan worden door iedereen, inclusief mensen met een functiebeperking.",
         "p3": "Voor meer informatie:",
         "li1": "Register van Toegankelijkheidsverklaringen van de overheid",
         "li1_link": "https://www.toegankelijkheidsverklaring.nl/register?w=gegevens+bij+besluiten",
         "li2": "Toegankelijkheidscertificaat",
-        "li2_link": "https://www.toegankelijkheidscertificaat.nl/wiegebruiktmijngegevens.nl"
+        "li2_link": "https://www.toegankelijkheidsonderzoek.nl/gegevensbijbesluiten.overheid.nl"
       },
       "contact": "Contact",
       "contactPage": {
@@ -164,7 +162,7 @@
       "archiefPage": {
         "h1": "Archief",
         "p1": "Websites zijn een belangrijke informatiebron voor burgers, bedrijven en overheden. Dit geldt ook voor vorige versies van websites. Hier kan informatie op staan die nog steeds relevant is en waar rechten aan kunnen worden ontleend. Door websites te archiveren, kunnen ze duurzaam toegankelijk blijven: ze blijven dus beschikbaar voor het terugkijken van openbare informatie. Dit is verplicht voor alle overheidswebsites.",
-        "p2_1": "Deze versies komen te staan in het", 
+        "p2_1": "Deze versies komen te staan in het",
         "li1": "archief",
         "li1_link": "https://minbzk.sitearchief.nl/?subsite=gegevensbijbesluiten#archive",
         "p2_2": "In het overzicht vind u de webarchieven van alle verplichte deelnemers. Klik op een archief, kies een datum uit het verleden via de kalender en de site past haar inhoud aan op wat er toen actueel was. U kunt teruggaan tot 5 maart 2024.",
@@ -180,7 +178,6 @@
         "p1_2": "en meld dit ook aan het Nationaal Cyber Security Centrum (NCSC). Het maken van zo’n melding heet Coordinated Vulnerability Disclosure (CVD). Wij bekijken samen met het NCSC het probleem en lossen dit zo snel mogelijk op.",
         "p2": "Klik hier om een kwetsbaarheid te melden",
         "li1": "https://www.ncsc.nl/contact/kwetsbaarheid-melden"
-        
       },
       "cookies": "Cookies",
       "cookiesPage": {
@@ -288,7 +285,6 @@
     "goTo": "Ga naar pagina {n}",
     "goToNextPage": "Ga naar de volgende pagina",
     "goToPreviousPage": "Ga naar de vorige pagina"
-
   },
   "homePageText": {
     "description_1": "De overheid houdt gegevens bij van alle inwoners van Nederland. Deze gegevens worden gebruikt om besluiten te nemen. Een besluit is elke beslissing die invloed kan hebben op uw rechten of plichten, zoals het verlenen van een vergunning, het toekennen van een uitkering, het verlengen van een paspoort of het opleggen van een belastingaanslag. Waar nodig wisselen overheidsinstanties uw gegevens onderling uit, zodat u deze niet steeds opnieuw hoeft aan te leveren.",
@@ -466,6 +462,7 @@
     },
     "besluiten": {
       "title": "Zoek naar een besluit",
+      "searchText": "Zoek naar een besluit (voer minimaal drie karakter in)",
       "titleSuggestionBar": "Besluiten",
       "description_1": "Op deze pagina vindt u de besluiten die de overheid over u neemt alfabetisch op een rijtje.",
       "description_2": "Gebruik de zoekbalk. Of selecteer een organisatie als u al weet dat u daar moet zijn.",
@@ -478,7 +475,7 @@
     "gegevens": {
       "title": "Gegevens",
       "description": "Wie beheert nu precies mijn inkomensgegevens? Met wie worden mijn medische gegevens gedeeld? Op deze pagina ziet u welke gegevens de overheid gebruikt om besluiten te nemen. Deze gegevens zijn verdeeld over een aantal categorieën. Van alle gegevens kunt u zien voor welk besluit ze worden gebruikt, welke organisatie ze beheert  en met welke andere organisaties ze worden gedeeld.",
-      "searchText": "Zoek naar gegevens",
+      "searchText": "Zoek naar gegevens (voer minimaal drie karakter in)",
       "searchSingleText": "Zoek naar een gegeven",
       "suggestionsHidden": "Toon de overige {n} gegevens",
       "relatedGg": "Gerelateerde gegevens",
@@ -497,7 +494,7 @@
     },
     "organisaties": {
       "title": "Organisaties",
-      "searchText": "Zoek naar organisaties",
+      "searchText": "Zoek naar een organisatie (voer minimaal drie karakter in)",
       "searchSingleText": "Zoek naar een organisatie",
       "description_1": "Dit overzicht toont organisaties die verantwoordelijk zijn voor het uitvoeren van overheidsbesluiten. Het gaat om overheidsorganisaties én organisaties die namens de overheid een wettelijke taak uitvoeren. Per organisatie vindt u de bijbehorende besluiten.",
       "description_italics": "Het overzicht is nog niet compleet en zal verder worden uitgebreid. Hier worden alleen organisaties weergegeven waarvan op dit moment een besluit op de website staat.",

@@ -18,7 +18,7 @@
       <div>
         <ul>
           <li v-for="(item, index) in contentList" :key="index" class="card-sub-content">
-            <NuxtLink :to="item.link" :aria-label="`Lees meer over ${item.description}`">
+            <NuxtLink :to="item.link" :aria-label="`${item.description}`">
               {{ capitaliseFirstLetter(item.description) }}
             </NuxtLink>
           </li>

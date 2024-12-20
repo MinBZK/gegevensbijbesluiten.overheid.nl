@@ -141,7 +141,7 @@
             "
           >
             <h3 class="psentence capitalise-first accordion-header-with-chevron">
-              <span class="timeline-dots naar" aria-hidden="true"> </span>
+              <span class="timeline-dots naar"></span>
               {{ gst.gegevensgroep_grondslag.header_oe_best_naamofficieel }}
             </h3>
             <NuxtIcon :name="getIconAccordion(EvtpGstHeader.gegevensgroep_grondslag)" />

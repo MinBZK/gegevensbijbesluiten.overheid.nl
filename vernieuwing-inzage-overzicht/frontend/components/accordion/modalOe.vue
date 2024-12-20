@@ -8,7 +8,7 @@
       >
         <NuxtLink
           :to="getLink(`/organisatie/${item.oe_upc}`).value"
-          :aria-label="`Lees meer over ${item.naam_spraakgbr}`"
+          :aria-label="`${item.naam_spraakgbr}`"
           class="linked-content"
         >
           <span class="underline">{{ capitaliseFirstLetter(item.naam_spraakgbr) }}</span>

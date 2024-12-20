@@ -16,6 +16,11 @@
             {{ t('footer.paths.toegankelijkheidPage.li1') }}
           </ExternalLink>
         </li>
+        <li>
+          <ExternalLink :href="t('footer.paths.toegankelijkheidPage.li2_link')">
+            {{ t('footer.paths.toegankelijkheidPage.li2') }}
+          </ExternalLink>
+        </li>
       </ul>
     </div>
   </div>

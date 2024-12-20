@@ -5,7 +5,7 @@
       <p>
         {{ t(`footer.paths.kwetsbaarheidPage.p1_1`) }}
         <a href="">
-          <a href="mailto:algemeneinzage@ictu.nl">algemeneinzage@ictu.nl</a>
+          <a href="mailto:servicedesk@koop.overheid.nl">servicedesk@koop.overheid.nl</a>
         </a>
         {{ t(`footer.paths.kwetsbaarheidPage.p1_2`) }}
       </p>

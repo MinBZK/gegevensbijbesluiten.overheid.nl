@@ -24,30 +24,23 @@ def get_similarity_search_clause(
 ):
     """Full text search query based on word similarity."""
     search_query = prep_search_for_query(search_query)
+
+    # Get similar words query
+    similar_words = (
+        select(models.words.Words.word)
+        .filter(func.similarity(models.words.Words.word, search_query) > SIMILARITY_THRESHOLD)
+        .scalar_subquery()
+    )
+
+    # Create search vector
+    search_vector = func.websearch_to_tsquery(func.array_to_string(func.array(similar_words), " OR "))
+
     if suggestion_search:
-        similar_words = (
-            select(models.words.Words.word)
-            .filter(func.similarity(models.words.Words.word, search_query) > SIMILARITY_THRESHOLD)
-            .scalar_subquery()
-        )
-
-        search_vector = func.websearch_to_tsquery(func.array_to_string(func.array(similar_words), " OR "))
-        if search_restricted:
-            search_condition = model.vector_suggestion.op("@@")(search_vector)
-        else:
-            search_condition = model.vector.op("@@")(search_vector)
-
+        vector_field = model.vector_suggestion if search_restricted else model.vector
     else:
-        similar_words = (
-            select(models.words.Words.word)
-            .filter(func.similarity(models.words.Words.word, search_query) > SIMILARITY_THRESHOLD)
-            .scalar_subquery()
-        )
+        vector_field = model.vector
 
-        search_vector = func.websearch_to_tsquery(func.array_to_string(func.array(similar_words), " OR "))
-        search_condition = model.vector.op("@@")(search_vector)
-
-    return search_condition
+    return vector_field.op("@@")(search_vector)
 
 
 def build_filters(search_query: str, model) -> List:

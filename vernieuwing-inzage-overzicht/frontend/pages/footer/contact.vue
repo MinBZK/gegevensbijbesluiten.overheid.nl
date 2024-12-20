@@ -6,7 +6,7 @@
     <h2>{{ t('footer.paths.contactPage.h2') }}</h2>
     <p>
       {{ t('footer.paths.contactPage.p2') }}
-      <a href="mailto:test@test.nl"> test@test.nl</a>.
+      <a href="mailto:servicedesk@koop.overheid.nl"> servicedesk@koop.overheid.nl</a>.
     </p>
 
     <p>

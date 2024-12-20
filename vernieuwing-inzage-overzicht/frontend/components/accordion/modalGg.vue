@@ -4,7 +4,7 @@
       <li v-for="item in ggListSortedSlice" :key="item.gg_cd" class="white-card-list">
         <NuxtLink
           :to="getLink(`/gegeven/${item.gg_upc}`).value"
-          :aria-label="`Lees meer over ${item.omschrijving}`"
+          :aria-label="`${item.omschrijving}`"
           class="linked-content"
         >
           <span class="underline">

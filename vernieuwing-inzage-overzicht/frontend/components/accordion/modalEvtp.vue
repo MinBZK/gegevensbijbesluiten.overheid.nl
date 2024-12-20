@@ -4,7 +4,7 @@
       <li v-for="item in evtpListSortedSlice" :key="item.evtp_nm" class="white-card-list">
         <NuxtLink
           :to="getLink(`/besluit/${item.evtp_upc}`, item.versie_nr).value"
-          :aria-label="`Lees meer over ${item.evtp_nm}`"
+          :aria-label="`${item.evtp_nm}`"
           class="linked-content"
         >
           <span class="underline"> {{ item.evtp_nm }} </span>

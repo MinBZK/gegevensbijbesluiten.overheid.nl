@@ -33,7 +33,6 @@
             :aria-label="t('pagination.goTo', { n: pageNumber })"
             :tabindex="currentPage == pageNumber ? -1 : 0"
             :aria-current="pageNumber == currentPage && `true`"
-            role="button"
             inactive-class
             class="pagenumber noselect"
             @click=";[$emit('setPage', pageNumber), announcePage(pageNumber)]"
@@ -153,7 +152,7 @@ nav {
 
 .pagenumber:hover:not(.current-page, .disabled) {
   background-color: $secondary;
-  color: white;
+  color: black;
 }
 
 .current-page {

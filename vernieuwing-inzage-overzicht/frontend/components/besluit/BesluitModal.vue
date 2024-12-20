@@ -19,7 +19,7 @@
         <li v-for="(evtp, index) in evtps" :key="index">
           <NuxtLink
             :to="getLink(`/besluit/${evtp.evtp_upc}`, evtp.versie_nr).value"
-            :aria-label="`Lees meer over ${evtp.evtp_nm}`"
+            :aria-label="`${evtp.evtp_nm}`"
             >{{ evtp.evtp_nm }}
             <span v-if="channelIfConcept"> {{ `${t(`versionNumber`)} ${evtp.versie_nr}` }}</span>
           </NuxtLink>

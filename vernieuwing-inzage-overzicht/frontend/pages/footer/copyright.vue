@@ -27,7 +27,7 @@
       </h2>
       <p class="p-margin-bottom-footer extra-margin-bottom">
         {{ t(`footer.paths.copyrightPage.p4`) }}
-        <a href="mailto:algemeneinzage@ictu.nl"> algemeneinzage@ictu.nl</a>.
+        <a href="mailto:servicedesk@koop.overheid.nl"> servicedesk@koop.overheid.nl</a>.
       </p>
     </div>
   </div>

@@ -6,7 +6,7 @@ from datetime import datetime
 import pandas as pd
 from fastapi.exceptions import HTTPException
 from fastapi.responses import StreamingResponse
-from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy import BinaryExpression, and_, desc, func, or_, select
 from sqlalchemy.orm import Session, joinedload
 
 import app.models as models
@@ -121,15 +121,16 @@ def fetch_and_format_organisation_filter_data(db: Session, model_evtp_version, w
 
 
 def get_filtered(db: Session, evtp_query: schemas.evtp.EvtpQuery) -> schemas.evtp.EvtpQueryResult:
-    # Ilike-search with synonyms
     model_evtp_version = models.evtp.EvtpVersion
     filters, selected_filters, filter_ilike, filter_synonyms, similarity_score = build_filters(
         evtp_query, model_evtp_version
     )
-    where_clause = and_(*filters, or_(*filter_ilike, *filter_synonyms))
 
+    # First try ilike search with synonyms
+    where_clause = and_(*filters, or_(*filter_ilike, *filter_synonyms))
     query_evtp = execute_query(db, where_clause, evtp_query, similarity_score)
     total_count = get_total_count(db, model_evtp_version, where_clause)
+
     if query_evtp:
         logging.info(f"Enter search - Ilike search with synonyms for besluiten for: {evtp_query.searchtext}")
 
@@ -144,18 +145,33 @@ def get_filtered(db: Session, evtp_query: schemas.evtp.EvtpQuery) -> schemas.evt
         selected_filters=[schemas.filters.SelectedFilters(**dict(s)) for s in selected_filters],
     )
 
-    # Similarity search
+    # If no results, try similarity search while maintaining organization filter
     if not total_results.result_evtp and evtp_query.searchtext:
         logging.info("Enter search - ilike did not give any results for besluiten")
         searchtext = prep_search_for_query(evtp_query.searchtext)
-        filters[-1] = get_similarity_search_clause(searchtext, model_evtp_version, suggestion_search=False)
-        where_clause = and_(*filters)
+
+        # Create a new list of filters without the search condition
+        base_filters = []
+        for f in filters:
+            if isinstance(f, BinaryExpression):
+                # Check if this is an organization filter
+                if hasattr(f.left, "name") and f.left.name == "naam_spraakgbr":
+                    base_filters.append(f)
+            else:
+                base_filters.append(f)
+
+        # Add similarity search while maintaining other filters
+        similarity_clause = get_similarity_search_clause(searchtext, model_evtp_version, suggestion_search=False)
+        where_clause = and_(similarity_clause, *base_filters)
+
         query = (
             select(model_evtp_version)
             .where(where_clause)
+            .join(models.oe.Oe)
             .offset((evtp_query.page - 1) * evtp_query.limit)
             .limit(evtp_query.limit)
         )
+
         query_evtp = db.execute(query).scalars().all()
         total_count = get_total_count(db, model_evtp_version, where_clause)
         logging.info(f"Enter-search - Similarity search query for besluiten for: {evtp_query.searchtext}")

@@ -6,7 +6,7 @@
     </p>
     <p>
       {{ t(`footer.paths.overPage.p0_2`) }}
-      <a href="mailto:test@test.nl"> test@test.nl</a>.
+      <a href="mailto:servicedesk@koop.overheid.nl"> servicedesk@koop.overheid.nl</a>.
     </p>
     <h2>{{ t(`footer.paths.overPage.h2`) }}</h2>
     <p>
@@ -25,7 +25,7 @@
 
     <p>
       {{ t(`footer.paths.overPage.p2_3`) }}
-      <a href="mailto:test@test.nl"> test@test.nl</a>.
+      <a href="mailto:servicedesk@koop.overheid.nl"> servicedesk@koop.overheid.nl</a>.
     </p>
     <h2>{{ t(`footer.paths.overPage.h3`) }}</h2>
     <p>

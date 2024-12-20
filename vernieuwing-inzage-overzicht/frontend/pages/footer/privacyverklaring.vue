@@ -14,7 +14,7 @@
 
     <p class="p-margin-bottom-footer">
       {{ t('footer.paths.privacyverklaringPage.p4') }}
-      <a href="mailto:algemeneinzage@ictu.nl"> algemeneinzage@ictu.nl</a>.
+      <a href="mailto:servicedesk@koop.overheid.nl"> servicedesk@koop.overheid.nl</a>.
     </p>
   </div>
 </template>

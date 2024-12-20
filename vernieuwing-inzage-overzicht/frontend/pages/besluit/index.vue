@@ -2,7 +2,7 @@
   <div class="container">
     <SearchBar
       ref="searchbar"
-      :search-explanation="t('pages.onderwerpen.searchText')"
+      :search-explanation="t('pages.besluiten.searchText')"
       :suggestions-hidden="`pages.besluiten.suggestionsHidden`"
       @do-search="(searchtext) => doSearch(searchtext)"
     />
